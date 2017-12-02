@@ -16,6 +16,8 @@ parser.add_argument('--name', metavar='name',
                     help="Specify nam for new registry entry.")
 parser.add_argument('--list', action='store_true',
                     help="List all registered applications.")
+parser.add_argument('--delete-id', type=int, metavar='delete_id',
+                    help="Option to delete entry by DB id.")
 REGISTER_MESSAGE = """You are registering A program with the following details.
 Name={}
 Path={}
@@ -33,29 +35,29 @@ def main():
 
     args = parser.parse_args()
     # print("Arguments:", args)
-
+    if args.delete_id:
+        database_engine.deregister_program(args.delete_id)
     if args.list:
         cursor = database_engine.database_connection.cursor()
         for i in cursor.execute("SELECT * FROM programs"):
             print(i)
-        quit()
-        # handle unsupplied path
-    if args.path is None:
-        print("Path (--path) must be supplied.")
-        error = True
-        path = None
-    else:
-        path = os.path.abspath(args.path)
-
-    # handle unsupplied name
-    if args.name is None:
-        print("Name (--name) must be supplied.")
-        error = True
 
     if error:
         quit()
 
     if args.register:
+        # handle unsupplied path
+        if args.path is None:
+            print("Path (--path) must be supplied.")
+            error = True
+            path = None
+        else:
+            path = os.path.abspath(args.path)
+
+        # handle unsupplied name
+        if args.name is None:
+            print("Name (--name) must be supplied.")
+            error = True
         print(REGISTER_MESSAGE.format(args.name, path))
         database_engine.register_program(args.name, path)
 

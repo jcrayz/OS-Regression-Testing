@@ -16,10 +16,19 @@ for sql_command in config.DB_TABLES:
 def register_program(name, path):
     logger.log(logging.DEBUG,
                "Attempting to register program name=%s, path=%s", repr(name), repr(path))
-    conn = database_connection
-    cursor = conn.cursor()
+    cursor = database_connection.cursor()
     cursor.execute("""INSERT INTO programs VALUES (null,?,?) """,
                    (name, path))
-    conn.commit()
+    database_connection.commit()
     logger.log(logging.DEBUG, "Successfully registered name=%s, path=%s", repr(
         name), repr(path))
+
+
+def deregister_program(entry_id):
+    logger.log(logging.DEBUG,
+               "Attempting to delete program id=%s", entry_id)
+
+    cursor.execute("""DELETE FROM programs where id=?""", (entry_id,))
+    database_connection.commit()
+    logger.log(logging.DEBUG,
+               "Deleted program id=%s", entry_id)
