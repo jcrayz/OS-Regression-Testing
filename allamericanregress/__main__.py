@@ -3,6 +3,7 @@ import argparse
 import os
 from allamericanregress import config
 from allamericanregress import database_engine
+from allamericanregress import utils
 import logging
 logger = logging.getLogger(__name__)
 
@@ -18,6 +19,8 @@ parser.add_argument('--list', action='store_true',
                     help="List all registered applications.")
 parser.add_argument('--delete-id', type=int, metavar='delete_id',
                     help="Option to delete entry by DB id.")
+parser.add_argument('--uninstall', action='store_true',
+                    help="Delete all config and logs for the application.")
 REGISTER_MESSAGE = """You are registering A program with the following details.
 Name={}
 Path={}
@@ -25,7 +28,6 @@ Path={}
 
 
 def main():
-    error = False
     # detect number of cmd line args
     # fail early if no args found
     if len(sys.argv) == 1:
@@ -35,17 +37,21 @@ def main():
 
     args = parser.parse_args()
     # print("Arguments:", args)
+
+    if args.uninstall:
+        print("Uninstalling...")
+        utils.uninstall()
+
     if args.delete_id:
         database_engine.deregister_program(args.delete_id)
+
     if args.list:
         cursor = database_engine.database_connection.cursor()
         for i in cursor.execute("SELECT * FROM programs"):
             print(i)
 
-    if error:
-        quit()
-
     if args.register:
+        error = False
         # handle unsupplied path
         if args.path is None:
             print("Path (--path) must be supplied.")
@@ -53,11 +59,16 @@ def main():
             path = None
         else:
             path = os.path.abspath(args.path)
+            if not os.path.exists(path):
+                print("Path {} does not exist!".format(repr(path)))
+                error = True
 
         # handle unsupplied name
         if args.name is None:
             print("Name (--name) must be supplied.")
             error = True
+        if error:
+            quit()
         print(REGISTER_MESSAGE.format(args.name, path))
         database_engine.register_program(args.name, path)
 
