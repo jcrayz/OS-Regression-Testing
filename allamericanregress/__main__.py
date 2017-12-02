@@ -14,7 +14,9 @@ parser.add_argument('--register', action='store_true',
 parser.add_argument('--path', metavar='path',
                     help="Specify path of program to register.")
 parser.add_argument('--name', metavar='name',
-                    help="Specify nam for new registry entry.")
+                    help="Specify name for new registry entry.")
+parser.add_argument('--command', metavar='command',
+                    help="Specify command to execute the registry entry in the form 'command $1'.")
 parser.add_argument('--list', action='store_true',
                     help="List all registered applications.")
 parser.add_argument('--delete-id', type=int, metavar='delete_id',
@@ -24,6 +26,7 @@ parser.add_argument('--uninstall', action='store_true',
 REGISTER_MESSAGE = """You are registering A program with the following details.
 Name={}
 Path={}
+Command={}
 """
 
 
@@ -54,23 +57,27 @@ def main():
         error = False
         # handle unsupplied path
         if args.path is None:
-            print("Path (--path) must be supplied.")
+            print("Path must be supplied.")
             error = True
             path = None
         else:
             path = os.path.abspath(args.path)
             if not os.path.exists(path):
-                print("Path {} does not exist!".format(repr(path)))
+                print(
+                    "Path {} does not exist! Please an existing path.".format(repr(path)))
                 error = True
 
         # handle unsupplied name
         if args.name is None:
-            print("Name (--name) must be supplied.")
+            print("Name must be supplied.")
+            error = True
+        if args.command is None:
+            print("Command must be supplied.")
             error = True
         if error:
             quit()
-        print(REGISTER_MESSAGE.format(args.name, path))
-        database_engine.register_program(args.name, path)
+        print(REGISTER_MESSAGE.format(args.name, path, args.command))
+        database_engine.register_program(args.name, path, args.command)
 
 
 if __name__ == '__main__':

@@ -10,7 +10,7 @@ DB_TABLES = [
     '''CREATE TABLE logs
                 (date text, body text)''',
     '''CREATE TABLE programs
-                (id INTEGER PRIMARY KEY, name text, path text)'''
+                (id INTEGER PRIMARY KEY, name text, path text, command text)'''
 
 ]
 

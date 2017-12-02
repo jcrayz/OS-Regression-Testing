@@ -13,15 +13,15 @@ for sql_command in config.DB_TABLES:
         logger.log(logging.DEBUG, "Ignoring db error: %s", e)
 
 
-def register_program(name, path):
+def register_program(name, path, command):
+    args = (name, path, command)
     logger.log(logging.DEBUG,
-               "Attempting to register program name=%s, path=%s", repr(name), repr(path))
+               "Attempting to register program %s", repr(args))
     cursor = database_connection.cursor()
-    cursor.execute("""INSERT INTO programs VALUES (null,?,?) """,
-                   (name, path))
+    cursor.execute("""INSERT INTO programs VALUES (null,?,?,?) """,
+                   args)
     database_connection.commit()
-    logger.log(logging.DEBUG, "Successfully registered name=%s, path=%s", repr(
-        name), repr(path))
+    logger.log(logging.DEBUG, "Successfully registered %s", repr(args))
 
 
 def deregister_program(entry_id):
@@ -32,3 +32,8 @@ def deregister_program(entry_id):
     database_connection.commit()
     logger.log(logging.DEBUG,
                "Deleted program id=%s", entry_id)
+
+
+def all_entries():
+    for i in cursor.execute("""SELECT * FROM programs"""):
+        yield i
