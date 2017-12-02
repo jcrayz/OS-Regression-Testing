@@ -16,7 +16,7 @@ parser.add_argument('--path', metavar='path',
 parser.add_argument('--name', metavar='name',
                     help="Specify name for new registry entry.")
 parser.add_argument('--command', metavar='command',
-                    help="Specify command to execute the registry entry in the form 'command $1'.")
+                    help="""Specify command to execute the registry entry in the form 'command $1'. $1 will be replaced with the program path.""")
 parser.add_argument('--list', action='store_true',
                     help="List all registered applications.")
 parser.add_argument('--delete-id', type=int, metavar='delete_id',
