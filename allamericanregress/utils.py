@@ -7,6 +7,6 @@ logger = logging.getLogger(__name__)
 
 
 def uninstall():
-    logger.close()
+    logging.shutdown()
     database_engine.database_connection.close()
     shutil.rmtree(config.CONFIG_PATH)
