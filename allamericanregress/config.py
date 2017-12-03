@@ -3,9 +3,11 @@ import os
 import logging
 logger = logging.getLogger(__name__)
 
-
+# Absolute path for folder where database and logs will be stored.
 CONFIG_PATH = os.path.join('c:/', 'AllAmericanRegress')
+# Absolute path for database file.
 DB_PATH = os.path.join(CONFIG_PATH, 'aar_db.db')
+# SQLite table schemas and semantic names.
 DB_TABLES = {
     'programs': '''CREATE TABLE programs
                 (
@@ -24,10 +26,10 @@ DB_TABLES = {
                 );''',
 }
 
-
+# Absolute path for log file.
 LOG_PATH = os.path.join(CONFIG_PATH, 'logs.log')
 
-# ensure the installation directory exists
+# Ensure the installation directory exists
 if not os.path.isdir(CONFIG_PATH):
     print("Create config path")
     os.makedirs(CONFIG_PATH)

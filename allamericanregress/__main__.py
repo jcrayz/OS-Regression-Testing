@@ -10,24 +10,34 @@ logger = logging.getLogger(__name__)
 
 parser = argparse.ArgumentParser(
     description="Capstone regression testing program.")
+# Register new program.
 parser.add_argument('--register', action='store_true',
                     help="Flag to enable registering a new program.")
+# List all test results.
 parser.add_argument('--logs', action='store_true',
                     help="Show all testing logs")
+# Execute all tests.
 parser.add_argument('--execute-tests', action='store_true',
                     help="Invoke the testing framework and log results.")
+# Program path, only if registering.
 parser.add_argument('--path', metavar='path',
                     help="Specify path of program to register.")
+# Program name, only if registering.
 parser.add_argument('--name', metavar='name',
                     help="Specify name for new registry entry.")
+# Program command, only if registering.
 parser.add_argument('--command', metavar='command',
                     help="""Specify command to execute the registry entry in the form 'command $1'. $1 will be replaced with the program path.""")
+# List all programs.
 parser.add_argument('--list', action='store_true',
                     help="List all registered applications.")
+# Delete a program.
 parser.add_argument('--delete-id', type=int, metavar='delete_id',
                     help="Option to delete entry by DB id.")
+# Delete all config and DB files.
 parser.add_argument('--uninstall', action='store_true',
                     help="Delete all config and logs for the application.")
+# Template to display when registering.
 REGISTER_MESSAGE = """You are registering A program with the following details.
 Name={}
 Path={}
@@ -49,12 +59,16 @@ def main():
     if args.uninstall:
         print("Uninstalling...")
         utils.uninstall()
+        # uninstall overrrides everything else
+        quit()
 
     if args.delete_id:
         database_engine.deregister_program(args.delete_id)
+
     if args.list:
         for i in database_engine.all_entries():
             print(i)
+
     if args.logs:
         for i in database_engine.all_test_logs():
             print(i)
