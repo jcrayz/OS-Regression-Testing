@@ -8,7 +8,7 @@ import logging
 
 # Logs to the temp directory under C
 logging.basicConfig(
-    filename='c:\\Temp\\hello-service2.log',
+    filename='C:\\Temp\\hello-service2.log',
     level=logging.DEBUG,
     format='[helloworld2-service] %(levelname)-7.7s %(message)s'
 )
