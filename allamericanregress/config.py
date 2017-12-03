@@ -6,13 +6,24 @@ logger = logging.getLogger(__name__)
 
 CONFIG_PATH = os.path.join('c:/', 'AllAmericanRegress')
 DB_PATH = os.path.join(CONFIG_PATH, 'aar_db.db')
-DB_TABLES = [
-    '''CREATE TABLE logs
-                (date text, body text)''',
-    '''CREATE TABLE programs
-                (id INTEGER PRIMARY KEY, name text, path text, command text)'''
+DB_TABLES = {
+    'programs': '''CREATE TABLE programs
+                (
+                    id INTEGER PRIMARY KEY,
+                    name TEXT,
+                    path TEXT,
+                    command TEXT
+                );''',
+    'logs': '''CREATE TABLE logs
+                (
+                    program_id INTEGER,
+                    date TEXT,
+                    output TEXT,
+                    exit_code INTEGER,
+                    FOREIGN KEY(program_id) REFERENCES programs(id)
+                );''',
+}
 
-]
 
 LOG_PATH = os.path.join(CONFIG_PATH, 'logs.log')
 
