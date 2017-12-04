@@ -9,5 +9,5 @@ By convention, python packages that are dependencies of this project are enumera
 
 # Command Line Interface
 
-Execute `python -m text_mode` fro mthe root of the repository to use the command line interface.
+Execute `python -m allamericanregress` from the root of the repository to use the command line interface.
 
