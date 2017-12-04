@@ -17,7 +17,9 @@ def execute_tests():
         console_output = child.communicate()[0]
         code = child.returncode
         # only log if there was an error
-        database_engine.log_executed_test(p[0], console_output, code)
+        if code != 0:
+            logger.log(logging.DEBUG, "Test {} failed.".format(p))
+            database_engine.log_executed_test(p[0], console_output, code)
         print("Test {} exited with code {}".format(p, code))
 
 
