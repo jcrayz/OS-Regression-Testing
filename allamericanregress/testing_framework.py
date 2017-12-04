@@ -5,10 +5,10 @@ logger = logging.getLogger(__name__)
 
 
 def execute_tests():
-	"""Execute all tests from DB."""
-	# iterate over all tests
+    """Execute all tests from DB."""
+    # iterate over all tests
     for p in database_engine.all_entries():
-    	# substitute the path into the command
+        # substitute the path into the command
         command = p[-1].replace('$1', p[2])
         # execute the command
         child = subprocess.Popen(command.split(' '), stdout=subprocess.PIPE)

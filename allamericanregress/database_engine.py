@@ -6,6 +6,9 @@ logger = logging.getLogger(__name__)
 
 # Iterate over configured table names and schemas.
 # Create them if they don't yet exist.
+# Initialize database connection and cursor
+database_connection = sqlite3.connect(config.DB_PATH)
+cursor = database_connection.cursor()
 for table_name, sql_command in config.DB_TABLES.items():
     # Command to check if table exists.
     existing_tables = len(list(cursor.execute(
@@ -13,13 +16,14 @@ for table_name, sql_command in config.DB_TABLES.items():
     if existing_tables == 0:
         cursor.execute(sql_command)
         logger.log(logging.DEBUG, "Created table: %s", sql_command)
+database_connection.close()
 
 
 def register_program(name, path, command):
+    """Insert a program in the the DB."""
     # Initialize database connection and cursor
     database_connection = sqlite3.connect(config.DB_PATH)
     cursor = database_connection.cursor()
-    """Insert a program in the the DB."""
     args = (name, path, command)
     logger.log(logging.DEBUG,
                "Attempting to register program %s", repr(args))
