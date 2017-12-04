@@ -1,1 +1,1 @@
-pypiwin32
+git+git://github.com/mhammond/pywin32
