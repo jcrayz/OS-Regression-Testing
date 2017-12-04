@@ -31,7 +31,7 @@ LOG_PATH = os.path.join(CONFIG_PATH, 'logs.log')
 
 # Ensure the installation directory exists
 if not os.path.isdir(CONFIG_PATH):
-    print("Create config path")
+    loggin.log(logging.DEBUG, "Created config path")
     os.makedirs(CONFIG_PATH)
 
 
