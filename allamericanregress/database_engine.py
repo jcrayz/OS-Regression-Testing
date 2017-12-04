@@ -9,6 +9,7 @@ logger = logging.getLogger(__name__)
 
 @contextmanager
 def connect():
+    """Context manager to prevent forgetting to close the DB connection."""
     database_connection = sqlite3.connect(config.DB_PATH)
     cursor = database_connection.cursor()
     yield database_connection, cursor
@@ -31,7 +32,6 @@ with connect() as (conn, cursor):
 
 def register_program(name, path, command):
     """Insert a program in the the DB."""
-    # Initialize database connection and cursor
     with connect() as (conn, cursor):
         args = (name, path, command)
         logger.log(logging.DEBUG,
@@ -43,7 +43,6 @@ def register_program(name, path, command):
 
 def deregister_program(entry_id):
     """Remove a program entry from the DB."""
-    # Initialize database connection and cursor
     with connect() as (conn, cursor):
         logger.log(logging.DEBUG,
                    "Attempting to delete program id=%s", entry_id)
@@ -55,7 +54,6 @@ def deregister_program(entry_id):
 
 def all_entries():
     """Return all program entries."""
-    # Initialize database connection and cursor
     with connect() as (conn, cursor):
         entries = list(cursor.execute("""SELECT * FROM programs"""))
     return entries
@@ -63,7 +61,6 @@ def all_entries():
 
 def log_executed_test(program_id, test_output, exit_code):
     """Save a test result in the DB."""
-    # Initialize database connection and cursor
     with connect() as (conn, cursor):
         cursor.execute("""INSERT INTO logs (program_id, date, output, exit_code) VALUES (?, ?, ?, ?)""",
                        (program_id, str(time.time()), str(test_output), exit_code))
@@ -71,7 +68,6 @@ def log_executed_test(program_id, test_output, exit_code):
 
 def all_test_logs():
     """Return all test logs."""
-    # Initialize database connection and cursor
     with connect() as (conn, cursor):
         for i in cursor.execute("""SELECT * FROM logs"""):
             yield i
