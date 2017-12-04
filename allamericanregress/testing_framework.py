@@ -5,7 +5,7 @@ logger = logging.getLogger(__name__)
 
 
 def execute_tests():
-	"""Execute all tests from DB."""
+    """Execute all tests from DB."""
 	# iterate over all tests
     for p in database_engine.all_entries():
     	# substitute the path into the command

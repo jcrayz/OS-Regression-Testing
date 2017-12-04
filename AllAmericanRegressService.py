@@ -5,18 +5,18 @@ import servicemanager
 import socket
 import time
 import logging
-
+import allamericanregress.testing_framework
 # Logs to the temp directory under C
 logging.basicConfig(
-    filename='C:\\Temp\\hello-service2.log',
+    filename='C:\\Temp\\allamericanregress.log',
     level=logging.DEBUG,
-    format='[helloworld2-service] %(levelname)-7.7s %(message)s'
+    format='[allamericanregress-service] %(levelname)-7.7s %(message)s'
 )
 
 # Simple service that logs every 5 seconds 50x
-class HelloWorldSvc(win32serviceutil.ServiceFramework):
-    _svc_name_ = "HelloWorld2-Service"
-    _svc_display_name_ = "HelloWorld2 Service"
+class AllAmericanRegressService(win32serviceutil.ServiceFramework):
+    _svc_name_ = "AllAmericanRegress"
+    _svc_display_name_ = "OS Regression Testing"
 
     def __init__(self, args):
         win32serviceutil.ServiceFramework.__init__(self, args)
@@ -42,17 +42,11 @@ class HelloWorldSvc(win32serviceutil.ServiceFramework):
 
     # Logs "Hello at <time>" 50x at 5 second intervals
     def main(self):
-        logging.info(' ** Hello PyWin32 World ** ')
-        # Simulate a main loop
-        for i in range(0, 50):
-            if self.stop_requested:
-                logging.info('A stop signal was received: Breaking main loop ...')
-                break
-            time.sleep(5)
-            logging.info("Hello at %s" % time.ctime())
+        logging.info(' ** Running test suites ** ')
+        allamericanregress.testing_framework.execute_tests()
         return
 
 
 if __name__ == '__main__':
-    win32serviceutil.HandleCommandLine(HelloWorldSvc, None, ["HelloWorldSvc","--startup=auto", "install"])
-    win32serviceutil.HandleCommandLine(HelloWorldSvc, None, ["HelloWorldSvc", "start"])
+    win32serviceutil.HandleCommandLine(AllAmericanRegressService, None, ["AllAmericanRegressService","--startup=auto", "install"])
+    win32serviceutil.HandleCommandLine(AllAmericanRegressService, None, ["AllAmericanRegressService", "start"])
