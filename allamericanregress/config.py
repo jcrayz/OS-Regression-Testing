@@ -31,13 +31,13 @@ DB_TABLES = {
                     command TEXT,
                     name TEXT,
                     author TEXT,
-                    timestamp TEXT
+                    timestamp INTEGER
                 );''',
     'execution_records': '''CREATE TABLE execution_records
                 (
                     id INTEGER PRIMARY KEY,
                     os_version TEXT,
-                    timestamp TEXT
+                    timestamp INTEGER
                 );''',
     'current_records': '''CREATE TABLE current_records
                 (
