@@ -1,8 +1,7 @@
 {% extends 'base.html' %} {% block body %} {{super()}} {{context.message}}
 <div>
-    <p>
-        All programs:
-    </p>
+    All programs:
+    <hr>
     <!--  -->
     {% for program in context.programs %}
     <!--  -->
@@ -14,6 +13,7 @@
         <p>
             Command:{{program.command}}
         </p>
+        <hr>
     </div>
     <!--  -->
     {% endfor%}
