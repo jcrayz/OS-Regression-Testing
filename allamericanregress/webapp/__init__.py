@@ -25,6 +25,11 @@ def index():
         'index.html', context=dict(message="Welcome!"))
 
 
+@app.route("/logs")
+def logs():
+    return flask.render_template(
+        'log_view.html')
+
 # ========== Utility Functions ==========
 
 
