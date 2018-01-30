@@ -71,3 +71,9 @@ def all_test_logs():
     with connect() as (conn, cursor):
         for i in cursor.execute("""SELECT * FROM logs"""):
             yield i
+
+def get_last_os_version():
+    """Return the last recorded OS version"""
+    with connect() as(conn, cursor):
+        cursor.execute("""SELECT timestamp FROM execution_records ORDER BY timestamp DESC LIMIT 1""")
+        return cursor.fetchone()[0]
