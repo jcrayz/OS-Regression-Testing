@@ -1,15 +1,29 @@
-"""Constants"""
+"""This module contains constants and configuration values necessary
+for the application to run.
+This includes:
+    Paths of log files and the SQLite DB.
+    DB Table definitions.
+
+Directories for these files are automatically created.
+
+The logger is configured.
+"""
 import os
 import logging
 import flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
+#  ========== Logging ==========
 logger = logging.getLogger(__name__)
 
 # Absolute path for folder where database and logs will be stored.
 CONFIG_PATH = os.path.join('c:', 'AllAmericanRegress')
 # Absolute path for database file.
 DB_PATH = os.path.join(CONFIG_PATH, 'aar_db.db')
+# Absolute path for log file.
+LOG_PATH = os.path.join(CONFIG_PATH, 'logs.log')
+
+# ========== SQL ==========
 # SQLite table schemas and semantic names.
 DB_TABLES = {
     'programs': '''CREATE TABLE programs
@@ -62,9 +76,7 @@ DB_TABLES = {
                 );''',
 }
 
-# Absolute path for log file.
-LOG_PATH = os.path.join(CONFIG_PATH, 'logs.log')
-
+# ========== Loggign ==========
 # Ensure the installation directory exists
 if not os.path.isdir(CONFIG_PATH):
     logging.log(logging.DEBUG, "Created config path")
