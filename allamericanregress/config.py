@@ -67,16 +67,17 @@ DB_TABLES = {
                 );''',
     'failure_records': '''CREATE TABLE failure_records
                 (
-                    registrant_id INTEGER PRIMARY KEY,
-                    execution_id INTEGER PRIMARY KEY,
+                    registrant_id INTEGER,
+                    execution_id INTEGER,
                     exit_code INTEGER,
                     message TEXT,
+                    PRIMARY KEY (registrant_id, execution_id),
                     FOREIGN KEY(registrant_id) REFERENCES registrants(id),
                     FOREIGN KEY(execution_id) REFERENCES execution_records(id)
                 );''',
 }
 
-# ========== Loggign ==========
+# ========== Logging ==========
 # Ensure the installation directory exists
 if not os.path.isdir(CONFIG_PATH):
     logging.log(logging.DEBUG, "Created config path")
