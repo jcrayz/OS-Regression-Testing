@@ -11,9 +11,7 @@ The logger is configured.
 #  ========== Dependencies ==========
 import os
 import logging
-import flask
-from flask_sqlalchemy import SQLAlchemy
-from flask_migrate import Migrate
+
 import sys
 #  ========== Logging ==========
 logger = logging.getLogger(__name__)
@@ -29,32 +27,6 @@ else:
 DB_PATH = os.path.join(CONFIG_PATH, 'aar_db.db')
 # Absolute path for log file.
 LOG_PATH = os.path.join(CONFIG_PATH, 'logs.log')
-
-#  ========== Flask App ==========
-app = flask.Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{DB_PATH}'
-# initialize SQLAlchemy engine
-db = SQLAlchemy(app)
-# initialize migration engine
-migrate = Migrate(app, db)
-
-
-# ========== SQLAlchemy Models ==========
-
-
-class Program(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String())
-    path = db.Column(db.String())
-    command = db.Column(db.String())
-
-
-class Log(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    program = db.Column(db.Integer, db.ForeignKey("program.id"))
-    output = db.Column(db.String())
-    exit_code = db.Column(db.Integer)
-    date = db.Column(db.Integer)
 
 
 # ========== Logging ==========

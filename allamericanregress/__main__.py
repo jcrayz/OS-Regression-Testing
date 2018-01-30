@@ -5,6 +5,7 @@ from allamericanregress import config
 from allamericanregress import database_engine
 from allamericanregress import utils
 from allamericanregress import testing_framework
+from allamericanregress import webapp
 import logging
 logger = logging.getLogger(__name__)
 
@@ -37,6 +38,9 @@ parser.add_argument('--delete-id', type=int, metavar='delete_id',
 # Delete all config and DB files.
 parser.add_argument('--uninstall', action='store_true',
                     help="Delete all config and logs for the application.")
+# serve the webapp
+parser.add_argument('--webapp', action='store_true',
+                    help="Serve the Flask webapp.")
 # Template to display when registering.
 REGISTER_MESSAGE = """You are registering A program with the following details.
 Name={}
@@ -101,6 +105,9 @@ def main():
 
     if args.execute_tests:
         testing_framework.execute_tests()
+
+    if args.webapp:
+        webapp.serve()
 
 if __name__ == '__main__':
     main()

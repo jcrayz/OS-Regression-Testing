@@ -17,19 +17,6 @@ def connect():
     database_connection.close()
 
 
-# Iterate over configured table names and schemas.
-# Create them if they don't yet exist.
-# Initialize database connection and cursor
-with connect() as (conn, cursor):
-    for table_name, sql_command in config.DB_TABLES.items():
-        # Command to check if table exists.
-        existing_tables = len(list(cursor.execute(
-            "SELECT name FROM sqlite_master WHERE type='table' AND name='{}';".format(table_name))))
-        if existing_tables == 0:
-            cursor.execute(sql_command)
-            logger.log(logging.DEBUG, "Created table: %s", sql_command)
-
-
 def register_program(name, path, command):
     """Insert a program in the the DB."""
     with connect() as (conn, cursor):
@@ -72,8 +59,10 @@ def all_test_logs():
         for i in cursor.execute("""SELECT * FROM logs"""):
             yield i
 
+
 def get_last_os_version():
     """Return the last recorded OS version"""
     with connect() as(conn, cursor):
-        cursor.execute("""SELECT timestamp FROM execution_records ORDER BY timestamp DESC LIMIT 1""")
+        cursor.execute(
+            """SELECT timestamp FROM execution_records ORDER BY timestamp DESC LIMIT 1""")
         return cursor.fetchone()[0]
