@@ -1,1 +1,11 @@
-{% extends 'base.html' %}  {% block body %} {{super()}} There's nothing here!{% endblock %}
+{% extends 'base.html' %} {% block body %} {{super()}} There's nothing here!
+<div>
+    Logs:
+    <!--  -->
+    {% for log in context.logs %}
+    <!--  -->
+    log goes here
+    <!--  -->
+    {% endfor%}
+</div>
+{% endblock %}

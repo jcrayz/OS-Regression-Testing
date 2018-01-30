@@ -15,6 +15,7 @@ db = SQLAlchemy(app)
 # initialize migration engine
 migrate = Migrate(app, db)
 
+from allamericanregress import models
 
 # ========== Routes ==========
 
@@ -22,13 +23,15 @@ migrate = Migrate(app, db)
 @app.route("/")
 def index():
     return flask.render_template(
-        'index.html', context=dict(message="Welcome!"))
+        'index.html', context=dict(
+            message="Welcome!",
+            programs=list(models.Program.query.all())))
 
 
 @app.route("/logs")
 def logs():
     return flask.render_template(
-        'log_view.html')
+        'log_view.html', context=dict(logs=models.Log.query.all()))
 
 # ========== Utility Functions ==========
 
