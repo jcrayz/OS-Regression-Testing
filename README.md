@@ -25,7 +25,7 @@ To initialize the Flask web app for the first time:
 ```
 # add program file to path
 export FLASK_APP=allamericanregress/webapp/__init__.py
-# initialize database
+# initialize schema engine
 flask db init
 # detect schema changes
 flask db migrate
