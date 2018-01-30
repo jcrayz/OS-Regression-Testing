@@ -8,6 +8,7 @@ Directories for these files are automatically created.
 
 The logger is configured.
 """
+#  ========== Dependencies ==========
 import os
 import logging
 import flask
@@ -16,6 +17,7 @@ from flask_migrate import Migrate
 #  ========== Logging ==========
 logger = logging.getLogger(__name__)
 
+#  ========== Paths ==========
 # Absolute path for folder where database and logs will be stored.
 CONFIG_PATH = os.path.join('c:', 'AllAmericanRegress')
 # Absolute path for database file.
