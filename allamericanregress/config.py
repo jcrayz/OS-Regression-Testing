@@ -1,10 +1,13 @@
 """Constants"""
 import os
 import logging
+import flask
+from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
 logger = logging.getLogger(__name__)
 
 # Absolute path for folder where database and logs will be stored.
-CONFIG_PATH = os.path.join('c:/', 'AllAmericanRegress')
+CONFIG_PATH = os.path.join('c:', 'AllAmericanRegress')
 # Absolute path for database file.
 DB_PATH = os.path.join(CONFIG_PATH, 'aar_db.db')
 # SQLite table schemas and semantic names.

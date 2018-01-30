@@ -1,10 +1,10 @@
-from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
-from flask_migrate import Migrate
-import allamericanregress.config as config
-app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + config.DB_PATH
+from allamericanregress import config
 
-db = SQLAlchemy(app)
-migrate = Migrate(app, db)
+app = config.app
 
+
+def main():
+    app.run(debug=True)
+
+if __name__ == '__main__':
+    main()
