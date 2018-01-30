@@ -14,19 +14,48 @@ import logging
 import flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
+import sys
 #  ========== Logging ==========
 logger = logging.getLogger(__name__)
 
 #  ========== Paths ==========
 # Absolute path for folder where database and logs will be stored.
-CONFIG_PATH = os.path.join('c:', 'AllAmericanRegress')
+if sys.platform == 'linux':
+    CONFIG_PATH = os.path.join(os.path.expanduser('~'), 'AllAmericanRegress')
+else:
+    CONFIG_PATH = os.path.join('c:', 'AllAmericanRegress')
+
 # Absolute path for database file.
 DB_PATH = os.path.join(CONFIG_PATH, 'aar_db.db')
 # Absolute path for log file.
 LOG_PATH = os.path.join(CONFIG_PATH, 'logs.log')
 
+#  ========== Flask App ==========
+app = flask.Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///{DB_PATH}'
+# initialize SQLAlchemy engine
+db = SQLAlchemy(app)
+# initialize migration engine
+migrate = Migrate(app, db)
+
 # ========== SQL ==========
-# SQLite table schemas and semantic names.
+
+
+class Program(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String())
+    path = db.Column(db.String())
+    command = db.Column(db.String())
+
+
+class Log(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    program = db.Column(db.Integer, db.ForeignKey("program.id"))
+    output = db.Column(db.String())
+    exit_code = db.Column(db.Integer)
+    date = db.Column(db.Integer)
+
+    # SQLite table schemas and semantic names.
 DB_TABLES = {
     'programs': '''CREATE TABLE programs
                 (
