@@ -13,15 +13,21 @@ import os
 import logging
 
 import sys
-#  ========== Logging ==========
-logger = logging.getLogger(__name__)
 
 #  ========== Paths ==========
 # Absolute path for folder where database and logs will be stored.
 if sys.platform == 'linux':
     CONFIG_PATH = os.path.join(os.path.expanduser('~'), 'AllAmericanRegress')
 else:
-    CONFIG_PATH = os.path.join('c:', 'AllAmericanRegress')
+    print('on windows')
+    CONFIG_PATH = os.path.join('c:/', 'AllAmericanRegress')
+#  ========== Logging ==========
+logger = logging.getLogger(__name__)
+
+# Ensure the installation directory exists
+if not os.path.isdir(CONFIG_PATH):
+    logging.log(logging.DEBUG, "Created config path")
+    os.makedirs(CONFIG_PATH)
 
 # Absolute path for database file.
 DB_PATH = os.path.join(CONFIG_PATH, 'aar_db.db')
@@ -29,11 +35,6 @@ DB_PATH = os.path.join(CONFIG_PATH, 'aar_db.db')
 LOG_PATH = os.path.join(CONFIG_PATH, 'logs.log')
 
 
-# ========== Logging ==========
-# Ensure the installation directory exists
-if not os.path.isdir(CONFIG_PATH):
-    logging.log(logging.DEBUG, "Created config path")
-    os.makedirs(CONFIG_PATH)
 
 
 # Logs to the temp directory under C
