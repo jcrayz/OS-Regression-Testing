@@ -34,9 +34,6 @@ DB_PATH = os.path.join(CONFIG_PATH, 'aar_db.db')
 # Absolute path for log file.
 LOG_PATH = os.path.join(CONFIG_PATH, 'logs.log')
 
-
-
-
 # Logs to the temp directory under C
 logging.basicConfig(
     filename=LOG_PATH,

@@ -12,7 +12,8 @@ logger = logging.getLogger(__name__)
 def get_current_os_version():
     """Get the current version's major.minor.build number"""
     version = win32api.GetVersionEx(1)
-    return "{major}.{minor}.{build}".format(major=version[0], minor=version[1], build=version[2])
+    return "{major}.{minor}.{build}".format(
+        major=version[0], minor=version[1], build=version[2])
 
 
 def execute_tests():

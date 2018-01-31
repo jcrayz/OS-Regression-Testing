@@ -20,16 +20,15 @@ db = SQLAlchemy(app)
 # initialize migration engine
 migrate = Migrate(app, db)
 
-
 # ========== Routes ==========
 
 
 @app.route("/")
 def index():
     return flask.render_template(
-        'index.html', context=dict(
-            message="Welcome!",
-            programs=list(models.Program.query.all())))
+        'index.html',
+        context=dict(
+            message="Welcome!", programs=list(models.Program.query.all())))
 
 
 @app.route("/logs")
@@ -40,8 +39,8 @@ def logs():
 
 @app.route("/home")
 def home():
-    return flask.render_template(
-        'mockup.html', context=dict())
+    return flask.render_template('mockup.html', context=dict())
+
 
 # ========== Utility Functions ==========
 
