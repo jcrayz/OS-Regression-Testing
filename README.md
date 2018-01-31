@@ -33,7 +33,7 @@ flask db migrate
 flask db upgrade
 ```
 
-To run it every other future:
+To run it every other time:
 ```
 export FLASK_APP=allamericanregress/webapp/__init__.py
 flask run
