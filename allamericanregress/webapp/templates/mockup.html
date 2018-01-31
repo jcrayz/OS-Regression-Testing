@@ -1,0 +1,71 @@
+{% extends 'base.html' %} {% block body %} {{super()}} {# <- not sure what that super call does #}
+<head><link rel="stylesheet" type="text/css" href="../stylesheets/default.css" ></head>
+<div>
+    <h1>{{app_title}}</h1>
+    <h4>{{subtitle}}</h4>
+</div>
+<hr>
+<div id="results">
+    <h2>Results</h2>
+    <p>Current OS Version: {{current_version}}</p>
+    <table border="1px">
+        <tr>
+            <td colspan="5">TEST RESULTS</td>
+        </tr>
+        <tr>
+            <td>#</td>
+            <td>NAME</td>
+            <td>LAST RESULT</td>
+            <td>VERSION OF LAST SUCCESS</td>
+            <td>DATE OF LAST SUCCESS</td>
+        </tr>
+        {% for registrant in context.registrants %}
+        <tr>
+            <td>{{registrant.id}}</td>
+            <td>{{registrant.name}}</td>
+            <td>{{'PASS' if registrant.result else 'FAIL'}}</td> {# This code will probably be more complex #}
+            <td>{{registrant.last_successful_version}}</td>
+            <td>{{registrant.last_successful_date}}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    <button>EXECUTE ALL</button>
+</div>
+<hr>
+<div id="register_new">
+    <h2>Register Test Executable</h2>
+    <form>
+        {# this will be the registration area #}<br>
+        <label>Filepath</label><input type="text"><br>
+        <label>Name</label><input type="text"><br>
+        <label>Author</label><input type="text"><br>
+        <label>Command</label><input type="text"><br>
+    </form>
+    <button>REGISTER</button>
+</div>
+<hr>
+<div id="registered_tests">
+    <h2>Registered Tests</h2>
+    <table border="1px">
+        <tr>
+            <td>#</td>
+            <td>NAME</td>
+            <td>AUTHOR</td>
+            <td>COMMAND</td>
+            <td>FILEPATH</td>
+            <td></td><td></td>
+        </tr>
+        {% for registrant in context.registrants %}
+        <tr>
+            <td>{{registrant.id}}</td>
+            <td>{{registrant.name}}</td>
+            <td>{{registrant.author}}</td>
+            <td>{{registrant.command}}</td>
+            <td>{{registrant.filepath}}</td>
+            <td>{# edit button #}</td>
+            <td>{# delete button #}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+{% endblock %}

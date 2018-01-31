@@ -35,6 +35,7 @@ def execute_tests():
 
 
 def main():
+    # TODO: Get last OS version from DB & compare to current version
     execute_tests()
 
 
