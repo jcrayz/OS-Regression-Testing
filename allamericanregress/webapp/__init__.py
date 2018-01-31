@@ -37,6 +37,12 @@ def logs():
     return flask.render_template(
         'log_view.html', context=dict(logs=models.Log.query.all()))
 
+
+@app.route("/home")
+def home():
+    return flask.render_template(
+        'mockup.html', context=dict())
+
 # ========== Utility Functions ==========
 
 
