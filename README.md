@@ -21,7 +21,7 @@ The GUI is launched by executing `python3 -m allamericanregress --webapp`
 
 # Web App
 
-To initialize the Flask web app for the first time:
+To initialize the Flask web app for the first time, execute these commands from the root of the repo.
 ```
 # add program file to path
 export FLASK_APP=allamericanregress/webapp/__init__.py
@@ -33,7 +33,7 @@ flask db migrate
 flask db upgrade
 ```
 
-To run it every other future:
+To run it every other time:
 ```
 export FLASK_APP=allamericanregress/webapp/__init__.py
 flask run
