@@ -1,10 +1,12 @@
 import flask
+from flask import request, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
-from allamericanregress import config
-from allamericanregress import models
+from allamericanregress import config, models, database_engine
+
 # hack to get a reference to the templates directory within the package
 import os
+
 tmpl_dir = os.path.join(
     os.path.dirname(os.path.abspath(__file__)), 'templates')
 
@@ -19,6 +21,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{config.DB_PATH}'
 db = SQLAlchemy(app)
 # initialize migration engine
 migrate = Migrate(app, db)
+
 
 # ========== Routes ==========
 
@@ -41,6 +44,14 @@ def logs():
 def home():
     return flask.render_template(
         'mockup.html', context=dict(registrants=models.Program.query.all()))
+
+
+@app.route("/register", methods=["POST"])
+def register():
+    if request.method == "POST":
+        database_engine.register_program(request.form["reg_name"], request.form["reg_filepath"],
+                                         request.form["reg_command"])
+    return redirect(url_for('home'))
 
 
 # ========== Utility Functions ==========

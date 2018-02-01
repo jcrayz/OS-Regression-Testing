@@ -34,11 +34,11 @@
 <hr>
 <div id="register_div">
     <h2>Register Test Executable</h2>
-    <form id="register_form">
-        <label>Filepath</label><input type="text"><br>
-        <label>Name</label><input type="text"><br>
-        <label>Author</label><input type="text"><br>
-        <label>Command</label><input type="text"><br>
+    <form id="register_form" method="POST" action="/register">
+        <label>Filepath</label><input name="reg_filepath" type="text"><br>
+        <label>Name</label><input name="reg_name" type="text"><br>
+        <label>Author</label><input name="reg_author" type="text"><br>
+        <label>Command</label><input name="reg_command" type="text"><br>
         <input type="submit" value="REGISTER">
     </form>
 </div>
