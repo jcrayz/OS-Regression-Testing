@@ -9,7 +9,7 @@ tmpl_dir = os.path.join(
     os.path.dirname(os.path.abspath(__file__)), 'templates')
 
 #  ========== Flask App ==========
-app = flask.Flask(__name__)
+app = flask.Flask(__name__, static_url_path='/static')
 # auto reload template engine when template files change
 app.jinja_env.auto_reload = True
 app.config['TEMPLATES_AUTO_RELOAD'] = True
@@ -41,6 +41,10 @@ def logs():
 def home():
     return flask.render_template(
         'mockup.html', context=dict(registrants=models.Program.query.all()))
+#
+# @app.route("static/<path:path>")
+# def static(path):
+#     return app.send_static_file(path)
 
 
 # ========== Utility Functions ==========
