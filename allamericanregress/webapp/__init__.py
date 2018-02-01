@@ -41,10 +41,6 @@ def logs():
 def home():
     return flask.render_template(
         'mockup.html', context=dict(registrants=models.Program.query.all()))
-#
-# @app.route("static/<path:path>")
-# def static(path):
-#     return app.send_static_file(path)
 
 
 # ========== Utility Functions ==========
