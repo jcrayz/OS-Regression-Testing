@@ -1,13 +1,13 @@
 {% extends 'base.html' %} {% block body %} {{super()}} {# <- not sure what that super call does #}
 <head><link rel="stylesheet" type="text/css" href="../stylesheets/default.css" ></head>
 <div>
-    <h1>{{app_title}}</h1>
-    <h4>{{subtitle}}</h4>
+    <h1>{{context.app_title}}</h1>
+    <h4>{{context.subtitle}}</h4>
 </div>
 <hr>
 <div id="results">
     <h2>Results</h2>
-    <p>Current OS Version: {{current_version}}</p>
+    <p>Current OS Version: {{context.current_version}}</p>
     <table border="1px">
         <tr>
             <td colspan="5">TEST RESULTS</td>
@@ -19,13 +19,13 @@
             <td>VERSION OF LAST SUCCESS</td>
             <td>DATE OF LAST SUCCESS</td>
         </tr>
-        {% for registrant in context.registrants %}
+        {% for results in context.test_results %}
         <tr>
-            <td>{{registrant.id}}</td>
-            <td>{{registrant.name}}</td>
-            <td>{{'PASS' if registrant.result else 'FAIL'}}</td> {# This code will probably be more complex #}
-            <td>{{registrant.last_successful_version}}</td>
-            <td>{{registrant.last_successful_date}}</td>
+            <td>{{results.id}}</td>
+            <td>{{results.name}}</td>
+            <td>{{'PASS' if results.result else 'FAIL'}}</td> {# This code will probably be more complex #}
+            <td>{{results.last_successful_version}}</td>
+            <td>{{results.last_successful_date}}</td>
         </tr>
         {% endfor %}
     </table>
@@ -60,9 +60,9 @@
             <td>{{registrant.name}}</td>
             <td>{{registrant.author}}</td>
             <td>{{registrant.command}}</td>
-            <td>{{registrant.filepath}}</td>
-            <td>{# edit button #}</td>
-            <td>{# delete button #}</td>
+            <td>{{registrant.path}}</td>
+            <td>{# edit button #}<button>Edit</button></td>
+            <td>{# delete button #}<button>Delete</button></td>
         </tr>
         {% endfor %}
     </table>
