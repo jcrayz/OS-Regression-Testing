@@ -22,7 +22,6 @@ db = SQLAlchemy(app)
 # initialize migration engine
 migrate = Migrate(app, db)
 
-
 # ========== Routes ==========
 
 
@@ -49,7 +48,8 @@ def home():
 @app.route("/register", methods=["POST"])
 def register():
     if request.method == "POST":
-        database_engine.register_program(request.form["reg_name"], request.form["reg_filepath"],
+        database_engine.register_program(request.form["reg_name"],
+                                         request.form["reg_filepath"],
                                          request.form["reg_command"])
     return redirect(url_for('home'))
 
