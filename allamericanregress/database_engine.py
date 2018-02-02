@@ -8,7 +8,7 @@ logger = logging.getLogger(__name__)
 
 
 @contextmanager
-def connect(model):
+def connect():
     """Context manager to prevent forgetting to close the DB connection.
     Flushes at end."""
     session = models.db.session()
@@ -19,8 +19,15 @@ def connect(model):
 
 def register_program(name, path, command):
     """Insert a program in the the DB."""
+    if len(name) == 0:
+        raise ValueError('Name can not be empty!')
+    if len(path) == 0:
+        raise ValueError('Path can not be empty!')
+    if len(command) == 0:
+        raise ValueError('Command can not be empty!')
+
     args = (name, path, command)
-    with connect(models.Program) as session:
+    with connect() as session:
         logger.log(logging.DEBUG, "Attempting to register program %s",
                    repr(args))
         new_program = models.Program(name=name, path=path, command=command)
