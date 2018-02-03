@@ -19,11 +19,12 @@ def connect():
 
 def register_program(name, path, command):
     """Insert a program in the the DB."""
-    if len(name) == 0:
+
+    if len(name.strip()) == 0:
         raise ValueError('Name can not be empty!')
-    if len(path) == 0:
+    if len(path.strip()) == 0:
         raise ValueError('Path can not be empty!')
-    if len(command) == 0:
+    if len(command.strip()) == 0:
         raise ValueError('Command can not be empty!')
 
     args = (name, path, command)
@@ -42,7 +43,7 @@ def deregister_program(entry_id):
         logger.log(logging.DEBUG, "Attempting to delete program id=%s",
                    entry_id)
 
-        cursor.execute("""DELETE FROM programs where id=?""", (entry_id, ))
+        cursor.execute("""DELETE FROM programs WHERE id=?""", (entry_id,))
         logger.log(logging.DEBUG, "Deleted program models.id=%s", entry_id)
 
 
@@ -50,7 +51,7 @@ def all_entries():
     """Return all program entries."""
     yield from models.Program.query.all()
 
-
+# This method is on its way to deprecation
 def log_executed_test(program_id, test_output, exit_code):
     """Save a test result in the DB."""
     raise RuntimeError('Not implemented!')
@@ -58,6 +59,38 @@ def log_executed_test(program_id, test_output, exit_code):
         cursor.execute(
             """INSERT INTO logs (program_id, date, output, exit_code) VALUES (?, ?, ?, ?)""",
             (program_id, str(time.time()), str(test_output), exit_code))
+
+
+def record_execution(os_version):
+    """Saves records of when tests are executed, preserving the OS version and time of execution.
+    This table exists to reduce duplication of information between the CurrentRecords and FailedRecords tables.
+    Returns the execution record ID"""
+    with connect() as session:
+        logger.log(logging.DEBUG, "Attempting to record execution for version %s", os_version)
+        new_execution_record = models.ExecutionRecord(os_version=os_version, timestamp=time.time())
+        session.add(new_execution_record)
+        logger.log(logging.DEBUG, "Successfully recorded execution of %s", os_version)
+    return new_execution_record.id
+
+
+def update_current_record(registrant_id, execution_id, succeeded):
+    """Updates or inserts the current record for the given registrant. References the most recent
+       execution record and the last successful one (i.e. can be queried to see if the registrant
+       succeeded on its most recent execution)"""
+    updated_record = models.CurrentRecord(registrant_id=registrant_id, last_execution_id=execution_id)
+    if (succeeded):
+        updated_record.last_successful_execution_id = execution_id
+
+    with connect() as session:
+        session.merge(updated_record)
+
+
+def record_failure(registrant_id, execution_id, exit_code, message):
+    """Saves records of failed test executions' codes and messages, referencing the program ID and execution ID"""
+    with connect() as session:
+        failure_record = models.FailureRecord(registrant_id=registrant_id, execution_id=execution_id,
+                                         exit_code=exit_code, message=message)
+        session.add(failure_record)
 
 
 def all_test_logs():
@@ -70,10 +103,9 @@ def all_test_logs():
 
 
 def get_last_os_version():
-    """Return the last recorded OS version"""
-    raise RuntimeError('Not implemented!')
-    with connect() as (conn, cursor):
-        cursor.execute(
-            """SELECT timestamp FROM execution_records ORDER BY timestamp DESC LIMIT 1"""
-        )
-        return cursor.fetchone()[0]
+    """Returns the last recorded OS version as '{major}.{minor}.{build}"""
+    with connect() as session:
+        exec_rec = session.query(models.ExecutionRecord).order_by(models.ExecutionRecord.timestamp)[0]
+    if exec_rec == None:
+        return "" # Depending on how we use this function, this return val may change
+    return exec_rec.os_version
