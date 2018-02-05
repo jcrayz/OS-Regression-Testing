@@ -1,70 +1,82 @@
-{% extends 'base.html' %} {% block body %} {{super()}} {# <- not sure what that super call does #}
-<head><link rel="stylesheet" type="text/css" href="/static/stylesheets/default.css" ></head>
-<div>
+{% extends 'base.html' %} {% block body %} {{super()}} {#
+<- not sure what that super call does #} <div>
     <h1>{{context.app_title}}</h1>
     <h4>{{context.subtitle}}</h4>
-</div>
-<hr>
-<div id="results">
-    <h2>Results</h2>
-    <p>Current OS Version: {{context.current_version}}</p>
-    <table border="1px">
-        <tr>
-            <td colspan="5">TEST RESULTS</td>
-        </tr>
-        <tr>
-            <td>#</td>
-            <td>NAME</td>
-            <td>LAST RESULT</td>
-            <td>VERSION OF LAST SUCCESS</td>
-            <td>DATE OF LAST SUCCESS</td>
-        </tr>
-        {% for results in context.test_results %}
-        <tr>
-            <td>{{results.id}}</td>
-            <td>{{results.name}}</td>
-            <td>{{'PASS' if results.result else 'FAIL'}}</td> {# This code will probably be more complex #}
-            <td>{{results.last_successful_version}}</td>
-            <td>{{results.last_successful_date}}</td>
-        </tr>
-        {% endfor %}
-    </table>
-    <button>EXECUTE ALL</button>
-</div>
-<hr>
-<div id="register_div">
-    <h2>Register Test Executable</h2>
-    <form id="register_form" method="POST" action="/register">
-        <label>Filepath</label><input name="reg_filepath" type="text"><br>
-        <label>Name</label><input name="reg_name" type="text"><br>
-        <label>Author</label><input name="reg_author" type="text"><br>
-        <label>Command</label><input name="reg_command" type="text"><br>
-        <input type="submit" value="REGISTER">
-    </form>
-</div>
-<hr>
-<div id="registered_tests">
-    <h2>Registered Tests</h2>
-    <table border="1px">
-        <tr>
-            <td>#</td>
-            <td>NAME</td>
-            <td>AUTHOR</td>
-            <td>COMMAND</td>
-            <td>FILEPATH</td>
-            <td></td><td></td>
-        </tr>
-        {% for registrant in context.registrants %}
-        <tr>
-            <td>{{registrant.id}}</td>
-            <td>{{registrant.name}}</td>
-            <td>{{registrant.author}}</td>
-            <td>{{registrant.command}}</td>
-            <td>{{registrant.path}}</td>
-            <td>{# edit button #}<button>Edit</button></td>
-            <td>{# delete button #}<button>Delete</button></td>
-        </tr>
-        {% endfor %}
-    </table>
-</div>
-{% endblock %}
+    </div>
+    <hr>
+    <div id="results">
+        <h2>Results</h2>
+        <p>Current OS Version: {{context.current_version}}</p>
+        <table border="1px">
+            <tr>
+                <td colspan="5">TEST RESULTS</td>
+            </tr>
+            <tr>
+                <td>#</td>
+                <td>NAME</td>
+                <td>LAST RESULT</td>
+                <td>VERSION OF LAST SUCCESS</td>
+                <td>DATE OF LAST SUCCESS</td>
+            </tr>
+            {% for results in context.test_results %}
+            <tr>
+                <td>{{results.id}}</td>
+                <td>{{results.name}}</td>
+                <td>{{'PASS' if results.result else 'FAIL'}}</td> {# This code will probably be more complex #}
+                <td>{{results.last_successful_version}}</td>
+                <td>{{results.last_successful_date}}</td>
+            </tr>
+            {% endfor %}
+        </table>
+        <button>EXECUTE ALL</button>
+    </div>
+    <hr>
+    <div id="register_div">
+        <h2>Register Test Executable</h2>
+        <form id="register_form" method="POST" action="/register">
+            <label>Filepath</label>
+            <input name="reg_filepath" type="text">
+            <br>
+            <label>Name</label>
+            <input name="reg_name" type="text">
+            <br>
+            <label>Author</label>
+            <input name="reg_author" type="text">
+            <br>
+            <label>Command</label>
+            <input name="reg_command" type="text">
+            <br>
+            <input type="submit" value="REGISTER">
+        </form>
+    </div>
+    <hr>
+    <div id="registered_tests">
+        <h2>Registered Tests</h2>
+        <table border="1px">
+            <tr>
+                <td>#</td>
+                <td>NAME</td>
+                <td>AUTHOR</td>
+                <td>COMMAND</td>
+                <td>FILEPATH</td>
+                <td></td>
+                <td></td>
+            </tr>
+            {% for registrant in context.registrants %}
+            <tr>
+                <td>{{registrant.id}}</td>
+                <td>{{registrant.name}}</td>
+                <td>{{registrant.author}}</td>
+                <td>{{registrant.command}}</td>
+                <td>{{registrant.path}}</td>
+                <td>{# edit button #}
+                    <button>Edit</button>
+                </td>
+                <td>{# delete button #}
+                    <button>Delete</button>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+    {% endblock %}

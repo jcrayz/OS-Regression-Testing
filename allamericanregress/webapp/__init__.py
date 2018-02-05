@@ -28,21 +28,13 @@ migrate = Migrate(app, db)
 @app.route("/")
 def index():
     return flask.render_template(
-        'index.html',
-        context=dict(
-            message="Welcome!", programs=list(models.Program.query.all())))
+        'mockup.html', context=dict(registrants=models.Program.query.all()))
 
 
 @app.route("/logs")
 def logs():
     return flask.render_template(
         'log_view.html', context=dict(logs=models.Log.query.all()))
-
-
-@app.route("/home")
-def home():
-    return flask.render_template(
-        'mockup.html', context=dict(registrants=models.Program.query.all()))
 
 
 @app.route("/register", methods=["POST"])
