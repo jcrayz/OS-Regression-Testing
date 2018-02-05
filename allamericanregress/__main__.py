@@ -34,8 +34,7 @@ parser.add_argument(
 parser.add_argument(
     '--command',
     metavar='command',
-    help=
-    """Specify command to execute the registry entry in the form 'command $1'. $1 will be replaced with the program path."""
+    help="""Specify command to execute the registry entry in the form 'command $1'. $1 will be replaced with the program path."""
 )
 # List all programs.
 parser.add_argument(
@@ -121,7 +120,7 @@ def main():
         testing_framework.execute_tests()
 
     if args.webapp:
-        webapp.serve()
+        webapp.app.run(debug=True)
 
 
 if __name__ == '__main__':

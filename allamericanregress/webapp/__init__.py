@@ -46,9 +46,3 @@ def register():
     return redirect(url_for('home'))
 
 
-# ========== Utility Functions ==========
-
-
-def serve():
-    print('serving webapp')
-    app.run(debug=True)
