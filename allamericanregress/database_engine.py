@@ -102,6 +102,34 @@ def all_test_logs():
         for i in cursor.execute("""SELECT * FROM logs"""):
             yield i
 
+def get_current_results():
+    """Return the name, pass/fail value, version of last success, and date of last success"""
+    with connect() as session:
+        # Join the registrant with their latest execution record
+        current_results = session.query(models.Registrant, models.CurrentRecord, models.ExecutionRecord).\
+            filter(models.Registrant.id == models.CurrentRecord.registrant_id).\
+            filter(models.CurrentRecord.last_execution_id == models.ExecutionRecord.id).all()
+        augmented_results = [] # current_results is immutable, but we may need to add to the tuples
+        for result in current_results:
+            registrant = result[0]
+            current_record = result[1]
+            last_execution_record = result[2]
+            # If the registrant failed recently, find its last successful record
+            if current_record.last_execution_id is not current_record.last_successful_execution_id:
+                last_successful_record = session.query(models.ExecutionRecord).\
+                    filter(models.ExecutionRecord.id == current_record.last_successful_execution_id).first()
+            else:
+                last_successful_record = last_execution_record
+
+            # Add the successful record to the result tuple
+            if last_successful_record is not None:
+                result = result + (last_successful_record,)
+            print(result)
+            augmented_results.append(result)
+    return augmented_results
+
+        # registrant id = currentRecord.registrant_id, currentRecord.last_execution_id = executionRecord.id,
+        # currentRecord.last_successful_execution_id = executionRecord.id (if different from most recent)
 
 def get_last_os_version():
     """Returns the last recorded OS version as '{major}.{minor}.{build}"""

@@ -9,26 +9,35 @@
         <p>Current OS Version: {{context.current_version}}</p>
         <table border="1px">
             <tr>
-                <td colspan="5">TEST RESULTS</td>
+                <th colspan="5">TEST RESULTS</th>
             </tr>
             <tr>
-                <td>#</td>
-                <td>NAME</td>
-                <td>LAST RESULT</td>
-                <td>VERSION OF LAST SUCCESS</td>
-                <td>DATE OF LAST SUCCESS</td>
+                <th>#</th>
+                <th>NAME</th>
+                <th>LAST RESULT</th>
+                <th>VERSION OF LAST SUCCESS</th>
+                <th>DATE OF LAST SUCCESS</th>
             </tr>
             {% for results in context.test_results %}
             <tr>
-                <td>{{results.id}}</td>
-                <td>{{results.name}}</td>
-                <td>{{'PASS' if results.result else 'FAIL'}}</td> {# This code will probably be more complex #}
-                <td>{{results.last_successful_version}}</td>
-                <td>{{results.last_successful_date}}</td>
+                <td>{{results[0].id}}</td>
+                <td>{{results[0].name}}</td>
+                {% if results[1].last_execution_id == results[1].last_successful_execution_id %}
+                    <td>PASS</td>
+                {% else %}
+                    <td>FAIL</td>
+                {% endif %}
+                {% if results[3] is defined %}
+                    <td>{{ results[3].os_version }}</td>
+                    <td>{{ results[3].timestamp }}</td>
+                {% else %}
+                    <td>NONE</td>
+                    <td>NEVER</td>
+                {% endif %}
             </tr>
             {% endfor %}
         </table>
-        <button>EXECUTE ALL</button>
+        <button disabled="true">EXECUTE ALL</button>
     </div>
     <hr>
     <div id="register_div">
@@ -54,13 +63,13 @@
         <h2>Registered Tests</h2>
         <table border="1px">
             <tr>
-                <td>#</td>
-                <td>NAME</td>
-                <td>AUTHOR</td>
-                <td>COMMAND</td>
-                <td>FILEPATH</td>
-                <td></td>
-                <td></td>
+                <th>#</th>
+                <th>NAME</th>
+                <th>AUTHOR</th>
+                <th>COMMAND</th>
+                <th>FILEPATH</th>
+                <th></th>
+                <th></th>
             </tr>
             {% for registrant in context.registrants %}
             <tr>
@@ -70,10 +79,10 @@
                 <td>{{registrant.command}}</td>
                 <td>{{registrant.path}}</td>
                 <td>{# edit button #}
-                    <button>Edit</button>
+                    <button disabled="true">Edit</button>
                 </td>
                 <td>{# delete button #}
-                    <button>Delete</button>
+                    <button disabled="true">Delete</button>
                 </td>
             </tr>
             {% endfor %}
