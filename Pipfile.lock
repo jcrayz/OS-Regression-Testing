@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "0a7ce34529d03cdf238fb1847706a908e0afba0dd9831bef4dd92bcc9045d2be"
+            "sha256": "2523a3b4d6137d664183c9568a3e812879022401eb27a31cf878da762abcc484"
         },
         "host-environment-markers": {
             "implementation_name": "cpython",
@@ -34,6 +34,11 @@
                 "sha256:46f4849c6dce69f54dd5001b3215b6a983dee6b17512efee10e237fa11f20cfa"
             ],
             "version": "==0.9.7"
+        },
+        "allamericanregress": {
+            "editable": true,
+            "git": "https://github.com/jcrayz/Capstone.git",
+            "ref": "b92ef38b3d5f236929dbb83f9242d5a9c5794210"
         },
         "click": {
             "hashes": [
@@ -123,6 +128,12 @@
                 "sha256:c3fd7a7d41976d9f44db327260e263132466836cef6f91512889ed60ad26557c"
             ],
             "version": "==0.14.1"
+        },
+        "wtforms": {
+            "hashes": [
+                "sha256:ffdf10bd1fa565b8233380cb77a304cd36fd55c73023e91d4b803c96bc11d46f"
+            ],
+            "version": "==2.1"
         }
     },
     "develop": {}

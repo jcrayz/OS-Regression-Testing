@@ -1,7 +1,7 @@
 import flask
 from flask import request, redirect, url_for
 from allamericanregress import models, database_engine
-from .app_init import app, db
+from .app_init import app
 
 # ========== Routes ==========
 
@@ -9,7 +9,8 @@ from .app_init import app, db
 @app.route("/")
 def index():
     return flask.render_template(
-        'mockup.html', context=dict(registrants=database_engine.all_registrants()))
+        'mockup.html',
+        context=dict(registrants=database_engine.all_registrants()))
 
 
 @app.route("/logs")
