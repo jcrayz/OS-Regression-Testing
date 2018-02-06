@@ -12,6 +12,7 @@ flask = "*"
 sqlalchemy = "*"
 flask-migrate = "*"
 wtforms = "*"
+flask-wtf = "*"
 
 
 [dev-packages]

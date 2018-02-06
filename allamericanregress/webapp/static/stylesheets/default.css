@@ -18,3 +18,7 @@ button {
     margin-right: 5px;
     margin-bottom: 15px;
 }
+
+dt label{
+	width: 100%;
+}

@@ -1,8 +1,8 @@
-import wtforms
+import flask_wtf
 from wtforms import validators, StringField
 
 
-class RegistrantForm(wtforms.Form):
+class RegistrantForm(flask_wtf.FlaskForm):
     name = StringField(
         'Registrant Name',
         validators=[validators.Length(min=1),
