@@ -4,14 +4,18 @@ from wtforms import validators, StringField
 
 class RegistrantForm(wtforms.Form):
     name = StringField(
-        'name', validators=[validators.Length(min=1),
-                            validators.Required()])
+        'Registrant Name',
+        validators=[validators.Length(min=1),
+                    validators.Required()])
     path = StringField(
-        'path', validators=[validators.Length(min=1),
-                            validators.Required()])
+        'Path to executable',
+        validators=[validators.Length(min=1),
+                    validators.Required()])
     author = StringField(
-        'path', validators=[validators.Length(min=1),
-                            validators.Required()])
+        'Program Author',
+        validators=[validators.Length(min=1),
+                    validators.Required()])
     command = StringField(
-        'path', validators=[validators.Length(min=1),
-                            validators.Required()])
+        'Shell command',
+        validators=[validators.Length(min=1),
+                    validators.Required()])

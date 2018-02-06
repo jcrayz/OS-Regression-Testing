@@ -11,7 +11,7 @@ button {
     padding: 5px;
 }
 
-#register_form label {
+.register_form label {
     display: inline-block;
     width: 100px;
     text-align: right;

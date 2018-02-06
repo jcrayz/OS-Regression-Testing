@@ -11,7 +11,9 @@ from allamericanregress.webapp import forms
 def index():
     return flask.render_template(
         'mockup.html',
-        context=dict(registrants=database_engine.all_registrants()))
+        context=dict(
+            registrants=database_engine.all_registrants(),
+            form=forms.RegistrantForm(request.form)))
 
 
 @app.route("/logs")
@@ -22,8 +24,9 @@ def logs():
 
 @app.route("/register", methods=["POST"])
 def register():
-    if request.method == "POST":
-        database_engine.register_program(request.form["reg_name"],
-                                         request.form["reg_filepath"],
-                                         request.form["reg_command"])
-    return redirect(url_for('home'))
+    form = forms.RegistrantForm(request.form)
+    flask.flash('thanks!')
+    if request.method == "POST" and form.validate():
+        database_engine.register_program(
+            form.name.data, form.path.data, form.command.data, form.author.data, )
+    return redirect(url_for('index'))
