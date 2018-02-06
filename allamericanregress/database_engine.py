@@ -39,12 +39,11 @@ def register_program(name, path, command, author):
 
 def deregister_program(entry_id):
     """Remove a registered program from the DB."""
-    raise RuntimeError('Not implemented!')
-    with connect() as (conn, cursor):
+    with connect() as session:
         logger.log(logging.DEBUG, "Attempting to delete program id=%s",
                    entry_id)
-
-        cursor.execute("""DELETE FROM programs WHERE id=?""", (entry_id,))
+        session.query(models.Registrant).filter(models.Registrant.id == entry_id).delete()
+        # Should we delete corresponding entries in FailureRecords and CurrentRecords?
         logger.log(logging.DEBUG, "Deleted program models.id=%s", entry_id)
 
 
