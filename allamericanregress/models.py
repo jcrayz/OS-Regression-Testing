@@ -18,6 +18,7 @@ class Log(db.Model):
     exit_code = db.Column(db.Integer)
     date = db.Column(db.Integer)
 
+
 class Registrant(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     path = db.Column(db.String(), nullable=False)
@@ -28,6 +29,7 @@ class Registrant(db.Model):
 
     def __str__(self):
         return self.name
+
 
 class ExecutionRecord(db.Model):
     id = db.Column(db.Integer, primary_key=True)

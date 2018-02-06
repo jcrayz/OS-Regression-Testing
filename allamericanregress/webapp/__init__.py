@@ -8,6 +8,7 @@ from allamericanregress.webapp import forms
 
 
 @app.route("/", methods=['GET', 'POST'])
+@app.route("/index", methods=['GET', 'POST'])
 def index():
     flask.flash('thanks!')
     # instantiate the form object with request data
@@ -23,7 +24,10 @@ def index():
             return redirect(url_for('index'))
     return flask.render_template(
         'mockup.html',
-        context=dict(registrants=database_engine.all_registrants(), form=form))
+        context=dict(
+            registrants=database_engine.all_registrants(),
+            test_results=database_engine.get_current_results(),
+            form=form))
 
 
 @app.route("/logs")

@@ -18,6 +18,8 @@ def get_current_os_version():
 
 def execute_tests():
     """Execute all tests from DB."""
+    print("Getting current records:")
+    database_engine.get_current_results()
     logging.info("Executing all tests")
     execution_id = database_engine.record_execution(get_current_os_version())
     # iterate over all tests
@@ -31,14 +33,21 @@ def execute_tests():
         console_output = child.communicate()[0]
         code = child.returncode
         was_successful = (code == 0)
-        database_engine.update_current_record(program_id, execution_id, was_successful)
+        database_engine.update_current_record(program_id, execution_id,
+                                              was_successful)
 
         # record all failed executions
         if not was_successful:
             logger.log(logging.DEBUG, "Test {} failed.".format(registrant))
-            database_engine.record_failure(program_id, execution_id, code, console_output)
+            database_engine.record_failure(program_id, execution_id, code,
+                                           console_output)
         print("Test {} exited with code {}".format(registrant, code))
-    database_engine.migrate_programs()
+    database_engine.migrate_programs(
+    )  # temporary method placement until all coders have migrated
+
+    print("Getting new current records:")  # testing join
+    database_engine.get_current_results()
+
 
 def main():
     # TODO: Get last OS version from DB & compare to current version

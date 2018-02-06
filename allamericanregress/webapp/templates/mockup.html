@@ -9,14 +9,14 @@
     <p>Current OS Version: {{context.current_version}}</p>
     <table border="1px">
         <tr>
-            <td colspan="5">TEST RESULTS</td>
+            <th colspan="5">TEST RESULTS</th>
         </tr>
         <tr>
-            <td>#</td>
-            <td>NAME</td>
-            <td>LAST RESULT</td>
-            <td>VERSION OF LAST SUCCESS</td>
-            <td>DATE OF LAST SUCCESS</td>
+            <th>#</th>
+            <th>NAME</th>
+            <th>LAST RESULT</th>
+            <th>VERSION OF LAST SUCCESS</th>
+            <th>DATE OF LAST SUCCESS</th>
         </tr>
         {% for results in context.test_results %}
         <tr>

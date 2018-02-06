@@ -10,8 +10,8 @@ import allamericanregress.testing_framework
 logging.basicConfig(
     filename='C:\\Temp\\allamericanregress.log',
     level=logging.DEBUG,
-    format='[allamericanregress-service] %(levelname)-7.7s %(message)s'
-)
+    format='[allamericanregress-service] %(levelname)-7.7s %(message)s')
+
 
 # Simple service that logs every 5 seconds 50x
 class AllAmericanRegressService(win32serviceutil.ServiceFramework):
@@ -33,11 +33,9 @@ class AllAmericanRegressService(win32serviceutil.ServiceFramework):
 
     # When launched by service control manager, log brief intro
     def SvcDoRun(self):
-        servicemanager.LogMsg(
-            servicemanager.EVENTLOG_INFORMATION_TYPE,
-            servicemanager.PYS_SERVICE_STARTED,
-            (self._svc_name_, '')
-        )
+        servicemanager.LogMsg(servicemanager.EVENTLOG_INFORMATION_TYPE,
+                              servicemanager.PYS_SERVICE_STARTED,
+                              (self._svc_name_, ''))
         self.main()
 
     # Logs "Hello at <time>" 50x at 5 second intervals
@@ -48,5 +46,8 @@ class AllAmericanRegressService(win32serviceutil.ServiceFramework):
 
 
 if __name__ == '__main__':
-    win32serviceutil.HandleCommandLine(AllAmericanRegressService, None, ["AllAmericanRegressService","--startup=auto", "install"])
-    win32serviceutil.HandleCommandLine(AllAmericanRegressService, None, ["AllAmericanRegressService", "start"])
+    win32serviceutil.HandleCommandLine(
+        AllAmericanRegressService, None,
+        ["AllAmericanRegressService", "--startup=auto", "install"])
+    win32serviceutil.HandleCommandLine(AllAmericanRegressService, None,
+                                       ["AllAmericanRegressService", "start"])
