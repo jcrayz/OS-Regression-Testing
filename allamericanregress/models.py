@@ -18,6 +18,16 @@ class Log(db.Model):
     exit_code = db.Column(db.Integer)
     date = db.Column(db.Integer)
 
+class Registrant(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    path = db.Column(db.String(), nullable=False)
+    command = db.Column(db.String(), nullable=False)
+    name = db.Column(db.String(), nullable=False)
+    author = db.Column(db.String())
+    timestamp = db.Column(db.Integer, nullable=False)
+
+    def __str__(self):
+        return self.name
 
 class ExecutionRecord(db.Model):
     id = db.Column(db.Integer, primary_key=True)

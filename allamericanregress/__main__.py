@@ -82,8 +82,8 @@ def main():
         database_engine.deregister_program(args.delete_id)
 
     if args.list:
-        for i in database_engine.all_entries():
-            print(i)
+        for registrant in database_engine.all_registrants():
+            print(registrant)
 
     if args.logs:
         for i in database_engine.all_test_logs():

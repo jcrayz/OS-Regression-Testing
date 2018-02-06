@@ -17,8 +17,8 @@ def connect():
     session.commit()
 
 
-def register_program(name, path, command):
-    """Insert a program in the the DB."""
+def register_program(name, path, command, author):
+    """Registers a program with the the DB."""
 
     if len(name.strip()) == 0:
         raise ValueError('Name can not be empty!')
@@ -27,17 +27,18 @@ def register_program(name, path, command):
     if len(command.strip()) == 0:
         raise ValueError('Command can not be empty!')
 
-    args = (name, path, command)
+    args = (name, path, command, author)
     with connect() as session:
         logger.log(logging.DEBUG, "Attempting to register program %s",
                    repr(args))
-        new_program = models.Program(name=name, path=path, command=command)
-        session.add(new_program)
+        new_registrant = models.Registrant(name=name, path=path, command=command, author=author,
+                                           timestamp=time.time())
+        session.add(new_registrant)
         logger.log(logging.DEBUG, "Successfully registered %s", repr(args))
 
 
 def deregister_program(entry_id):
-    """Remove a program entry from the DB."""
+    """Remove a registered program from the DB."""
     raise RuntimeError('Not implemented!')
     with connect() as (conn, cursor):
         logger.log(logging.DEBUG, "Attempting to delete program id=%s",
@@ -47,9 +48,9 @@ def deregister_program(entry_id):
         logger.log(logging.DEBUG, "Deleted program models.id=%s", entry_id)
 
 
-def all_entries():
-    """Return all program entries."""
-    yield from models.Program.query.all()
+def all_registrants():
+    """Return all registrant entries."""
+    yield from models.Registrant.query.all()
 
 # This method is on its way to deprecation
 def log_executed_test(program_id, test_output, exit_code):
@@ -109,3 +110,12 @@ def get_last_os_version():
     if exec_rec == None:
         return "" # Depending on how we use this function, this return val may change
     return exec_rec.os_version
+
+def migrate_programs():
+    """Adds each entry from the Programs table to the Registrants table"""
+    with connect() as session:
+        for program in models.Program.query.all():
+            register_program(program.name, program.path, program.command, None)
+            print("{} moved to registrants table".format(program.name))
+        rows_deleted = models.Program.query.delete()
+        print("{} rows deleted".format(rows_deleted))

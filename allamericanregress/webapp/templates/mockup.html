@@ -1,11 +1,11 @@
-{% extends 'base.html' %} {% block body %} {{super()}} {#
-<- not sure what that super call does #} <div>
+{% extends 'base.html' %} {% block body %} {{super()}}
+    <div>
     <h1>{{context.app_title}}</h1>
     <h4>{{context.subtitle}}</h4>
     </div>
     <hr>
     <div id="results">
-        <h2>Results</h2>
+        <h2>Results</h2> {# The result set query will require a join between 3 of the tables #}
         <p>Current OS Version: {{context.current_version}}</p>
         <table border="1px">
             <tr>
@@ -79,4 +79,4 @@
             {% endfor %}
         </table>
     </div>
-    {% endblock %}
+{% endblock %}

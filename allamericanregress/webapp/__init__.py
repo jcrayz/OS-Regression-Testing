@@ -9,7 +9,7 @@ from .app_init import app, db
 @app.route("/")
 def index():
     return flask.render_template(
-        'mockup.html', context=dict(registrants=models.Program.query.all()))
+        'mockup.html', context=dict(registrants=database_engine.all_registrants()))
 
 
 @app.route("/logs")

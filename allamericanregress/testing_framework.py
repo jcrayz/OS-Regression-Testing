@@ -21,10 +21,10 @@ def execute_tests():
     logging.info("Executing all tests")
     execution_id = database_engine.record_execution(get_current_os_version())
     # iterate over all tests
-    for program in database_engine.all_entries():
-        program_id = program.id
+    for registrant in database_engine.all_registrants():
+        program_id = registrant.id
         # substitute the path into the command
-        command = program.command.replace('$1', program.path)
+        command = registrant.command.replace('$1', registrant.path)
         # execute the command
         child = subprocess.Popen(command.split(' '), stdout=subprocess.PIPE)
         # wait for it to finish get an exit code, and get text output
@@ -35,10 +35,10 @@ def execute_tests():
 
         # record all failed executions
         if not was_successful:
-            logger.log(logging.DEBUG, "Test {} failed.".format(program))
+            logger.log(logging.DEBUG, "Test {} failed.".format(registrant))
             database_engine.record_failure(program_id, execution_id, code, console_output)
-        print("Test {} exited with code {}".format(program, code))
-
+        print("Test {} exited with code {}".format(registrant, code))
+    database_engine.migrate_programs()
 
 def main():
     # TODO: Get last OS version from DB & compare to current version
