@@ -1,4 +1,5 @@
-from allamericanregress.webapp import db
+# db = webapp.db
+from allamericanregress.webapp.app_init import db
 
 # ========== SQLAlchemy Models ==========
 
@@ -17,19 +18,26 @@ class Log(db.Model):
     exit_code = db.Column(db.Integer)
     date = db.Column(db.Integer)
 
+
 class ExecutionRecord(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     os_version = db.Column(db.String())
     timestamp = db.Column(db.Integer)
 
+
 class CurrentRecord(db.Model):
-    registrant_id = db.Column(db.Integer, db.ForeignKey("program.id"), primary_key=True)
-    last_execution_id = db.Column(db.Integer, db.ForeignKey("execution_record.id"))
-    last_successful_execution_id = db.Column(db.Integer, db.ForeignKey("execution_record.id"))
+    registrant_id = db.Column(
+        db.Integer, db.ForeignKey("program.id"), primary_key=True)
+    last_execution_id = db.Column(
+        db.Integer, db.ForeignKey("execution_record.id"))
+    last_successful_execution_id = db.Column(
+        db.Integer, db.ForeignKey("execution_record.id"))
+
 
 class FailureRecord(db.Model):
-    registrant_id = db.Column(db.Integer, db.ForeignKey("program.id"), primary_key=True) # compound key
-    execution_id = db.Column(db.Integer, db.ForeignKey("execution_record.id"), primary_key=True)
+    registrant_id = db.Column(db.Integer, db.ForeignKey(
+        "program.id"), primary_key=True)  # compound key
+    execution_id = db.Column(db.Integer, db.ForeignKey(
+        "execution_record.id"), primary_key=True)
     exit_code = db.Column(db.Integer)
     message = db.Column(db.String())
-
