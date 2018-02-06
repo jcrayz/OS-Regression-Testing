@@ -38,5 +38,6 @@ LOG_PATH = os.path.join(CONFIG_PATH, 'logs.log')
 logging.basicConfig(
     filename=LOG_PATH,
     level=logging.DEBUG,
-    format='[allamericanregress-service] %(asctime)s %(levelname)-7.7s %(message)s',
+    format=
+    '[allamericanregress-service] %(asctime)s %(levelname)-7.7s %(message)s',
 )

@@ -29,10 +29,10 @@ if not os.path.isdir(CONFIG_PATH):
     logging.log(logging.DEBUG, "Created config path")
     os.makedirs(CONFIG_PATH)
 
-
 # Logs to the temp directory under C
 logging.basicConfig(
     filename=LOG_PATH,
     level=logging.DEBUG,
-    format='[allamericanregress-service] %(asctime)s %(levelname)-7.7s %(message)s',
+    format=
+    '[allamericanregress-service] %(asctime)s %(levelname)-7.7s %(message)s',
 )
