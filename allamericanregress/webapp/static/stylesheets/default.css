@@ -1,0 +1,20 @@
+h4 {
+    color: gray;
+}
+
+table {
+    margin: 10px;
+}
+
+button {
+    border-radius: 10px;
+    padding: 5px;
+}
+
+#register_form label {
+    display: inline-block;
+    width: 100px;
+    text-align: right;
+    margin-right: 5px;
+    margin-bottom: 15px;
+}

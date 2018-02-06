@@ -1,0 +1,21 @@
+{% extends 'base.html' %} {% block body %} {{super()}} {{context.message}}
+<div>
+    All programs:
+    <hr>
+    <!--  -->
+    {% for program in context.programs %}
+    <!--  -->
+    <div>
+        Name: {{program.name}}
+        <div>
+            Path: {{program.path}}
+        </div>
+        <div>
+            Command: {{program.command}}
+        </div>
+        <hr>
+    </div>
+    <!--  -->
+    {% endfor%}
+</div>
+{% endblock %}

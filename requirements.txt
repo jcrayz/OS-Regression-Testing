@@ -1,1 +1,5 @@
-git+git://github.com/mhammond/pywin32
+git+git://github.com/mhammond/pywin32#egg=pywin32
+flask
+SQLAlchemy
+Flask-Migrate
+

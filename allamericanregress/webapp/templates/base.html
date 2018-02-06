@@ -1,0 +1,23 @@
+<head>
+    <title>regrOS</title>
+
+    <head>
+        <link rel="stylesheet" type="text/css" href="/static/stylesheets/default.css">
+    </head>
+</head>
+
+<body>
+    <div>
+        <table>
+            <tr>
+                <td>
+                    <a href="{{ url_for('index') }}">Home</a>
+                </td>
+                <td>
+                    <a href="{{ url_for('logs') }}">Logs</a>
+                </td>
+            </tr>
+        </table>
+    </div>
+    {% block body %} {% endblock %}
+</body>
