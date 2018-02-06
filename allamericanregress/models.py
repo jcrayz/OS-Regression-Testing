@@ -28,16 +28,17 @@ class ExecutionRecord(db.Model):
 class CurrentRecord(db.Model):
     registrant_id = db.Column(
         db.Integer, db.ForeignKey("program.id"), primary_key=True)
-    last_execution_id = db.Column(
-        db.Integer, db.ForeignKey("execution_record.id"))
+    last_execution_id = db.Column(db.Integer,
+                                  db.ForeignKey("execution_record.id"))
     last_successful_execution_id = db.Column(
         db.Integer, db.ForeignKey("execution_record.id"))
 
 
 class FailureRecord(db.Model):
-    registrant_id = db.Column(db.Integer, db.ForeignKey(
-        "program.id"), primary_key=True)  # compound key
-    execution_id = db.Column(db.Integer, db.ForeignKey(
-        "execution_record.id"), primary_key=True)
+    registrant_id = db.Column(
+        db.Integer, db.ForeignKey("program.id"),
+        primary_key=True)  # compound key
+    execution_id = db.Column(
+        db.Integer, db.ForeignKey("execution_record.id"), primary_key=True)
     exit_code = db.Column(db.Integer)
     message = db.Column(db.String())
