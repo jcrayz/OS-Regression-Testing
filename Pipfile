@@ -7,7 +7,6 @@ name = "pypi"
 
 [packages]
 
-"pywin32" = {git = "git://github.com/mhammond/pywin32"}
 Flask = "*"
 SQLAlchemy = "*"
 Flask-Migrate = "*"
