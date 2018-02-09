@@ -1,0 +1,30 @@
+{% extends 'base.html' %} {% block body %} {{super()}}
+<div>
+    <table border="1px">
+        <tr>
+            <th colspan="7">Failure Logs</th>
+        </tr>
+        <tr>
+            <th>Registrant ID</th>
+            <th>Registrant Name</th>
+            <th>Execution ID</th>
+            <th>Execution Date</th>
+            <th>OS Version</th>
+            <th>Exit Code</th>
+            <th>Message</th>
+        </tr>
+        {% for failure_record in context.failure_records %}
+            <tr>
+                {# failure_record tuple: (FailureRecord, ExecutionRecord, Registrant) #}
+                <td>{{ failure_record[0].registrant_id }}</td>
+                <td>{{ failure_record[2].name }}</td>
+                <td>{{ failure_record[0].execution_id }}</td>
+                <td>{{ failure_record[1].timestamp }}</td> {# TODO: date formatting #}
+                <td>{{ failure_record[1].os_version }}</td>
+                <td>{{ failure_record[0].exit_code }}</td>
+                <td>{{ failure_record[0].message }}</td>
+            </tr>
+        {% endfor%}
+    </table>
+</div>
+{% endblock %}

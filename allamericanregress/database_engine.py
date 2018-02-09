@@ -58,18 +58,6 @@ def all_registrants():
     yield from models.Registrant.query.all()
 
 
-# This method is on its way to deprecation
-
-
-def log_executed_test(program_id, test_output, exit_code):
-    """Save a test result in the DB."""
-    raise RuntimeError('Not implemented!')
-    with connect() as (conn, cursor):
-        cursor.execute(
-            """INSERT INTO logs (program_id, date, output, exit_code) VALUES (?, ?, ?, ?)""",
-            (program_id, str(time.time()), str(test_output), exit_code))
-
-
 def record_execution(os_version):
     """Saves records of when tests are executed, preserving the OS version and time of execution.
     This table exists to reduce duplication of information between the CurrentRecords and FailedRecords tables.
@@ -117,6 +105,13 @@ def all_test_logs():
         for i in cursor.execute("""SELECT * FROM logs"""):
             yield i
 
+def all_failure_records():
+    """Return all failure records as a list of tuples like (<FailureRecord>, <ExecutionRecord>, <Registrant>)"""
+    with connect() as session:
+        failure_records = session.query(models.FailureRecord, models.ExecutionRecord, models.Registrant).\
+            filter(models.FailureRecord.registrant_id == models.Registrant.id).\
+            filter(models.FailureRecord.execution_id == models.ExecutionRecord.id).all()
+    return failure_records
 
 def get_current_results():
     """Return the name, pass/fail value, version of last success, and date of last success"""
@@ -129,11 +124,9 @@ def get_current_results():
         # current_results is immutable, but we may need to add to the tuples
         augmented_results = []
         for result in current_results:
-            registrant = result[0]
             current_record = result[1]
             last_execution_record = result[2]
-            # If the registrant failed recently, find its last successful
-            # record
+            # If the registrant failed recently, find its last successful record
             if current_record.last_execution_id is not current_record.last_successful_execution_id:
                 last_successful_record = session.query(models.ExecutionRecord).\
                     filter(models.ExecutionRecord.id ==
@@ -147,10 +140,6 @@ def get_current_results():
             print(result)
             augmented_results.append(result)
     return augmented_results
-
-    # registrant id = currentRecord.registrant_id, currentRecord.last_execution_id = executionRecord.id,
-    # currentRecord.last_successful_execution_id = executionRecord.id (if
-    # different from most recent)
 
 
 def get_last_os_version():
