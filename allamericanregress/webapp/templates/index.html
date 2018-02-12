@@ -1,91 +1,85 @@
 {% extends 'base.html' %} {% block body %} {{super()}}
-    <div>
+<div>
     <h1>{{context.app_title}}</h1>
     <h4>{{context.subtitle}}</h4>
-    </div>
-    <hr>
-    <div id="results">
-        <h2>Results</h2> {# The result set query will require a join between 3 of the tables #}
-        <p>Current OS Version: {{context.current_version}}</p>
-        <table border="1px">
-            <tr>
-                <th colspan="5">TEST RESULTS</th>
-            </tr>
-            <tr>
-                <th>#</th>
-                <th>NAME</th>
-                <th>LAST RESULT</th>
-                <th>VERSION OF LAST SUCCESS</th>
-                <th>DATE OF LAST SUCCESS</th>
-            </tr>
-            {% for results in context.test_results %}
-            <tr>
-                <td>{{results[0].id}}</td>
-                <td>{{results[0].name}}</td>
-                {% if results[1].last_execution_id == results[1].last_successful_execution_id %}
-                    <td>PASS</td>
-                {% else %}
-                    <td>FAIL</td>
-                {% endif %}
-                {% if results[3] is defined %}
-                    <td>{{ results[3].os_version }}</td>
-                    <td>{{ results[3].timestamp }}</td>
-                {% else %}
-                    <td>NONE</td>
-                    <td>NEVER</td>
-                {% endif %}
-            </tr>
-            {% endfor %}
-        </table>
-        <button disabled="true">EXECUTE ALL</button>
-    </div>
-    <hr>
-    <div id="register_div">
-        <h2>Register Test Executable</h2>
-        <form id="register_form" method="POST" action="/register">
-            <label>Filepath</label>
-            <input name="reg_filepath" type="text">
-            <br>
-            <label>Name</label>
-            <input name="reg_name" type="text">
-            <br>
-            <label>Author</label>
-            <input name="reg_author" type="text">
-            <br>
-            <label>Command</label>
-            <input name="reg_command" type="text">
-            <br>
-            <input type="submit" value="REGISTER">
-        </form>
-    </div>
-    <hr>
-    <div id="registered_tests">
-        <h2>Registered Tests</h2>
-        <table border="1px">
-            <tr>
-                <th>#</th>
-                <th>NAME</th>
-                <th>AUTHOR</th>
-                <th>COMMAND</th>
-                <th>FILEPATH</th>
-                <th></th>
-                <th></th>
-            </tr>
-            {% for registrant in context.registrants %}
-            <tr>
-                <td>{{registrant.id}}</td>
-                <td>{{registrant.name}}</td>
-                <td>{{registrant.author}}</td>
-                <td>{{registrant.command}}</td>
-                <td>{{registrant.path}}</td>
-                <td>{# edit button #}
-                    <button disabled="true">Edit</button>
-                </td>
-                <td>{# delete button #}
-                    <button disabled="true">Delete</button>
-                </td>
-            </tr>
-            {% endfor %}
-        </table>
-    </div>
+</div>
+<hr>
+<div id="results">
+    <h2>Results</h2> {# The result set query will require a join between 3 of the tables #}
+    <p>Current OS Version: {{context.current_version}}</p>
+    <table border="1px">
+        <tr>
+            <th colspan="5">TEST RESULTS</th>
+        </tr>
+        <tr>
+            <th>#</th>
+            <th>NAME</th>
+            <th>LAST RESULT</th>
+            <th>VERSION OF LAST SUCCESS</th>
+            <th>DATE OF LAST SUCCESS</th>
+        </tr>
+        {% for results in context.test_results %}
+        <tr>
+            <td>{{results[0].id}}</td>
+            <td>{{results[0].name}}</td>
+            {% if results[1].last_execution_id == results[1].last_successful_execution_id %}
+            <td>PASS</td>
+            {% else %}
+            <td>FAIL</td>
+            {% endif %} {% if results[3] is defined %}
+            <td>{{ results[3].os_version }}</td>
+            <td>{{ results[3].timestamp }}</td>
+            {% else %}
+            <td>NONE</td>
+            <td>NEVER</td>
+            {% endif %}
+        </tr>
+        {% endfor %}
+    </table>
+    <button disabled="true">EXECUTE ALL</button>
+</div>
+<hr>
+<div id="register_div">
+    <h2>Register Test Executable</h2>
+    <form class="register_form" method="POST" action="{{url_for('index')}}">
+        {{context.form.hidden_tag()}} {{render_field(context.form.path)}}
+        <!--  -->
+        {{render_field(context.form.name)}}
+        <!--  -->
+        {{render_field(context.form.author)}}
+        <!--  -->
+        {{render_field(context.form.command)}}
+        <input type="submit" value="Register">
+    </form>
+</div>
+<hr>
+<div id="registered_tests">
+    <h2>Registered Tests</h2>
+    <table border="1px">
+        <tr>
+            <th>#</th>
+            <th>NAME</th>
+            <th>AUTHOR</th>
+            <th>COMMAND</th>
+            <th>FILEPATH</th>
+            <th></th>
+            <th></th>
+        </tr>
+        {% for registrant in context.registrants %}
+        <tr>
+            <td>{{registrant.id}}</td>
+            <td>{{registrant.name}}</td>
+            <td>{{registrant.author}}</td>
+            <td>{{registrant.command}}</td>
+            <td>{{registrant.path}}</td>
+            <td>{# edit button #}
+                <button disabled="true">Edit</button>
+            </td>
+            <td>{# delete button #}
+                <button disabled="true">Delete</button>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
 {% endblock %}
