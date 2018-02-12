@@ -11,10 +11,14 @@ button {
     padding: 5px;
 }
 
-#register_form label {
+.register_form label {
     display: inline-block;
-    width: 100px;
+    width: 150px;
     text-align: right;
     margin-right: 5px;
     margin-bottom: 15px;
+}
+
+dt label{
+	width: 100%;
 }
