@@ -11,10 +11,13 @@ class Program(db.Model):
     path = db.Column(db.String())
     command = db.Column(db.String())
 
+    def __str__(self):
+        return self.name
+
 
 class Log(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    program = db.Column(db.Integer, db.ForeignKey("program.id"))
+    program = db.Column(db.Integer, db.ForeignKey(Program.id))
     output = db.Column(db.String())
     exit_code = db.Column(db.Integer)
     date = db.Column(db.Integer)
@@ -40,19 +43,19 @@ class ExecutionRecord(db.Model):
 
 class CurrentRecord(db.Model):
     registrant_id = db.Column(
-        db.Integer, db.ForeignKey("program.id"), primary_key=True)
+        db.Integer, db.ForeignKey(Program.id), primary_key=True)
     last_execution_id = db.Column(db.Integer,
-                                  db.ForeignKey("execution_record.id"))
+                                  db.ForeignKey(ExecutionRecord.id))
     last_successful_execution_id = db.Column(
-        db.Integer, db.ForeignKey("execution_record.id"))
+        db.Integer, db.ForeignKey(ExecutionRecord.id))
 
 
 class FailureRecord(db.Model):
     registrant_id = db.Column(
-        db.Integer, db.ForeignKey("program.id"),
+        db.Integer, db.ForeignKey(Program.id),
         primary_key=True)  # compound key
     execution_id = db.Column(
-        db.Integer, db.ForeignKey("execution_record.id"), primary_key=True)
+        db.Integer, db.ForeignKey(ExecutionRecord.id), primary_key=True)
     exit_code = db.Column(db.Integer)
     message = db.Column(db.String())
 
