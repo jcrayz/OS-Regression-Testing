@@ -61,7 +61,7 @@ class FailureRecord(db.Model):
 from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
 
-admin = Admin(app, name='regrOS', template_mode='bootstrap3')
+admin = Admin(app, name='regrOS Admin', template_mode='bootstrap3')
 
 admin.add_view(ModelView(Program, db.session))
 admin.add_view(ModelView(Log, db.session))
