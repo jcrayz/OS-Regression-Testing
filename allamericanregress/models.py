@@ -1,5 +1,6 @@
+"""regrOS models."""
 # db = webapp.db
-from allamericanregress.webapp.app_init import db
+from allamericanregress.webapp.app_init import db, app
 
 # ========== SQLAlchemy Models ==========
 
@@ -54,3 +55,17 @@ class FailureRecord(db.Model):
         db.Integer, db.ForeignKey("execution_record.id"), primary_key=True)
     exit_code = db.Column(db.Integer)
     message = db.Column(db.String())
+
+
+# ========== Admin Interface ==========
+from flask_admin import Admin
+from flask_admin.contrib.sqla import ModelView
+
+admin = Admin(app, name='regrOS Admin', template_mode='bootstrap3')
+
+admin.add_view(ModelView(Program, db.session))
+admin.add_view(ModelView(Log, db.session))
+admin.add_view(ModelView(Registrant, db.session))
+admin.add_view(ModelView(ExecutionRecord, db.session))
+admin.add_view(ModelView(CurrentRecord, db.session))
+admin.add_view(ModelView(FailureRecord, db.session))

@@ -1,20 +1,20 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "c7703ce99c2ad144e3ec2afcef58bc0ea746b9bc0594ee15696edf6d8942f32c"
+            "sha256": "4fa17e7594081b2a3aa27e9d57583ceb354534499b2a759f09c5f26b835e4b6c"
         },
         "host-environment-markers": {
             "implementation_name": "cpython",
-            "implementation_version": "3.6.4",
-            "os_name": "nt",
-            "platform_machine": "AMD64",
+            "implementation_version": "3.6.3",
+            "os_name": "posix",
+            "platform_machine": "x86_64",
             "platform_python_implementation": "CPython",
-            "platform_release": "8.1",
-            "platform_system": "Windows",
-            "platform_version": "6.3.9600",
-            "python_full_version": "3.6.4",
+            "platform_release": "4.13.0-32-generic",
+            "platform_system": "Linux",
+            "platform_version": "#35-Ubuntu SMP Thu Jan 25 09:13:46 UTC 2018",
+            "python_full_version": "3.6.3",
             "python_version": "3.6",
-            "sys_platform": "win32"
+            "sys_platform": "linux"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -35,11 +35,6 @@
             ],
             "version": "==0.9.7"
         },
-        "allamericanregress": {
-            "editable": true,
-            "git": "https://github.com/jcrayz/Capstone.git",
-            "ref": "82091953d763d86939878c28b0608d32dad3f8ba"
-        },
         "click": {
             "hashes": [
                 "sha256:29f99fc6125fbc931b758dc053b3114e55c77a6e4c6c3a2674a2dc986016381d",
@@ -53,6 +48,12 @@
                 "sha256:49f44461237b69ecd901cc7ce66feea0319b9158743dd27a2899962ab214dac1"
             ],
             "version": "==0.12.2"
+        },
+        "flask-admin": {
+            "hashes": [
+                "sha256:fe3a96d99f22e293cd7e83d364de6cffd36573ef25db93d6e32102527a624bc5"
+            ],
+            "version": "==1.5.0"
         },
         "flask-migrate": {
             "hashes": [
