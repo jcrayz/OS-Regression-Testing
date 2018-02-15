@@ -28,10 +28,15 @@ def execute_tests():
         # substitute the path into the command
         command = registrant.command.replace('$1', registrant.path)
         # execute the command
-        child = subprocess.Popen(command.split(' '), stdout=subprocess.PIPE)
-        # wait for it to finish get an exit code, and get text output
-        console_output = child.communicate()[0]
-        code = child.returncode
+        try:
+            child = subprocess.Popen(
+                command.split(' '), stdout=subprocess.PIPE)
+            # wait for it to finish get an exit code, and get text output
+            console_output = child.communicate()[0]
+            code = child.returncode
+        except FileNotFoundError:
+            code = 1
+            console_output = ''
         was_successful = (code == 0)
         database_engine.update_current_record(program_id, execution_id,
                                               was_successful)

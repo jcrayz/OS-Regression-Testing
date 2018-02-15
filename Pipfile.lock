@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "4fa17e7594081b2a3aa27e9d57583ceb354534499b2a759f09c5f26b835e4b6c"
+            "sha256": "d5e307a051403f39f0cfc24ce0d5844bb83a93de72d5a37487ce764f6790f046"
         },
         "host-environment-markers": {
             "implementation_name": "cpython",
@@ -50,10 +50,7 @@
             "version": "==0.12.2"
         },
         "flask-admin": {
-            "hashes": [
-                "sha256:fe3a96d99f22e293cd7e83d364de6cffd36573ef25db93d6e32102527a624bc5"
-            ],
-            "version": "==1.5.0"
+            "git": "git://github.com/flask-admin/flask-admin"
         },
         "flask-migrate": {
             "hashes": [

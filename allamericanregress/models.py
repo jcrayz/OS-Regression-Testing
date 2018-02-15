@@ -34,6 +34,9 @@ class Registrant(db.Model):
     def __str__(self):
         return self.name
 
+    def __repr__(self):
+        return self.name
+
 
 class ExecutionRecord(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -42,20 +45,26 @@ class ExecutionRecord(db.Model):
 
 
 class CurrentRecord(db.Model):
-    registrant_id = db.Column(
-        db.Integer, db.ForeignKey(Program.id), primary_key=True)
-    last_execution_id = db.Column(db.Integer,
-                                  db.ForeignKey(ExecutionRecord.id))
-    last_successful_execution_id = db.Column(
-        db.Integer, db.ForeignKey(ExecutionRecord.id))
+    id = db.Column(db.Integer, primary_key=True)
+
+    registrant_id = db.Column(db.Integer, db.ForeignKey(Registrant.id))
+    last_execution_id = db.Column(db.Integer, db.ForeignKey(
+        ExecutionRecord.id))
+    last_successful_execution_id = db.Column(db.Integer,
+                                             db.ForeignKey(ExecutionRecord.id))
+    registrant = db.relationship(
+        Registrant, backref=db.backref('current_records', lazy='dynamic'))
 
 
 class FailureRecord(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
     registrant_id = db.Column(
-        db.Integer, db.ForeignKey(Program.id),
-        primary_key=True)  # compound key
-    execution_id = db.Column(
-        db.Integer, db.ForeignKey(ExecutionRecord.id), primary_key=True)
+        db.Integer,
+        db.ForeignKey(Registrant.id),
+    )  # compound key
+    registrant = db.relationship(
+        Registrant, backref=db.backref('failure_records', lazy='dynamic'))
+    execution_id = db.Column(db.Integer, db.ForeignKey(ExecutionRecord.id))
     exit_code = db.Column(db.Integer)
     message = db.Column(db.String())
 
@@ -66,7 +75,6 @@ from flask_admin.contrib.sqla import ModelView
 
 admin = Admin(app, name='regrOS Admin', template_mode='bootstrap3')
 
-admin.add_view(ModelView(Program, db.session))
 admin.add_view(ModelView(Log, db.session))
 admin.add_view(ModelView(Registrant, db.session))
 admin.add_view(ModelView(ExecutionRecord, db.session))

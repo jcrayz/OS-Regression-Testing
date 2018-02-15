@@ -12,7 +12,7 @@ sqlalchemy = "*"
 flask-migrate = "*"
 wtforms = "*"
 flask-wtf = "*"
-flask-admin = "*"
+Flask-Admin = {git = "git://github.com/flask-admin/flask-admin"}
 
 
 [dev-packages]
