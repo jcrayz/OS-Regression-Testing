@@ -5,6 +5,7 @@ import time
 from contextlib import contextmanager
 
 logger = logging.getLogger(__name__)
+DUMMY_OS_VERSION = "-01.00.00"  # or something that is impossible
 
 
 @contextmanager
@@ -48,8 +49,7 @@ def deregister_program(entry_id):
                    entry_id)
         session.query(models.Registrant).filter(
             models.Registrant.id == entry_id).delete()
-        # Should we delete corresponding entries in FailureRecords and
-        # CurrentRecords?
+        # TODO: Should we delete corresponding entries in FailureRecords and CurrentRecords?
         logger.log(logging.DEBUG, "Deleted program models.id=%s", entry_id)
 
 
@@ -96,20 +96,22 @@ def record_failure(registrant_id, execution_id, exit_code, message):
             message=message)
         session.add(failure_record)
 
+
 def all_failure_records():
     """Return all failure records as a list of tuples like (<FailureRecord>, <ExecutionRecord>, <Registrant>)"""
     with connect() as session:
-        failure_records = session.query(models.FailureRecord, models.ExecutionRecord, models.Registrant).\
-            filter(models.FailureRecord.registrant_id == models.Registrant.id).\
+        failure_records = session.query(models.FailureRecord, models.ExecutionRecord, models.Registrant). \
+            filter(models.FailureRecord.registrant_id == models.Registrant.id). \
             filter(models.FailureRecord.execution_id == models.ExecutionRecord.id).all()
     return failure_records
+
 
 def get_current_results():
     """Return the name, pass/fail value, version of last success, and date of last success"""
     with connect() as session:
         # Join the registrant with their latest execution record
-        current_results = session.query(models.Registrant, models.CurrentRecord, models.ExecutionRecord).\
-            filter(models.Registrant.id == models.CurrentRecord.registrant_id).\
+        current_results = session.query(models.Registrant, models.CurrentRecord, models.ExecutionRecord). \
+            filter(models.Registrant.id == models.CurrentRecord.registrant_id). \
             filter(models.CurrentRecord.last_execution_id ==
                    models.ExecutionRecord.id).all()
         # current_results is immutable, but we may need to add to the tuples
@@ -119,7 +121,7 @@ def get_current_results():
             last_execution_record = result[2]
             # If the registrant failed recently, find its last successful record
             if current_record.last_execution_id is not current_record.last_successful_execution_id:
-                last_successful_record = session.query(models.ExecutionRecord).\
+                last_successful_record = session.query(models.ExecutionRecord). \
                     filter(models.ExecutionRecord.id ==
                            current_record.last_successful_execution_id).first()
             else:
@@ -127,7 +129,7 @@ def get_current_results():
 
             # Add the successful record to the result tuple
             if last_successful_record is not None:
-                result = result + (last_successful_record, )
+                result = result + (last_successful_record,)
             print(result)
             augmented_results.append(result)
     return augmented_results
@@ -141,3 +143,21 @@ def get_last_os_version():
     if exec_rec == None:
         return ""  # Depending on how we use this function, this return val may change
     return exec_rec.os_version
+
+
+def insert_dummy_rows():
+    """Midterm demo code: inserts success cases for every registrant to demonstrate table update"""
+    dummy_execution_id = record_execution(DUMMY_OS_VERSION)
+    for registrant in all_registrants():  # maybe instead of all registrants, we create dummy ones
+        logger.log(logging.INFO, "Inserting dummy data.")
+        update_current_record(registrant.id, dummy_execution_id, True)  # otherwise we have to preserve old data
+
+
+def remove_dummy_rows():
+    """Midterm demo code: removes the fake entries inserted by previous method"""
+    with connect() as session:
+        # delete execution records with dummy OS version
+        session.query(
+            models.ExecutionRecord).filter(models.ExecutionRecord.os_version == DUMMY_OS_VERSION).delete()
+        # figure out how to recover true "current record" for each registrant
+    return
