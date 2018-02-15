@@ -3,6 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from allamericanregress import config
 import random
+# for editing DB entries
 # hack to get a reference to the templates directory within the package
 import os
 
