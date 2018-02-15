@@ -5,8 +5,6 @@ import time
 from contextlib import contextmanager
 
 logger = logging.getLogger(__name__)
-DUMMY_OS_VERSION = "-01.00.00"  # or something that is impossible
-
 
 @contextmanager
 def connect():
