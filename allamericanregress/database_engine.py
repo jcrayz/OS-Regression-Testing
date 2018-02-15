@@ -143,21 +143,3 @@ def get_last_os_version():
     if exec_rec == None:
         return ""  # Depending on how we use this function, this return val may change
     return exec_rec.os_version
-
-
-def insert_dummy_rows():
-    """Midterm demo code: inserts success cases for every registrant to demonstrate table update"""
-    dummy_execution_id = record_execution(DUMMY_OS_VERSION)
-    for registrant in all_registrants():  # maybe instead of all registrants, we create dummy ones
-        logger.log(logging.INFO, "Inserting dummy data.")
-        update_current_record(registrant.id, dummy_execution_id, True)  # otherwise we have to preserve old data
-
-
-def remove_dummy_rows():
-    """Midterm demo code: removes the fake entries inserted by previous method"""
-    with connect() as session:
-        # delete execution records with dummy OS version
-        session.query(
-            models.ExecutionRecord).filter(models.ExecutionRecord.os_version == DUMMY_OS_VERSION).delete()
-        # figure out how to recover true "current record" for each registrant
-    return
