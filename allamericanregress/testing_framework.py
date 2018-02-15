@@ -43,8 +43,14 @@ def execute_tests():
 
 
 def main():
-    # TODO: Get last OS version from DB & compare to current version
-    execute_tests()
+    """Checks the last recorded OS version against the current version, and executes tests if it changed."""
+    last_tested_version = database_engine.get_last_os_version()
+    current_version = get_current_os_version()
+    if (last_tested_version is not current_version):
+        logger.log("Detected version change from {} to {}".format(last_tested_version, current_version))
+        execute_tests()
+    else:
+        logger.log("No version change detected. Tests will not be executed.")
 
 
 if __name__ == '__main__':
