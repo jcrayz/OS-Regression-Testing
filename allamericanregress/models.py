@@ -1,6 +1,7 @@
 """regrOS models."""
-# db = webapp.db
 from allamericanregress.webapp.app_init import db, app
+from flask_admin import Admin
+from flask_admin.contrib.sqla import ModelView
 
 # ========== SQLAlchemy Models ==========
 
@@ -70,8 +71,6 @@ class FailureRecord(db.Model):
 
 
 # ========== Admin Interface ==========
-from flask_admin import Admin
-from flask_admin.contrib.sqla import ModelView
 
 admin = Admin(app, name='regrOS Admin', template_mode='bootstrap3')
 
