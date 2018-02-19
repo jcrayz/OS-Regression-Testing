@@ -97,14 +97,6 @@ def record_failure(registrant_id, execution_id, exit_code, message):
         session.add(failure_record)
 
 
-def all_test_logs():
-    """Return all test logs."""
-    raise RuntimeError('Not implemented!')
-    return models.Log.query.filter()
-    with connect() as (conn, cursor):
-        for i in cursor.execute("""SELECT * FROM logs"""):
-            yield i
-
 def all_failure_records():
     """Return all failure records as a list of tuples like (<FailureRecord>, <ExecutionRecord>, <Registrant>)"""
     with connect() as session:
@@ -151,12 +143,3 @@ def get_last_os_version():
         return ""  # Depending on how we use this function, this return val may change
     return exec_rec.os_version
 
-
-def migrate_programs():
-    """Adds each entry from the Programs table to the Registrants table"""
-    with connect() as session:
-        for program in models.Program.query.all():
-            register_program(program.name, program.path, program.command, None)
-            print("{} moved to registrants table".format(program.name))
-        rows_deleted = models.Program.query.delete()
-        print("{} rows deleted".format(rows_deleted))
