@@ -21,6 +21,13 @@ if sys.platform == 'linux':
 else:
     print('on windows')
     CONFIG_PATH = os.path.join('c:/', 'AllAmericanRegress')
+# Absolute path for database file.
+DB_PATH = os.path.join(CONFIG_PATH, 'aar_db.db')
+# Absolute path for log file.
+LOG_PATH = os.path.join(CONFIG_PATH, 'logs.log')
+# Absolute path for the package
+MODULE_PATH = os.path.abspath(
+    os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
 #  ========== Logging ==========
 logger = logging.getLogger(__name__)
 
@@ -28,11 +35,6 @@ logger = logging.getLogger(__name__)
 if not os.path.isdir(CONFIG_PATH):
     logging.log(logging.DEBUG, "Created config path")
     os.makedirs(CONFIG_PATH)
-
-# Absolute path for database file.
-DB_PATH = os.path.join(CONFIG_PATH, 'aar_db.db')
-# Absolute path for log file.
-LOG_PATH = os.path.join(CONFIG_PATH, 'logs.log')
 
 # Logs to the temp directory under C
 logging.basicConfig(
