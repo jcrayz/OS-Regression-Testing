@@ -1,11 +1,9 @@
 import flask
 from flask import request, redirect, url_for
-from allamericanregress import database_engine
-from allamericanregress.webapp.app_init import app,db
+from allamericanregress.webapp.app_init import app, db
 from allamericanregress.webapp import forms
+from allamericanregress import database_engine
 
-# initialize the databse file and apply migrations
-database_engine.init()
 # ========== Routes ==========
 
 
@@ -36,3 +34,5 @@ def logs():
     return flask.render_template(
         'failure_log_view.html',
         context=dict(failure_records=database_engine.all_failure_records()))
+
+
