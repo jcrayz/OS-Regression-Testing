@@ -31,9 +31,9 @@
     "default": {
         "alembic": {
             "hashes": [
-                "sha256:46f4849c6dce69f54dd5001b3215b6a983dee6b17512efee10e237fa11f20cfa"
+                "sha256:13b8611788acf0d7b617775db5c2ae26554a6d4263c590ef628d448fd05aef56"
             ],
-            "version": "==0.9.7"
+            "version": "==0.9.8"
         },
         "click": {
             "hashes": [
@@ -120,9 +120,9 @@
         },
         "sqlalchemy": {
             "hashes": [
-                "sha256:64b4720f0a8e033db0154d3824f5bf677cf2797e11d44743cf0aebd2a0499d9d"
+                "sha256:9e9ec143e2e246f385cfb2de8daa89d2fa466279addcb7be9e102988fdf33d24"
             ],
-            "version": "==1.2.2"
+            "version": "==1.2.3"
         },
         "werkzeug": {
             "hashes": [

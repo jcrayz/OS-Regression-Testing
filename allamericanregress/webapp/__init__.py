@@ -4,6 +4,8 @@ from allamericanregress import database_engine
 from allamericanregress.webapp.app_init import app,db
 from allamericanregress.webapp import forms
 
+# initialize the databse file and apply migrations
+database_engine.init()
 # ========== Routes ==========
 
 

@@ -1,8 +1,30 @@
 from allamericanregress import config
 from allamericanregress import models
+from allamericanregress.webapp.app_init import app
 import logging
 import time
 from contextlib import contextmanager
+import flask_migrate
+import os
+
+
+class Initializer:
+    """Class for holding initialization state of file based dependencies.
+    init() must be called before this module's functions can be used."""
+
+    def __init__(self):
+        self.initialized = False
+
+    def __call__(self):
+        # https://flask-migrate.readthedocs.io/en/latest/
+        # https://blog.miguelgrinberg.com/post/flask-migrate-alembic-database-migration-wrapper-for-flask/page/3
+        with app.app_context():
+            flask_migrate.upgrade(
+                directory=os.path.join(config.MODULE_PATH, 'migrations'))
+        self.initialized = True
+
+
+init = Initializer()
 
 logger = logging.getLogger(__name__)
 
@@ -11,6 +33,11 @@ logger = logging.getLogger(__name__)
 def connect():
     """Context manager to prevent forgetting to close the DB connection.
     Flushes at end."""
+
+    if not init.initialized:
+        raise RuntimeError(
+            """database_engine.init() must be called before using any database functions."""
+        )
     session = models.db.session()
     yield session
     session.flush()
@@ -111,6 +138,7 @@ def all_failure_records():
             filter(models.FailureRecord.execution_id == models.ExecutionRecord.id).all()
     return failure_records
 
+
 def get_current_results():
     """Return the name, pass/fail value, version of last success, and date of last success"""
     with connect() as session:
@@ -147,4 +175,3 @@ def get_last_os_version():
     if exec_rec == None:
         return ""  # Depending on how we use this function, this return val may change
     return exec_rec.os_version
-
