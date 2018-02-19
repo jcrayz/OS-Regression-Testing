@@ -104,12 +104,18 @@ def update_current_record(registrant_id, execution_id, succeeded):
     """Updates or inserts the current record for the given registrant. References the most recent
        execution record and the last successful one (i.e. can be queried to see if the registrant
        succeeded on its most recent execution)"""
-    updated_record = models.CurrentRecord(
-        registrant_id=registrant_id, last_execution_id=execution_id)
-    if (succeeded):
-        updated_record.last_successful_execution_id = execution_id
-
     with connect() as session:
+        # see if there is an existing record for the registrant
+        updated_record = session.query(models.CurrentRecord).filter(
+            models.CurrentRecord.registrant_id == registrant_id).first()
+        if (updated_record is None): # if not, create a new record
+            updated_record = models.CurrentRecord(
+                registrant_id=registrant_id, last_execution_id=execution_id)
+        else:
+            updated_record.last_execution_id = execution_id
+        if (succeeded):
+            updated_record.last_successful_execution_id = execution_id
+
         session.merge(updated_record)
 
 
