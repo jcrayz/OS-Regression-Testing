@@ -135,7 +135,6 @@ def get_current_results():
             # Add the successful record to the result tuple
             if last_successful_record is not None:
                 result = result + (last_successful_record, )
-            print(result)
             augmented_results.append(result)
     return augmented_results
 

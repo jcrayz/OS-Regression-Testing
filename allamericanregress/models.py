@@ -2,6 +2,7 @@
 from allamericanregress.webapp.app_init import db, app
 from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
+import time
 
 # ========== SQLAlchemy Models ==========
 
@@ -44,10 +45,13 @@ class ExecutionRecord(db.Model):
     os_version = db.Column(db.String())
     timestamp = db.Column(db.Integer)
 
+    def pretty_time(self):
+        # prefer the abbreviated timezone, but it's not included in python's time library
+        return time.strftime("%Y-%m-%d %I:%M:%S %p %Z", time.localtime(self.timestamp))
+
 
 class CurrentRecord(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-
     registrant_id = db.Column(db.Integer, db.ForeignKey(Registrant.id))
     last_execution_id = db.Column(db.Integer, db.ForeignKey(
         ExecutionRecord.id))

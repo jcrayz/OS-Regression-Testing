@@ -28,7 +28,7 @@
             <td>FAIL</td>
             {% endif %} {% if results[3] is defined %}
             <td>{{ results[3].os_version }}</td>
-            <td>{{ results[3].timestamp }}</td>
+            <td>{{ results[3].pretty_time() }}</td>
             {% else %}
             <td>NONE</td>
             <td>NEVER</td>
