@@ -17,6 +17,7 @@ class Initializer:
 
     def __call__(self):
         # https://flask-migrate.readthedocs.io/en/latest/
+        # https://blog.miguelgrinberg.com/post/flask-migrate-alembic-database-migration-wrapper-for-flask/page/3
         with app.app_context():
             flask_migrate.upgrade(
                 directory=os.path.join(config.MODULE_PATH, 'migrations'))
