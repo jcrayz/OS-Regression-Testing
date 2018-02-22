@@ -5,6 +5,7 @@ import servicemanager
 import socket
 import time
 import logging
+import allamericanregress
 import allamericanregress.testing_framework
 # Logs to the temp directory under C
 logging.basicConfig(
