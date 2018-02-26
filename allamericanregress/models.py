@@ -46,7 +46,8 @@ class ExecutionRecord(db.Model):
     timestamp = db.Column(db.Integer)
 
     def pretty_time(self):
-        # prefer the abbreviated timezone, but it's not included in python's time library
+        # prefer the abbreviated timezone, but it's not included in python's
+        # time library
         return time.strftime("%Y-%m-%d %I:%M:%S %p %Z", time.localtime(self.timestamp))
 
 

@@ -13,7 +13,7 @@ import os
 import logging
 
 import sys
-
+FROZEN = getattr( sys, 'frozen', False )
 #  ========== Paths ==========
 # Absolute path for folder where database and logs will be stored.
 if sys.platform == 'linux':
@@ -28,6 +28,8 @@ LOG_PATH = os.path.join(CONFIG_PATH, 'logs.log')
 # Absolute path for the package
 MODULE_PATH = os.path.abspath(
     os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
+
+ALEMBIC_PATH = os.path.join(MODULE_PATH, 'migrations')
 #  ========== Logging ==========
 logger = logging.getLogger(__name__)
 
@@ -40,6 +42,5 @@ if not os.path.isdir(CONFIG_PATH):
 logging.basicConfig(
     filename=LOG_PATH,
     level=logging.DEBUG,
-    format=
-    '[allamericanregress-service] %(asctime)s %(levelname)-7.7s %(message)s',
+    format='[allamericanregress-service] %(asctime)s %(levelname)-7.7s %(message)s',
 )

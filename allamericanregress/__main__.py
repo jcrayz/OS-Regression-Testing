@@ -7,8 +7,7 @@ from allamericanregress import utils
 from allamericanregress import testing_framework
 from allamericanregress import webapp
 import logging
-
-database_engine.init()
+import logging.config
 
 logger = logging.getLogger(__name__)
 

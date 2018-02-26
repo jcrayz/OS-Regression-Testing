@@ -1,30 +1,12 @@
 from allamericanregress import config
 from allamericanregress import models
-from allamericanregress.webapp.app_init import app
 import logging
 import time
 from contextlib import contextmanager
 import flask_migrate
 import os
-
-
-class Initializer:
-    """Class for holding initialization state of file based dependencies.
-    init() must be called before this module's functions can be used."""
-
-    def __init__(self):
-        self.initialized = False
-
-    def __call__(self):
-        # https://flask-migrate.readthedocs.io/en/latest/
-        # https://blog.miguelgrinberg.com/post/flask-migrate-alembic-database-migration-wrapper-for-flask/page/3
-        with app.app_context():
-            flask_migrate.upgrade(
-                directory=os.path.join(config.MODULE_PATH, 'migrations'))
-        self.initialized = True
-
-
-init = Initializer()
+import sys
+import alembic
 
 logger = logging.getLogger(__name__)
 
@@ -33,11 +15,6 @@ logger = logging.getLogger(__name__)
 def connect():
     """Context manager to prevent forgetting to close the DB connection.
     Flushes at end."""
-
-    if not init.initialized:
-        raise RuntimeError(
-            """database_engine.init() must be called before using any database functions."""
-        )
     session = models.db.session()
     yield session
     session.flush()
@@ -108,7 +85,7 @@ def update_current_record(registrant_id, execution_id, succeeded):
         # see if there is an existing record for the registrant
         updated_record = session.query(models.CurrentRecord).filter(
             models.CurrentRecord.registrant_id == registrant_id).first()
-        if (updated_record is None): # if not, create a new record
+        if (updated_record is None):  # if not, create a new record
             updated_record = models.CurrentRecord(
                 registrant_id=registrant_id, last_execution_id=execution_id)
         else:
@@ -135,7 +112,8 @@ def all_failure_records():
     with connect() as session:
         failure_records = session.query(models.FailureRecord, models.ExecutionRecord, models.Registrant).\
             filter(models.FailureRecord.registrant_id == models.Registrant.id).\
-            filter(models.FailureRecord.execution_id == models.ExecutionRecord.id).all()
+            filter(models.FailureRecord.execution_id ==
+                   models.ExecutionRecord.id).all()
     return failure_records
 
 
@@ -152,7 +130,8 @@ def get_current_results():
         for result in current_results:
             current_record = result[1]
             last_execution_record = result[2]
-            # If the registrant failed recently, find its last successful record
+            # If the registrant failed recently, find its last successful
+            # record
             if current_record.last_execution_id is not current_record.last_successful_execution_id:
                 last_successful_record = session.query(models.ExecutionRecord).\
                     filter(models.ExecutionRecord.id ==
