@@ -13,6 +13,7 @@ import os
 import logging
 
 import sys
+logger = logging.getLogger(__name__)
 FROZEN = getattr( sys, 'frozen', False )
 #  ========== Paths ==========
 # Absolute path for folder where database and logs will be stored.
@@ -26,10 +27,16 @@ DB_PATH = os.path.join(CONFIG_PATH, 'aar_db.db')
 # Absolute path for log file.
 LOG_PATH = os.path.join(CONFIG_PATH, 'logs.log')
 # Absolute path for the package
-MODULE_PATH = os.path.abspath(
-    os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
-
-ALEMBIC_PATH = os.path.join(MODULE_PATH, 'migrations')
+if FROZEN:
+    logger.debug('Booting up as frozen dist')
+    MODULE_PATH = sys._MEIPASS
+    ALEMBIC_PATH = os.path.join(CONFIG_PATH, 'migrations')
+else:
+    logger.debug('Booting up as source dist')
+    MODULE_PATH = os.path.abspath(
+        os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
+    ALEMBIC_PATH = os.path.join(MODULE_PATH, 'migrations')
+# TEMPLATES_PATH = 
 #  ========== Logging ==========
 logger = logging.getLogger(__name__)
 

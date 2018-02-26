@@ -7,6 +7,7 @@ import time
 import logging
 import allamericanregress
 import allamericanregress.testing_framework
+
 # Logs to the temp directory under C
 logging.basicConfig(
     filename='C:\\Temp\\allamericanregress.log',
@@ -45,10 +46,12 @@ class AllAmericanRegressService(win32serviceutil.ServiceFramework):
         allamericanregress.testing_framework.execute_tests()
         return
 
-
-if __name__ == '__main__':
+def install():
     win32serviceutil.HandleCommandLine(
         AllAmericanRegressService, None,
         ["AllAmericanRegressService", "--startup=auto", "install"])
     win32serviceutil.HandleCommandLine(AllAmericanRegressService, None,
                                        ["AllAmericanRegressService", "start"])
+    
+if __name__ == '__main__':
+    install()

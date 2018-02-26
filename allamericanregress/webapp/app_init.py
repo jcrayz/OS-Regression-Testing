@@ -4,9 +4,10 @@ import flask_migrate
 from allamericanregress import config
 import random
 import alembic
+import logging
 # for editing DB entries
 import os
-
+logger = logging.getLogger(__name__)
 # hack to get a reference to the templates directory within the package
 tmpl_dir = os.path.join(
     os.path.dirname(os.path.abspath(__file__)), 'templates')
@@ -26,9 +27,14 @@ migrate = flask_migrate.Migrate(app, db)
 
 # initialize db with flask_migrate
 with app.app_context():
-	try:
-		flask_migrate.init(config.ALEMBIC_PATH)
-	except alembic.util.exc.CommandError as e:
-		pass
-	
-	flask_migrate.upgrade(config.ALEMBIC_PATH)
+    try:
+        flask_migrate.init(config.ALEMBIC_PATH)
+    except alembic.util.exc.CommandError as e:
+        logger.debug('flask db init failed: %s',
+                     e)
+        raise e
+    try:
+        flask_migrate.upgrade(config.ALEMBIC_PATH)
+    except Exception as e:
+        logger.debug('flask db upgrade failed: %s', e)
+        raise e
