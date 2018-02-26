@@ -2,7 +2,7 @@ import flask
 from flask import request, redirect, url_for
 from allamericanregress.webapp.app_init import app, db
 from allamericanregress.webapp import forms
-from allamericanregress import database_engine
+from allamericanregress import database_engine, testing_framework
 
 database_engine.init()
 # ========== Routes ==========
@@ -36,4 +36,8 @@ def logs():
         'failure_log_view.html',
         context=dict(failure_records=database_engine.all_failure_records()))
 
-
+@app.route("/execute")
+def execute():
+    # route for manual execution of tests from app
+    testing_framework.execute_tests()
+    return redirect(url_for('index'))
