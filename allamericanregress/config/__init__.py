@@ -30,12 +30,11 @@ LOG_PATH = os.path.join(CONFIG_PATH, 'logs.log')
 if FROZEN:
     logger.debug('Booting up as frozen dist')
     MODULE_PATH = sys._MEIPASS
-    ALEMBIC_PATH = os.path.join(CONFIG_PATH, 'migrations')
 else:
     logger.debug('Booting up as source dist')
     MODULE_PATH = os.path.abspath(
         os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
-    ALEMBIC_PATH = os.path.join(MODULE_PATH, 'migrations')
+ALEMBIC_PATH = os.path.join(CONFIG_PATH, 'migrations')
 # TEMPLATES_PATH = 
 #  ========== Logging ==========
 logger = logging.getLogger(__name__)
