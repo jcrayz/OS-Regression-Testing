@@ -1,6 +1,7 @@
 import sys
 import argparse
 import os
+print('path:', sys.path)
 from allamericanregress import config
 from allamericanregress import database_engine
 from allamericanregress import utils
@@ -55,7 +56,7 @@ parser.add_argument(
     help="Delete all config and logs for the application.")
 # serve the webapp
 parser.add_argument(
-    '--webapp', action='store_true', help="Serve the Flask webapp.")
+    '--serve', action='store_true', help="Serve the Flask webapp.")
 # Template to display when registering.
 REGISTER_MESSAGE = """You are registering A program with the following details.
 Name={}
@@ -70,7 +71,6 @@ def main():
     if len(sys.argv) == 1:
         # if none, print help and exit
         parser.print_help()
-        quit()
 
     args = parser.parse_args()
     # print("Arguments:", args)
@@ -122,8 +122,9 @@ def main():
     if args.execute_tests:
         testing_framework.execute_tests()
 
-    if args.webapp:
-        webapp.app.run(debug=True)
+    if args.serve:
+        logger.debug(f"Running webapp from command line via {__file__}")
+        webapp.main()
 
 
 if __name__ == '__main__':

@@ -1,5 +1,4 @@
 import shutil
-from allamericanregress import database_engine
 from allamericanregress import config
 import logging
 

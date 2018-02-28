@@ -36,3 +36,11 @@ def logs():
     return flask.render_template(
         'failure_log_view.html',
         context=dict(failure_records=database_engine.all_failure_records()))
+
+
+def main():
+    app.run(debug=True)
+
+
+if __name__ == '__main__':
+    main()

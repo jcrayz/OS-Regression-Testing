@@ -2,7 +2,6 @@ from allamericanregress import database_engine
 import subprocess
 import logging
 import sys
-from allamericanregress.webapp.app_init import app, db
 
 if sys.platform == 'linux':
     import allamericanregress.win32api_dummy as win32api
