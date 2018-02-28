@@ -1,7 +1,4 @@
 import allamericanregress
-import sys
-print('path:', sys.path)
-print('__name__', __name__)
 
 if __name__ == '__main__':
     try:

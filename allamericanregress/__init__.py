@@ -123,4 +123,4 @@ def cli():
 
     if args.serve:
         logger.debug(f"Running webapp from command line via {__file__}")
-        webapp.main()
+        webapp.app.run(debug=True)

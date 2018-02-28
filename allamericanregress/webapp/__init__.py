@@ -6,9 +6,6 @@ from allamericanregress.webapp import forms
 
 # ========== Routes ==========
 
-print('Commands:', app.cli.list_commands(app.app_context()))
-
-
 @app.route("/", methods=['GET', 'POST'])
 @app.route("/index", methods=['GET', 'POST'])
 def index():
