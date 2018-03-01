@@ -3,11 +3,9 @@ from flask_sqlalchemy import SQLAlchemy
 import flask_migrate
 from allamericanregress import config
 import random
-import alembic
 import logging
 import os
 
-import time
 
 logger = logging.getLogger(__name__)
 # hack to get a reference to the templates directory within the package

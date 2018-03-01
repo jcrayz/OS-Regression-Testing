@@ -6,6 +6,7 @@ from . import database_engine
 from . import utils
 from . import testing_framework
 from . import webapp
+from . import config
 import logging
 import logging.config
 
@@ -18,6 +19,11 @@ parser.add_argument(
     '--register',
     action='store_true',
     help="Flag to enable registering a new program.")
+# Enable debug mode.
+parser.add_argument(
+    '--debug',
+    action='store_true',
+    help="Flag for enabling debug mode.")
 # List all test results.
 parser.add_argument(
     '--logs', action='store_true', help="Show all testing logs")
@@ -67,9 +73,14 @@ Command={}
 def cli():
     # detect number of cmd line args
     # fail early if no args found
+    print("CLI invoked with args: %s", sys.argv)
     if len(sys.argv) == 1:
         # if none, print help and exit
         parser.print_help()
+    if config.FROZEN:
+        passed_args = sys.argv
+    else:
+        passed_args = sys.argv
 
     args = parser.parse_args()
     # print("Arguments:", args)
@@ -102,7 +113,7 @@ def cli():
             path = os.path.abspath(args.path)
             if not os.path.exists(path):
                 print(
-                    "Path {} does not exist! Please an existing path.".format(
+                    "Path {} does not exist! Please supply an existing path.".format(
                         repr(path)))
                 error = True
 
@@ -123,4 +134,4 @@ def cli():
 
     if args.webapp:
         logger.debug(f"Running webapp from command line via {__file__}")
-        webapp.app.run(debug=True)
+        webapp.app.run(debug=args.debug)
