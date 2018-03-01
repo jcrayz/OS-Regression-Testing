@@ -13,8 +13,8 @@ logging.basicConfig(
     format='[allamericanregress-service] %(levelname)-7.7s %(message)s')
 
 
-# Simple service that logs every 5 seconds 50x
 class AllAmericanRegressService(win32serviceutil.ServiceFramework):
+    """Creates a Windows service that executes the testing framework automatically on boot."""
     _svc_name_ = "AllAmericanRegress"
     _svc_display_name_ = "OS Regression Testing"
 
@@ -38,7 +38,7 @@ class AllAmericanRegressService(win32serviceutil.ServiceFramework):
                               (self._svc_name_, ''))
         self.main()
 
-    # Logs "Hello at <time>" 50x at 5 second intervals
+    # Executes the tests registered with the application
     def main(self):
         logging.info(' ** Running test suites ** ')
         allamericanregress.testing_framework.execute_tests()
