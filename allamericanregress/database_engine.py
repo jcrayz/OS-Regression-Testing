@@ -1,7 +1,7 @@
 from allamericanregress import config
-from allamericanregress.webapp import app_init
 import logging
 import time
+from allamericanregress import models
 from contextlib import contextmanager
 
 logger = logging.getLogger(__name__)
@@ -31,7 +31,7 @@ def register_program(name, path, command, author):
     with connect() as session:
         logger.log(logging.DEBUG, "Attempting to register program %s",
                    repr(args))
-        new_registrant = app_init.Registrant(
+        new_registrant = models.Registrant(
             name=name,
             path=path,
             command=command,
@@ -46,16 +46,16 @@ def deregister_program(entry_id):
     with connect() as session:
         logger.log(logging.DEBUG, "Attempting to delete program id=%s",
                    entry_id)
-        session.query(app_init.Registrant).filter(
-            app_init.Registrant.id == entry_id).delete()
+        session.query(models.Registrant).filter(
+            models.Registrant.id == entry_id).delete()
         # Should we delete corresponding entries in FailureRecords and
         # CurrentRecords?
-        logger.log(logging.DEBUG, "Deleted program app_init.id=%s", entry_id)
+        logger.log(logging.DEBUG, "Deleted program id=%s", entry_id)
 
 
 def all_registrants():
     """Return all registrant entries."""
-    yield from app_init.Registrant.query.all()
+    yield from models.Registrant.query.all()
 
 
 def record_execution(os_version):
@@ -65,7 +65,7 @@ def record_execution(os_version):
     with connect() as session:
         logger.log(logging.DEBUG,
                    "Attempting to record execution for version %s", os_version)
-        new_execution_record = app_init.ExecutionRecord(
+        new_execution_record = models.ExecutionRecord(
             os_version=os_version, timestamp=time.time())
         session.add(new_execution_record)
         logger.log(logging.DEBUG, "Successfully recorded execution of %s",
@@ -79,10 +79,10 @@ def update_current_record(registrant_id, execution_id, succeeded):
        succeeded on its most recent execution)"""
     with connect() as session:
         # see if there is an existing record for the registrant
-        updated_record = session.query(app_init.CurrentRecord).filter(
-            app_init.CurrentRecord.registrant_id == registrant_id).first()
+        updated_record = session.query(models.CurrentRecord).filter(
+            models.CurrentRecord.registrant_id == registrant_id).first()
         if (updated_record is None):  # if not, create a new record
-            updated_record = app_init.CurrentRecord(
+            updated_record = models.CurrentRecord(
                 registrant_id=registrant_id, last_execution_id=execution_id)
         else:
             updated_record.last_execution_id = execution_id
@@ -95,7 +95,7 @@ def update_current_record(registrant_id, execution_id, succeeded):
 def record_failure(registrant_id, execution_id, exit_code, message):
     """Saves records of failed test executions' codes and messages, referencing the program ID and execution ID"""
     with connect() as session:
-        failure_record = app_init.FailureRecord(
+        failure_record = models.FailureRecord(
             registrant_id=registrant_id,
             execution_id=execution_id,
             exit_code=exit_code,
@@ -106,10 +106,10 @@ def record_failure(registrant_id, execution_id, exit_code, message):
 def all_failure_records():
     """Return all failure records as a list of tuples like (<FailureRecord>, <ExecutionRecord>, <Registrant>)"""
     with connect() as session:
-        failure_records = session.query(app_init.FailureRecord, app_init.ExecutionRecord, app_init.Registrant).\
-            filter(app_init.FailureRecord.registrant_id == app_init.Registrant.id).\
-            filter(app_init.FailureRecord.execution_id ==
-                   app_init.ExecutionRecord.id).all()
+        failure_records = session.query(models.FailureRecord, models.ExecutionRecord, models.Registrant).\
+            filter(models.FailureRecord.registrant_id == models.Registrant.id).\
+            filter(models.FailureRecord.execution_id ==
+                   models.ExecutionRecord.id).all()
     return failure_records
 
 
@@ -117,10 +117,10 @@ def get_current_results():
     """Return the name, pass/fail value, version of last success, and date of last success"""
     with connect() as session:
         # Join the registrant with their latest execution record
-        current_results = session.query(app_init.Registrant, app_init.CurrentRecord, app_init.ExecutionRecord).\
-            filter(app_init.Registrant.id == app_init.CurrentRecord.registrant_id).\
-            filter(app_init.CurrentRecord.last_execution_id ==
-                   app_init.ExecutionRecord.id).all()
+        current_results = session.query(models.Registrant, models.CurrentRecord, models.ExecutionRecord).\
+            filter(models.Registrant.id == models.CurrentRecord.registrant_id).\
+            filter(models.CurrentRecord.last_execution_id ==
+                   models.ExecutionRecord.id).all()
         # current_results is immutable, but we may need to add to the tuples
         augmented_results = []
         for result in current_results:
@@ -129,8 +129,8 @@ def get_current_results():
             # If the registrant failed recently, find its last successful
             # record
             if current_record.last_execution_id is not current_record.last_successful_execution_id:
-                last_successful_record = session.query(app_init.ExecutionRecord).\
-                    filter(app_init.ExecutionRecord.id ==
+                last_successful_record = session.query(models.ExecutionRecord).\
+                    filter(models.ExecutionRecord.id ==
                            current_record.last_successful_execution_id).first()
             else:
                 last_successful_record = last_execution_record
@@ -145,8 +145,8 @@ def get_current_results():
 def get_last_os_version():
     """Returns the last recorded OS version as '{major}.{minor}.{build}"""
     with connect() as session:
-        exec_rec = session.query(app_init.ExecutionRecord).order_by(
-            app_init.ExecutionRecord.timestamp)[0]
+        exec_rec = session.query(models.ExecutionRecord).order_by(
+            models.ExecutionRecord.timestamp)[0]
     if exec_rec == None:
         return ""  # Depending on how we use this function, this return val may change
     return exec_rec.os_version

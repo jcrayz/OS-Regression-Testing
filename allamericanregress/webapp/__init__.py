@@ -1,7 +1,7 @@
 import flask
 from flask import request, redirect, url_for
 from allamericanregress import database_engine
-from allamericanregress.webapp.app_init import app, db
+from allamericanregress.webapp.app_init import app
 from allamericanregress.webapp import forms
 
 # ========== Routes ==========
