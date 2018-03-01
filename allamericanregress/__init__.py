@@ -55,7 +55,7 @@ parser.add_argument(
     help="Delete all config and logs for the application.")
 # serve the webapp
 parser.add_argument(
-    '--serve', action='store_true', help="Serve the Flask webapp.")
+    '--webapp', action='store_true', help="Serve the Flask webapp.")
 # Template to display when registering.
 REGISTER_MESSAGE = """You are registering A program with the following details.
 Name={}
@@ -121,6 +121,6 @@ def cli():
     if args.execute_tests:
         testing_framework.execute_tests()
 
-    if args.serve:
+    if args.webapp:
         logger.debug(f"Running webapp from command line via {__file__}")
         webapp.app.run(debug=True)
