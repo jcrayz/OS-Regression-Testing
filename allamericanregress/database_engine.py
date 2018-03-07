@@ -3,6 +3,7 @@ import logging
 import time
 from allamericanregress import models
 from contextlib import contextmanager
+from allamericanregress.webapp import app_init
 
 logger = logging.getLogger(__name__)
 

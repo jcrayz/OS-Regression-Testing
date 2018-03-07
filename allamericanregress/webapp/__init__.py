@@ -3,8 +3,11 @@ from flask import request, redirect, url_for
 from allamericanregress import database_engine
 from allamericanregress.webapp.app_init import app
 from allamericanregress.webapp import forms
-
+import logging
+logger = logging.getLogger(__name__)
+logger.debug('index')
 # ========== Routes ==========
+
 
 @app.route("/", methods=['GET', 'POST'])
 @app.route("/index", methods=['GET', 'POST'])
