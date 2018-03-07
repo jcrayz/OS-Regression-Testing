@@ -1,6 +1,9 @@
 import allamericanregress
 
 if __name__ == '__main__':
+    f = open('C:\\temp\\jennatest.log', 'a')
+    f.write('\nIn __main__.py')
+    f.close()
     try:
         print(f"Invoking cli from {__name__}")
         allamericanregress.cli()

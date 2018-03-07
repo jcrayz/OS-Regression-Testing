@@ -7,10 +7,16 @@ from . import utils
 from . import testing_framework
 from . import webapp
 from . import config
+from . import AllAmericanRegressService
 import logging
 import logging.config
+import os
+import sys
+import win32com.shell.shell as shell
+import testing
 
 logger = logging.getLogger(__name__)
+ASADMIN = '--asadmin'
 
 parser = argparse.ArgumentParser(
     description="Capstone regression testing program.")
@@ -54,6 +60,10 @@ parser.add_argument(
     type=int,
     metavar='delete_id',
     help="Option to delete entry by DB id.")
+parser.add_argument(
+    '--install-service',
+    action='store_true',
+    help="Install a Windows service to automatically execute tests after OS version updates.")
 # Delete all config and DB files.
 parser.add_argument(
     '--uninstall',
@@ -62,6 +72,9 @@ parser.add_argument(
 # serve the webapp
 parser.add_argument(
     '--webapp', action='store_true', help="Serve the Flask webapp.")
+parser.add_argument(
+    ASADMIN, action='store_true'
+)
 # Template to display when registering.
 REGISTER_MESSAGE = """You are registering A program with the following details.
 Name={}
@@ -74,6 +87,9 @@ def cli():
     # detect number of cmd line args
     # fail early if no args found
     print("CLI invoked with args: %s", sys.argv)
+    f = open('C:\\temp\\jennatest.log', 'a')
+    f.write('\nCLI invoked with args: {}'.format(sys.argv))
+    f.close()
     if len(sys.argv) == 1:
         # if none, print help and exit
         parser.print_help()
@@ -90,6 +106,10 @@ def cli():
         utils.uninstall()
         # uninstall overrrides everything else
         quit()
+
+    if args.install_service:
+        install()
+        # AllAmericanRegressService.install()
 
     if args.delete_id:
         database_engine.deregister_program(args.delete_id)
@@ -135,3 +155,8 @@ def cli():
     if args.webapp:
         logger.debug(f"Running webapp from command line via {__file__}")
         webapp.app.run(debug=args.debug)
+
+def install():
+    print('hi, i wanna install')
+    testing.testing()
+    # AllAmericanRegressService.install()
