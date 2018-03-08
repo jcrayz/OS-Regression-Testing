@@ -3,7 +3,6 @@ import win32service
 import win32event
 import servicemanager
 import socket
-import allamericanregress
 import allamericanregress.testing_framework
 import allamericanregress.config
 

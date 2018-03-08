@@ -1,7 +1,5 @@
 """AllAmericanRegress """
-import sys
 import argparse
-import os
 from . import database_engine
 from . import utils
 from . import testing_framework
@@ -13,7 +11,6 @@ import logging.config
 import os
 import sys
 import win32com.shell.shell as shell
-import testing
 
 logger = logging.getLogger(__name__)
 ASADMIN = '--asadmin'
@@ -152,6 +149,8 @@ def cli():
         webapp.app.run(debug=args.debug)
 
 def install():
+    import os
+    import sys
     """Installs the service using admin privileges. Privilege code taken from Jorenko's answer at
     https://stackoverflow.com/questions/130763/request-uac-elevation-from-within-a-python-script#answer-11746382"""
     if sys.argv[-1] != ASADMIN:
