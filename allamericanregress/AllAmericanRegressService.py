@@ -3,13 +3,9 @@ import win32service
 import win32event
 import servicemanager
 import socket
-import logging
 import allamericanregress
 import allamericanregress.testing_framework
 import allamericanregress.config
-import os
-import sys
-import win32com.shell.shell as shell
 
 
 logger = allamericanregress.config.logger
@@ -39,8 +35,7 @@ class AllAmericanRegressService(win32serviceutil.ServiceFramework):
                               (self._svc_name_, ''))
         self.main()
 
-        # Executes the tests registered with the application if OS version change detected
-
+    # Executes the tests registered with the application if OS version change detected
     def main(self):
         logger.info(' ** All-American Regress Service running ** ')
         allamericanregress.testing_framework.main()
@@ -48,8 +43,6 @@ class AllAmericanRegressService(win32serviceutil.ServiceFramework):
 
 
 def install():
-    """Installs the service using admin privileges. Privilege code taken from Jorenko's answer at
-    https://stackoverflow.com/questions/130763/request-uac-elevation-from-within-a-python-script#answer-11746382"""
     logger.info('Attempting to install.')
     win32serviceutil.HandleCommandLine(
         AllAmericanRegressService, None,

@@ -86,10 +86,6 @@ Command={}
 def cli():
     # detect number of cmd line args
     # fail early if no args found
-    print("CLI invoked with args: %s", sys.argv)
-    f = open('C:\\temp\\jennatest.log', 'a')
-    f.write('\nCLI invoked with args: {}'.format(sys.argv))
-    f.close()
     if len(sys.argv) == 1:
         # if none, print help and exit
         parser.print_help()
@@ -109,7 +105,6 @@ def cli():
 
     if args.install_service:
         install()
-        # AllAmericanRegressService.install()
 
     if args.delete_id:
         database_engine.deregister_program(args.delete_id)
@@ -157,6 +152,12 @@ def cli():
         webapp.app.run(debug=args.debug)
 
 def install():
-    print('hi, i wanna install')
-    testing.testing()
-    # AllAmericanRegressService.install()
+    """Installs the service using admin privileges. Privilege code taken from Jorenko's answer at
+    https://stackoverflow.com/questions/130763/request-uac-elevation-from-within-a-python-script#answer-11746382"""
+    if sys.argv[-1] != ASADMIN:
+        script = os.path.abspath(sys.argv[0]) # get current execution command
+        new_args = sys.argv[1:] + [ASADMIN]   # add admin arg to avoid infinite recursion
+        params = ' '.join([script] + new_args)
+        shell.ShellExecuteEx(lpVerb='runas', lpFile=sys.executable, lpParameters=params) # relaunch as admin
+    else:
+        AllAmericanRegressService.install()
