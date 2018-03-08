@@ -4,7 +4,7 @@ import sys
 import win32com.shell.shell as shell
 import logging
 import time
-ASADMIN = 'asadmin'
+ASADMIN = '--asadmin'
 import allamericanregress.AllAmericanRegressService
 
 """Code taken from Jorenko's answer at
@@ -13,16 +13,19 @@ def testing():
     # Logs to the temp directory under C
     print('hello, i am in testing')
     if sys.argv[-1] != ASADMIN:
-        print('IN THE FUNCTION')
+        script = os.path.abspath(sys.argv[0])
+        new_args = sys.argv[1:] + [ASADMIN]
         f = open('C:\\temp\\jennatest.log', 'a')
         f.write('\nOpened log file~sys.executable={}'.format(sys.executable))
-        f.write('\nexc_info={}'.format(sys.exc_info()))
+        f.write('\nscript={script}\nparams={params}'.format(script=script, params=new_args))
         f.close()
-        script = os.path.abspath(sys.argv[0])
-        params = ' '.join([script] + sys.argv[1:] + [ASADMIN])
+        params = ' '.join([script] + new_args)
         shell.ShellExecuteEx(lpVerb='runas', lpFile=sys.executable, lpParameters=params)
         # sys.exit(0)
     else:
+        f = open('C:\\temp\\jennatest.log', 'a')
+        f.write('\nREACHED ELSE!  THIS IS A BIG DEAL!')
+        f.close()
         allamericanregress.AllAmericanRegressService.install()
 
     # version = win32api.GetVersionEx(1)
