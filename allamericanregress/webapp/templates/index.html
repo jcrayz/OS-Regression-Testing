@@ -9,7 +9,7 @@
     <p>Current OS Version: {{context.current_version}}</p>
     <table border="1px">
         <tr>
-            <th colspan="5">TEST RESULTS</th>
+            <th colspan="6">TEST RESULTS</th>
         </tr>
         <tr>
             <th>#</th>
@@ -17,6 +17,7 @@
             <th>LAST RESULT</th>
             <th>VERSION OF LAST SUCCESS</th>
             <th>DATE OF LAST SUCCESS</th>
+            <th>EXECUTE</th>
         </tr>
         {% for results in context.test_results %}
         <tr>
@@ -33,6 +34,11 @@
             <td>NONE</td>
             <td>NEVER</td>
             {% endif %}
+            <td>
+                <button onclick="window.location.href='{{url_for('execute_individual', registrant_id=results[0].id)}}';">
+                    Execute
+                </button>
+            </td>
         </tr>
         {% endfor %}
     </table>

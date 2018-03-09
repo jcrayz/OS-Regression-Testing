@@ -22,19 +22,29 @@ def execute_tests():
     execution_id = database_engine.record_execution(get_current_os_version())
     # iterate over all tests
     for registrant in database_engine.all_registrants():
+        execute_registrant(registrant, execution_id)
+
+def execute_individual_test(id):
+    """Get the registrant"""
+    registrant = database_engine.get_registrant(id)
+    execution_id = database_engine.record_execution(get_current_os_version())
+    execute_registrant(registrant, execution_id)
+
+def execute_registrant(registrant, execution_id):
+    if not (registrant is None):
         program_id = registrant.id
         # substitute the path into the command
         command = registrant.command.replace('$1', registrant.path)
         # execute the command
         try:
-            child = subprocess.Popen(
-                command.split(' '), stdout=subprocess.PIPE)
+            child = subprocess.Popen(command.split(' '), stdout=subprocess.PIPE)
             # wait for it to finish get an exit code, and get text output
             console_output = child.communicate()[0]
             code = child.returncode
         except FileNotFoundError:
             code = 1
             console_output = ''
+
         was_successful = (code == 0)
         database_engine.update_current_record(program_id, execution_id,
                                               was_successful)

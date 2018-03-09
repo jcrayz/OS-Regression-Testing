@@ -84,6 +84,10 @@ def all_registrants():
     """Return all registrant entries."""
     yield from models.Registrant.query.all()
 
+def get_registrant(id):
+    """Returns the registrant with the given id"""
+    return models.Registrant.query.filter(models.Registrant.id == id).first()
+
 
 def record_execution(os_version):
     """Saves records of when tests are executed, preserving the OS version and time of execution.

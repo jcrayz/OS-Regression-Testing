@@ -41,3 +41,8 @@ def execute():
     # route for manual execution of tests from app
     testing_framework.execute_tests()
     return redirect(url_for('index'))
+
+@app.route("/execute-individual/<int:registrant_id>")
+def execute_individual(registrant_id):
+    testing_framework.execute_individual_test(registrant_id)
+    return redirect(url_for('index'))
