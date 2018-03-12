@@ -28,7 +28,16 @@ def execute_individual_test(id):
     """Get the registrant"""
     registrant = database_engine.get_registrant(id)
     execution_id = database_engine.record_execution(get_current_os_version())
+    logging.info("Executing test for {}".format(registrant))
     execute_registrant(registrant, execution_id)
+
+def execute_failed_tests():
+    """Execute all the tests that have failed"""
+    logging.info("Executing failed tests")
+    execution_id = database_engine.record_execution(get_current_os_version())
+    # iterate over failed tests
+    for registrant in database_engine.get_failure_registrants():
+        execute_registrant(registrant, execution_id)
 
 def execute_registrant(registrant, execution_id):
     if not (registrant is None):
