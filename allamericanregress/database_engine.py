@@ -19,7 +19,7 @@ def connect():
 
 
 def register_program(name, path, command, author):
-    """Registers a program with the the DB."""
+    """Registers a program with the DB."""
 
     if len(name.strip()) == 0:
         raise ValueError('Name can not be empty!')
