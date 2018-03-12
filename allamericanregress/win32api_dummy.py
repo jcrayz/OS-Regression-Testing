@@ -2,5 +2,5 @@
 
 
 def GetVersionEx(_):
-    """A mock of GetVersionEx from win32api."""
+    """A mock of win32apiGetVersionEx."""
     return ['linux', 'linux', 'linux']

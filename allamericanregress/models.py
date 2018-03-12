@@ -1,4 +1,4 @@
-"""regrOS models."""
+"""Database models and admin interface."""
 from allamericanregress.webapp.app_init import app, db
 from allamericanregress import config
 import flask_migrate
@@ -31,6 +31,7 @@ class Log(db.Model):
 
 
 class Registrant(db.Model):
+    """Represent a test suite registered by the user."""
     id = db.Column(db.Integer, primary_key=True)
     path = db.Column(db.String(), nullable=False)
     command = db.Column(db.String(), nullable=False)
@@ -46,6 +47,8 @@ class Registrant(db.Model):
 
 
 class ExecutionRecord(db.Model):
+    """Record when each Registrant is invoked by allamericanregress
+    and record timestamps."""
     id = db.Column(db.Integer, primary_key=True)
     os_version = db.Column(db.String())
     timestamp = db.Column(db.Integer)
@@ -58,6 +61,7 @@ class ExecutionRecord(db.Model):
 
 
 class CurrentRecord(db.Model):
+    """A summary table of most recent ExecutionRecord for each Registrant."""
     id = db.Column(db.Integer, primary_key=True)
     registrant_id = db.Column(db.Integer, db.ForeignKey(Registrant.id))
     last_execution_id = db.Column(db.Integer, db.ForeignKey(
@@ -69,6 +73,7 @@ class CurrentRecord(db.Model):
 
 
 class FailureRecord(db.Model):
+    """Record all instances of Registrants' execution failing."""
     id = db.Column(db.Integer, primary_key=True)
     registrant_id = db.Column(
         db.Integer,
@@ -82,18 +87,19 @@ class FailureRecord(db.Model):
 
 
 # ========== Admin Interface ==========
-
+# instantiate admin interface
 admin = Admin(app, name='regrOS Admin', template_mode='bootstrap3')
-
+# register model admin views
 admin.add_view(ModelView(Log, db.session))
 admin.add_view(ModelView(Registrant, db.session))
 admin.add_view(ModelView(ExecutionRecord, db.session))
 admin.add_view(ModelView(CurrentRecord, db.session))
 admin.add_view(ModelView(FailureRecord, db.session))
 
-# initialize db with flask_migrate
+# programmatically initialize db with flask_migrate
 with app.app_context():
     try:
+        # initialize migrations directory and config files
         flask_migrate.init(config.ALEMBIC_PATH)
     except alembic.util.exc.CommandError as e:
         logger.debug('flask db init failed: %s', e)
@@ -101,9 +107,11 @@ with app.app_context():
             pass
         else:
             raise e
+    # detect model diffs and generate migration scripts
     flask_migrate.migrate(config.ALEMBIC_PATH)
     try:
         logger.debug('flask db upgrade')
+        # perform the migration
         flask_migrate.upgrade(config.ALEMBIC_PATH)
     except Exception as e:
         logger.debug('flask db upgrade failed: %s', e)
