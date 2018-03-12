@@ -1,4 +1,4 @@
-"""Database models and admin interface."""
+"""Database models and admin interface for app."""
 from allamericanregress.webapp.app_init import app, db
 from allamericanregress import config
 import flask_migrate
