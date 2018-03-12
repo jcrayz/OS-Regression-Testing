@@ -40,6 +40,7 @@ def execute_failed_tests():
         execute_registrant(registrant, execution_id)
 
 def execute_registrant(registrant, execution_id):
+    """Execute a registrant with an execution record"""
     if not (registrant is None):
         program_id = registrant.id
         # substitute the path into the command
