@@ -31,22 +31,13 @@ if FROZEN:
     logger.debug('Booting up as frozen dist')
     MODULE_PATH = sys._MEIPASS
 else:
-    logger.debug('Booting up as source dist')
+    logger.critical('Booting up as source dist')
     MODULE_PATH = os.path.abspath(
         os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
 ALEMBIC_PATH = os.path.join(CONFIG_PATH, 'migrations')
-# TEMPLATES_PATH = 
-#  ========== Logging ==========
-logger = logging.getLogger(__name__)
 
 # Ensure the installation directory exists
 if not os.path.isdir(CONFIG_PATH):
     logging.log(logging.DEBUG, "Created config path")
     os.makedirs(CONFIG_PATH)
 
-# Logs to the temp directory under C
-logging.basicConfig(
-    filename=LOG_PATH,
-    level=logging.DEBUG,
-    format='[allamericanregress-service] %(asctime)s %(levelname)-7.7s %(message)s',
-)
