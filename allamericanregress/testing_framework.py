@@ -10,6 +10,7 @@ else:
     import win32api
 logger = logging.getLogger(__name__)
 
+
 def get_current_os_version():
     """Get the current version's major.minor.build number"""
     version = win32api.GetVersionEx(1)
@@ -28,13 +29,15 @@ def execute_tests():
         program_id = registrant.id
         # substitute the path into the command
         tokens = registrant.command.split('$1')
-        assert len(tokens) == 2
+        assert len(tokens) <= 2
         command = os.path.normpath(registrant.path)
         logger.debug('Executing command:%s', command)
         # execute the command
         try:
-            child = subprocess.Popen(
-                [tokens[0], command, tokens[1]], stdout=subprocess.PIPE)
+            args = [tokens[0], command]
+            if len(tokens) > 1:
+                args.append(tokens[1])
+            child = subprocess.Popen(args, stdout=subprocess.PIPE)
             # wait for it to finish get an exit code, and get text output
             console_output = child.communicate()[0]
             code = child.returncode

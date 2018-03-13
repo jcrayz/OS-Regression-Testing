@@ -18,7 +18,7 @@ def connect():
     session.commit()
 
 
-def register_program(name, path, command, author):
+def register_program(name, path, command, author=''):
     """Registers a program with the the DB."""
 
     if len(name.strip()) == 0:

@@ -102,15 +102,15 @@ with app.app_context():
         # initialize migrations directory and config files
         flask_migrate.init(config.ALEMBIC_PATH)
     except alembic.util.exc.CommandError as e:
-        logger.debug('flask db init failed: %s', e)
         if 'already exists' in str(e):
             pass
         else:
+            logger.debug('flask db init failed: %s', e)
             raise e
     # detect model diffs and generate migration scripts
     flask_migrate.migrate(config.ALEMBIC_PATH)
     try:
-        logger.debug('flask db upgrade')
+        # logger.debug('flask db upgrade')
         # perform the migration
         flask_migrate.upgrade(config.ALEMBIC_PATH)
     except Exception as e:
