@@ -1,3 +1,4 @@
+"""Classes representing forms for the web frontendUI."""
 import flask_wtf
 from wtforms import validators, StringField
 

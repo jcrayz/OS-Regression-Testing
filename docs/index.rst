@@ -1,5 +1,5 @@
 .. allamericanregress documentation master file, created by
-   sphinx-quickstart on Thu Mar  1 14:37:35 2018.
+   sphinx-quickstart on Mon Mar 12 14:01:40 2018.
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
