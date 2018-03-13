@@ -96,6 +96,7 @@ admin.add_view(ModelView(ExecutionRecord, db.session))
 admin.add_view(ModelView(CurrentRecord, db.session))
 admin.add_view(ModelView(FailureRecord, db.session))
 
+
 def init():
     # programmatically initialize db with flask_migrate
     with app.app_context():
@@ -117,3 +118,6 @@ def init():
         except Exception as e:
             logger.debug('flask db upgrade failed: %s', e)
             raise e
+
+
+init()
