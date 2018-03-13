@@ -96,22 +96,20 @@ admin.add_view(ModelView(ExecutionRecord, db.session))
 admin.add_view(ModelView(CurrentRecord, db.session))
 admin.add_view(ModelView(FailureRecord, db.session))
 
-# programmatically initialize db with flask_migrate
+
+# initialize db with flask_migrate
 with app.app_context():
     try:
-        # initialize migrations directory and config files
         flask_migrate.init(config.ALEMBIC_PATH)
     except alembic.util.exc.CommandError as e:
+        logger.debug('flask db init failed: %s', e)
         if 'already exists' in str(e):
             pass
         else:
-            logger.debug('flask db init failed: %s', e)
             raise e
-    # detect model diffs and generate migration scripts
     flask_migrate.migrate(config.ALEMBIC_PATH)
     try:
-        # logger.debug('flask db upgrade')
-        # perform the migration
+        logger.debug('flask db upgrade')
         flask_migrate.upgrade(config.ALEMBIC_PATH)
     except Exception as e:
         logger.debug('flask db upgrade failed: %s', e)
