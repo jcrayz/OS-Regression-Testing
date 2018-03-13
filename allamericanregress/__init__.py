@@ -10,7 +10,17 @@ from . import config
 import logging
 import logging.config
 
+# configure logging to log everything to file and stdout
 logger = logging.getLogger(__name__)
+stream_handler = logging.StreamHandler()
+file_handler = logging.FileHandler(config.LOG_PATH)
+formatter = logging.Formatter(
+      '%(asctime)s %(name)-12s %(levelname)-8s %(message)s')
+stream_handler.setFormatter(formatter)
+file_handler.setFormatter(formatter)
+logger.addHandler(stream_handler)
+logger.addHandler(file_handler)
+logger.setLevel(logging.DEBUG)
 
 parser = argparse.ArgumentParser(
     description="Capstone regression testing program.")
