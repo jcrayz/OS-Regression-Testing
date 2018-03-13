@@ -24,4 +24,3 @@ app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{config.DB_PATH}'
 db = SQLAlchemy(app)
 # initialize migration engine
 migrate = flask_migrate.Migrate(app, db, directory=config.ALEMBIC_PATH)
-

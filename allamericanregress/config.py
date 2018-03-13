@@ -14,7 +14,7 @@ import logging
 
 import sys
 logger = logging.getLogger(__name__)
-FROZEN = getattr( sys, 'frozen', False )
+FROZEN = getattr(sys, 'frozen', False)
 #  ========== Paths ==========
 # Absolute path for folder where database and logs will be stored.
 if sys.platform == 'linux':
@@ -40,4 +40,3 @@ ALEMBIC_PATH = os.path.join(CONFIG_PATH, 'migrations')
 if not os.path.isdir(CONFIG_PATH):
     logging.log(logging.DEBUG, "Created config path")
     os.makedirs(CONFIG_PATH)
-
