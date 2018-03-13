@@ -1,3 +1,8 @@
+"""This class provides useful methods for communicating with the SQLite database.
+Users can add and remove registrants, add and update execution records, and conveniently
+retrieve collections of existing records/registrants.  There is also a method to query
+the most recently-tested OS version."""
+
 from allamericanregress import config
 import logging
 import time
@@ -19,7 +24,7 @@ def connect():
 
 
 def register_program(name, path, command, author=''):
-    """Registers a program with the the DB."""
+    """Registers a program with the DB. Name, path, and command are required."""
 
     if len(name.strip()) == 0:
         raise ValueError('Name can not be empty!')
@@ -43,7 +48,7 @@ def register_program(name, path, command, author=''):
 
 
 def deregister_program(entry_id):
-    """Remove a registered program from the DB."""
+    """Removes the registered program with the given ID from the DB."""
     with connect() as session:
         logger.log(logging.DEBUG, "Attempting to delete program id=%s",
                    entry_id)
@@ -55,7 +60,7 @@ def deregister_program(entry_id):
 
 
 def all_registrants():
-    """Return all registrant entries."""
+    """Returns all registrant entries."""
     yield from models.Registrant.query.all()
 
 
@@ -105,7 +110,7 @@ def record_failure(registrant_id, execution_id, exit_code, message):
 
 
 def all_failure_records():
-    """Return all failure records as a list of tuples like (<FailureRecord>, <ExecutionRecord>, <Registrant>)"""
+    """Returns all failure records as a list of tuples like (<FailureRecord>, <ExecutionRecord>, <Registrant>)"""
     with connect() as session:
         failure_records = session.query(models.FailureRecord, models.ExecutionRecord, models.Registrant).\
             filter(models.FailureRecord.registrant_id == models.Registrant.id).\
@@ -115,7 +120,9 @@ def all_failure_records():
 
 
 def get_current_results():
-    """Return the name, pass/fail value, version of last success, and date of last success"""
+    """Returns collection of current results for each registrant in the form of
+    <Registrant>, <CurrentRecord>, <LastExecutionRecord> and <LastSuccessfulExecutionRecord>
+    if it exists."""
     with connect() as session:
         # Join the registrant with their latest execution record
         current_results = session.query(models.Registrant, models.CurrentRecord, models.ExecutionRecord).\

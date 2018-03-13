@@ -20,28 +20,29 @@ class AllAmericanRegressService(win32serviceutil.ServiceFramework):
         socket.setdefaulttimeout(60)
         self.stop_requested = False
 
-    # How to respond to service stop command
     def SvcStop(self):
+        """How to respond to service stop command"""
         self.ReportServiceStatus(win32service.SERVICE_STOP_PENDING)
         win32event.SetEvent(self.stop_event)
         logger.info('Stopping service ...')
         self.stop_requested = True
 
-    # When launched by service control manager, log brief intro
     def SvcDoRun(self):
+        """When launched by service control manager, log brief intro"""
         servicemanager.LogMsg(servicemanager.EVENTLOG_INFORMATION_TYPE,
                               servicemanager.PYS_SERVICE_STARTED,
                               (self._svc_name_, ''))
         self.main()
 
-    # Executes the tests registered with the application if OS version change detected
     def main(self):
+        """Executes the tests registered with the application if OS version change detected"""
         logger.info(' ** All-American Regress Service running ** ')
         allamericanregress.testing_framework.main()
         return
 
 
 def install():
+    """Attempts to install program as a Windows service and set it to automatically execute on startup"""
     logger.info('Attempting to install.')
     win32serviceutil.HandleCommandLine(
         AllAmericanRegressService, None,

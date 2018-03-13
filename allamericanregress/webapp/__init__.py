@@ -1,3 +1,4 @@
+"""This class provides the routes for the Flask web app, handling GET and POST requests."""
 import flask
 from flask import request, redirect, url_for
 from allamericanregress import database_engine
@@ -12,9 +13,10 @@ logger.debug('index')
 @app.route("/", methods=['GET', 'POST'])
 @app.route("/index", methods=['GET', 'POST'])
 def index():
+    """The index page of the web app displays several tables detailing registrants and their results"""
     # instantiate the form object with request data
     form = forms.RegistrantForm(request.form)
-    if request.method == "POST":
+    if request.method == "POST": # handle new registration
         if form.validate():
             database_engine.register_program(
                 form.name.data,
@@ -33,12 +35,14 @@ def index():
 
 @app.route("/logs")
 def logs():
+    """This page displays a table of all failure records"""
     return flask.render_template(
         'failure_log_view.html',
         context=dict(failure_records=database_engine.all_failure_records()))
 
 
 def main():
+    """File entry point"""
     app.run(debug=True)
 
 
