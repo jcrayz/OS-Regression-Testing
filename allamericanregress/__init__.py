@@ -12,7 +12,17 @@ import os
 import sys
 import win32com.shell.shell as shell
 
+# configure logging to log everything to file and stdout
 logger = logging.getLogger(__name__)
+stream_handler = logging.StreamHandler()
+file_handler = logging.FileHandler(config.LOG_PATH)
+formatter = logging.Formatter(
+      '%(asctime)s %(name)-12s %(levelname)-8s %(message)s')
+stream_handler.setFormatter(formatter)
+file_handler.setFormatter(formatter)
+logger.addHandler(stream_handler)
+logger.addHandler(file_handler)
+logger.setLevel(logging.DEBUG)
 ASADMIN = '--asadmin'
 
 parser = argparse.ArgumentParser(
