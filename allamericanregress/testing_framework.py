@@ -24,11 +24,11 @@ def execute_tests():
     for registrant in database_engine.all_registrants():
         program_id = registrant.id
         # substitute the path into the command
-        command = registrant.command.replace('$1', registrant.path)
+        command = registrant.command.replace('$1', '"{}"'.format(registrant.path))
+        logger.debug('Executing command:%s', command)
         # execute the command
         try:
-            child = subprocess.Popen(
-                command.split(' '), stdout=subprocess.PIPE)
+            child = subprocess.Popen(command, stdout=subprocess.PIPE)
             # wait for it to finish get an exit code, and get text output
             console_output = child.communicate()[0]
             code = child.returncode
