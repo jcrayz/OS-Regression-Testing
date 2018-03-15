@@ -61,6 +61,9 @@ def execute_tests():
 
 
 def main():
+    f = open('C:\\temp\\debug.log', 'a')
+    f.write('In testing framework main\n')
+    f.close()
     """Checks the last recorded OS version against the current version, and executes tests if it changed."""
     last_tested_version = database_engine.get_last_os_version()
     current_version = get_current_os_version()
@@ -70,6 +73,9 @@ def main():
         execute_tests()
     else:
         logger.log("No version change detected. Tests will not be executed.")
+    f = open('C:\\temp\\debug.log', 'a')
+    f.write('Finished testing framework main\n')
+    f.close()
 
 
 if __name__ == '__main__':

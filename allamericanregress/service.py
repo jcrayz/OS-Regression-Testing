@@ -8,12 +8,12 @@ import time
 import subprocess
 
 logging.basicConfig(
-    filename='C:\\temp\\regrOS.log',
+    filename='C:\\temp\\service.log',
     level=logging.DEBUG,
     format='[regrOS-service] %(levelname)-7.7s %(message)s'
 )
 
-class RegrOSService(win32serviceutil.ServiceFramework):
+class Service(win32serviceutil.ServiceFramework):
     """Creates a Windows service that executes the testing framework automatically on boot."""
     _svc_name_ = "regrOS"
     _svc_display_name_ = "regrOS" # display name that appears in Service Manager
@@ -56,10 +56,10 @@ def install():
     """Attempts to install program as a Windows service and set it to automatically execute on startup"""
     logging.info('Attempting to install.')
     win32serviceutil.HandleCommandLine(
-        RegrOSService, None,
+        Service, None,
         ["regrOS", "--startup=auto", "install"])
     logging.info('Starting service.')
-    win32serviceutil.HandleCommandLine(RegrOSService, None,
+    win32serviceutil.HandleCommandLine(Service, None,
                                        ["regrOS", "start"])
 
 
