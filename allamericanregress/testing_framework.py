@@ -1,9 +1,11 @@
+"""Testing framework for regrOS"""
 from allamericanregress import database_engine
 import subprocess
 import logging
 import sys
 import os
 
+# Determines if the system is linux or windows to execute the proper import
 if sys.platform == 'linux':
     import allamericanregress.win32api_dummy as win32api
 else:
@@ -39,6 +41,8 @@ def execute_tests():
         except FileNotFoundError:
             code = 1
             console_output = ''
+
+        # tests pass if the exit code was 0
         was_successful = (code == 0)
         database_engine.update_current_record(program_id, execution_id,
                                               was_successful)
