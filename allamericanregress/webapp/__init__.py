@@ -1,7 +1,7 @@
 """This class provides the routes for the Flask web app, handling GET and POST requests."""
 import flask
 from flask import request, redirect, url_for
-from allamericanregress import database_engine
+from allamericanregress import database_engine, testing_framework
 from allamericanregress.webapp.app_init import app
 from allamericanregress.webapp import forms
 import logging
@@ -28,6 +28,7 @@ def index():
     return flask.render_template(
         'index.html',
         context=dict(
+            current_version=testing_framework.get_current_os_version(),
             registrants=database_engine.all_registrants(),
             test_results=database_engine.get_current_results(),
             form=form))

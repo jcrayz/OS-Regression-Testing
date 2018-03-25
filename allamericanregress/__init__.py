@@ -6,6 +6,8 @@ from . import testing_framework
 from . import webapp
 from . import config
 from . import service
+from . import AllAmericanRegressService
+import subprocess
 import logging
 import logging.config
 import os
@@ -106,13 +108,20 @@ def cli():
     # print("Arguments:", args)
 
     if args.uninstall:
-        print("Uninstalling...")
-        utils.uninstall()
-        # uninstall overrrides everything else
-        quit()
+        print("Not yet implemented")
+        # utils.uninstall()
+        # # uninstall overrrides everything else
+        # quit()
 
     if args.install_service:
-        install()
+        install_proc = subprocess.Popen(['python', 'AllAmericanRegressService.py'],
+                         cwd='C:\\Users\\Jenna\\PycharmProjects\\Capstone\\allamericanregress')
+        install_proc.wait()
+        exit_code = install_proc.returncode
+        if (exit_code is 0):
+            print('Install succeeded.')
+        else:
+            print('There was an error installing.')
 
     if args.delete_id:
         database_engine.deregister_program(args.delete_id)
@@ -158,16 +167,3 @@ def cli():
     if args.webapp:
         logger.debug(f"Running webapp from command line via {__file__}")
         webapp.app.run(debug=args.debug)
-
-def install():
-    import os
-    import sys
-    """Installs the service using admin privileges. Privilege code taken from Jorenko's answer at
-    https://stackoverflow.com/questions/130763/request-uac-elevation-from-within-a-python-script#answer-11746382"""
-    if sys.argv[-1] != ASADMIN:
-        script = os.path.abspath(sys.argv[0]) # get current execution command
-        new_args = sys.argv[1:] + [ASADMIN]   # add admin arg to avoid infinite recursion
-        params = ' '.join([script] + new_args)
-        shell.ShellExecuteEx(lpVerb='runas', lpFile=sys.executable, lpParameters=params) # relaunch as admin
-    else:
-        service.install()
