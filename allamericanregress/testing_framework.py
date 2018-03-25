@@ -22,7 +22,6 @@ def get_current_os_version():
 
 def execute_tests():
     """Execute all tests from DB."""
-    logger.disabled = False
     logger.info("Executing all tests")
     if logger.disabled:
         raise RuntimeError('logger is disabled but shouldn\'t be')
@@ -31,11 +30,11 @@ def execute_tests():
     for registrant in database_engine.all_registrants():
         program_id = registrant.id
         # substitute the path into the command
-        command_path = str(registrant.command).replace('$1', registrant.path)
+        command = registrant.command.replace('$1', '"{}"'.format(registrant.path))
+        logger.debug('Executing command:%s', command)
         # execute the command
         try:
-            print('args: {}'.format(command_path))
-            child = subprocess.Popen(command_path, stdout=subprocess.PIPE)
+            child = subprocess.Popen(command, stdout=subprocess.PIPE)
             # wait for it to finish get an exit code, and get text output
             console_output = child.communicate()[0]
             code = child.returncode
