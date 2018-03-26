@@ -70,6 +70,10 @@ class CurrentRecord(db.Model):
                                              db.ForeignKey(ExecutionRecord.id))
     registrant = db.relationship(
         Registrant, backref=db.backref('current_records', lazy='dynamic'))
+    last_execution = db.relationship(
+        ExecutionRecord, foreign_keys=[last_execution_id])
+    last_successful_execution = db.relationship(
+        ExecutionRecord, foreign_keys=[last_successful_execution_id])
 
 
 class FailureRecord(db.Model):

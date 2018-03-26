@@ -63,6 +63,19 @@ def all_registrants():
     """Returns all registrant entries."""
     yield from models.Registrant.query.all()
 
+def get_registrant(id):
+    """Returns the registrant with the given id"""
+    return models.Registrant.query.filter(models.Registrant.id == id).first()
+
+def get_failure_registrants():
+    """Returns all the registrants that have failed on the last run"""
+    currentRecords = models.CurrentRecord.query.all()
+    registrants = []
+    for record in currentRecords:
+        if record.last_successful_execution_id != record.last_execution_id:
+            registrants.append(record.registrant)
+
+    return registrants
 
 def record_execution(os_version):
     """Saves records of when tests are executed, preserving the OS version and time of execution.

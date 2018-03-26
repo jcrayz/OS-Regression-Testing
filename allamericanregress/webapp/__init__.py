@@ -7,6 +7,7 @@ from allamericanregress.webapp import forms
 import logging
 logger = logging.getLogger(__name__)
 logger.debug('index')
+
 # ========== Routes ==========
 
 
@@ -41,6 +42,23 @@ def logs():
         'failure_log_view.html',
         context=dict(failure_records=database_engine.all_failure_records()))
 
+@app.route("/execute")
+def execute():
+    # route for manual execution of tests from app
+    testing_framework.execute_tests()
+    return redirect(url_for('index'))
+
+@app.route("/execute-failed")
+def execute_failed():
+    # route for manual execution of failed tests from app
+    testing_framework.execute_failed_tests()
+    return redirect(url_for('index'))
+
+@app.route("/execute-individual/<int:registrant_id>")
+def execute_individual(registrant_id):
+    # route for manual execution of individual tests from the app
+    testing_framework.execute_individual_test(registrant_id)
+    return redirect(url_for('index'))
 
 def main():
     """File entry point"""
