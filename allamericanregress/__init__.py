@@ -5,14 +5,11 @@ from . import utils
 from . import testing_framework
 from . import webapp
 from . import config
-from . import service
 from . import AllAmericanRegressService
 import subprocess
-import logging
 import logging.config
 import os
 import sys
-import win32com.shell.shell as shell
 
 
 # configure logging to log everything to file and stdout

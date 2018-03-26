@@ -1,3 +1,4 @@
+"""Windows service for executing registered tests on boot when an update occurred."""
 import win32serviceutil
 import win32service
 import win32event
