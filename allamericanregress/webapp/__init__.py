@@ -42,8 +42,8 @@ def logs():
         'failure_log_view.html',
         context=dict(failure_records=database_engine.all_failure_records()))
 
-@app.route("/execute")
-def execute():
+@app.route("/execute-all")
+def execute_all():
     # route for manual execution of tests from app
     testing_framework.execute_tests()
     return redirect(url_for('index'))

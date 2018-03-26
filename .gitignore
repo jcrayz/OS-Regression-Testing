@@ -8,6 +8,7 @@ build/*
 dist/*
 env/*
 .idea/*
+TestResults/*
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
