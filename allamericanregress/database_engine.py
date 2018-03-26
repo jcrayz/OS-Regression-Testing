@@ -1,30 +1,14 @@
+"""This class provides useful methods for communicating with the SQLite database.
+Users can add and remove registrants, add and update execution records, and conveniently
+retrieve collections of existing records/registrants.  There is also a method to query
+the most recently-tested OS version."""
+
 from allamericanregress import config
-from allamericanregress import models
-from allamericanregress.webapp.app_init import app
 import logging
 import time
+from allamericanregress import models
 from contextlib import contextmanager
-import flask_migrate
-import os
-
-
-class Initializer:
-    """Class for holding initialization state of file based dependencies.
-    init() must be called before this module's functions can be used."""
-
-    def __init__(self):
-        self.initialized = False
-
-    def __call__(self):
-        # https://flask-migrate.readthedocs.io/en/latest/
-        # https://blog.miguelgrinberg.com/post/flask-migrate-alembic-database-migration-wrapper-for-flask/page/3
-        with app.app_context():
-            flask_migrate.upgrade(
-                directory=os.path.join(config.MODULE_PATH, 'migrations'))
-        self.initialized = True
-
-
-init = Initializer()
+from allamericanregress.webapp import app_init
 
 logger = logging.getLogger(__name__)
 
@@ -33,19 +17,14 @@ logger = logging.getLogger(__name__)
 def connect():
     """Context manager to prevent forgetting to close the DB connection.
     Flushes at end."""
-
-    if not init.initialized:
-        raise RuntimeError(
-            """database_engine.init() must be called before using any database functions."""
-        )
-    session = models.db.session()
+    session = app_init.db.session()
     yield session
     session.flush()
     session.commit()
 
 
-def register_program(name, path, command, author):
-    """Registers a program with the the DB."""
+def register_program(name, path, command, author=''):
+    """Registers a program with the DB. Name, path, and command are required."""
 
     if len(name.strip()) == 0:
         raise ValueError('Name can not be empty!')
@@ -69,7 +48,7 @@ def register_program(name, path, command, author):
 
 
 def deregister_program(entry_id):
-    """Remove a registered program from the DB."""
+    """Removes the registered program with the given ID from the DB."""
     with connect() as session:
         logger.log(logging.DEBUG, "Attempting to delete program id=%s",
                    entry_id)
@@ -77,11 +56,11 @@ def deregister_program(entry_id):
             models.Registrant.id == entry_id).delete()
         # Should we delete corresponding entries in FailureRecords and
         # CurrentRecords?
-        logger.log(logging.DEBUG, "Deleted program models.id=%s", entry_id)
+        logger.log(logging.DEBUG, "Deleted program id=%s", entry_id)
 
 
 def all_registrants():
-    """Return all registrant entries."""
+    """Returns all registrant entries."""
     yield from models.Registrant.query.all()
 
 def get_registrant(id):
@@ -121,7 +100,7 @@ def update_current_record(registrant_id, execution_id, succeeded):
         # see if there is an existing record for the registrant
         updated_record = session.query(models.CurrentRecord).filter(
             models.CurrentRecord.registrant_id == registrant_id).first()
-        if (updated_record is None): # if not, create a new record
+        if (updated_record is None):  # if not, create a new record
             updated_record = models.CurrentRecord(
                 registrant_id=registrant_id, last_execution_id=execution_id)
         else:
@@ -144,16 +123,19 @@ def record_failure(registrant_id, execution_id, exit_code, message):
 
 
 def all_failure_records():
-    """Return all failure records as a list of tuples like (<FailureRecord>, <ExecutionRecord>, <Registrant>)"""
+    """Returns all failure records as a list of tuples like (<FailureRecord>, <ExecutionRecord>, <Registrant>)"""
     with connect() as session:
         failure_records = session.query(models.FailureRecord, models.ExecutionRecord, models.Registrant).\
             filter(models.FailureRecord.registrant_id == models.Registrant.id).\
-            filter(models.FailureRecord.execution_id == models.ExecutionRecord.id).all()
+            filter(models.FailureRecord.execution_id ==
+                   models.ExecutionRecord.id).all()
     return failure_records
 
 
 def get_current_results():
-    """Return the name, pass/fail value, version of last success, and date of last success"""
+    """Returns collection of current results for each registrant in the form of
+    <Registrant>, <CurrentRecord>, <LastExecutionRecord> and <LastSuccessfulExecutionRecord>
+    if it exists."""
     with connect() as session:
         # Join the registrant with their latest execution record
         current_results = session.query(models.Registrant, models.CurrentRecord, models.ExecutionRecord).\
@@ -165,7 +147,8 @@ def get_current_results():
         for result in current_results:
             current_record = result[1]
             last_execution_record = result[2]
-            # If the registrant failed recently, find its last successful record
+            # If the registrant failed recently, find its last successful
+            # record
             if current_record.last_execution_id is not current_record.last_successful_execution_id:
                 last_successful_record = session.query(models.ExecutionRecord).\
                     filter(models.ExecutionRecord.id ==

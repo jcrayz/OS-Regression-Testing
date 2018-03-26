@@ -1,7 +1,11 @@
+"""Testing framework for regrOS"""
 from allamericanregress import database_engine
 import subprocess
 import logging
 import sys
+import os
+
+# Determines if the system is linux or windows to execute the proper import
 if sys.platform == 'linux':
     import allamericanregress.win32api_dummy as win32api
 else:
@@ -18,7 +22,9 @@ def get_current_os_version():
 
 def execute_tests():
     """Execute all tests from DB."""
-    logging.info("Executing all tests")
+    logger.info("Executing all tests")
+    if logger.disabled:
+        raise RuntimeError('logger is disabled but shouldn\'t be')
     execution_id = database_engine.record_execution(get_current_os_version())
     # iterate over all tests
     for registrant in database_engine.all_registrants():
@@ -56,6 +62,7 @@ def execute_registrant(registrant, execution_id):
             code = 1
             console_output = ''
 
+        # tests pass if the exit code was 0
         was_successful = (code == 0)
         database_engine.update_current_record(program_id, execution_id,
                                               was_successful)
@@ -69,14 +76,21 @@ def execute_registrant(registrant, execution_id):
 
 
 def main():
+    f = open('C:\\temp\\debug.log', 'a')
+    f.write('In testing framework main\n')
+    f.close()
     """Checks the last recorded OS version against the current version, and executes tests if it changed."""
     last_tested_version = database_engine.get_last_os_version()
     current_version = get_current_os_version()
     if (last_tested_version is not current_version):
-        logger.log("Detected version change from {} to {}".format(last_tested_version, current_version))
+        logger.log("Detected version change from {} to {}".format(
+            last_tested_version, current_version))
         execute_tests()
     else:
         logger.log("No version change detected. Tests will not be executed.")
+    f = open('C:\\temp\\debug.log', 'a')
+    f.write('Finished testing framework main\n')
+    f.close()
 
 
 if __name__ == '__main__':

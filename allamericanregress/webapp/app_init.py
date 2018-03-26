@@ -1,12 +1,14 @@
 import flask
 from flask_sqlalchemy import SQLAlchemy
-from flask_migrate import Migrate
+import flask_migrate
 from allamericanregress import config
 import random
-# for editing DB entries
-# hack to get a reference to the templates directory within the package
+import logging
 import os
+import alembic
 
+logger = logging.getLogger(__name__)
+# hack to get a reference to the templates directory within the package
 tmpl_dir = os.path.join(
     os.path.dirname(os.path.abspath(__file__)), 'templates')
 
@@ -21,4 +23,4 @@ app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{config.DB_PATH}'
 # initialize SQLAlchemy engine
 db = SQLAlchemy(app)
 # initialize migration engine
-migrate = Migrate(app, db)
+migrate = flask_migrate.Migrate(app, db, directory=config.ALEMBIC_PATH)
