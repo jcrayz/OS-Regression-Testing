@@ -7,15 +7,17 @@ import socket
 import time
 import logging
 import subprocess
-import sqlite3
+import win32api
 import sys
 import os
 import win32com.shell.shell as shell
+from . import config
+from . import service_database_engine
 
 logging.basicConfig(
-    filename='C:\\temp\\regrOS.log',
+    filename=config.LOG_PATH,
     level=logging.DEBUG,
-    format='[regrOS-service] %(levelname)-7.7s %(message)s'
+    format=service_database_engine.LOG_FORMAT
 )
 
 class RegrOSService(win32serviceutil.ServiceFramework):
@@ -45,35 +47,50 @@ class RegrOSService(win32serviceutil.ServiceFramework):
 
     def main(self):
         """Executes the tests registered with the application if OS version change detected"""
-        logging.info(' ** Running test suites ** ')
-        # TODO: Move check OS version code to this class
-        self.execute_tests()
+        logging.info(' ** Checking for update ** ')
+        last_tested_version = service_database_engine.get_last_os_version()
+        current_version = self.get_current_os_version()
+        if last_tested_version == current_version:
+            logging.info(' ** No update detected. Tests will not be run. **')
+        else:
+            logging.info(' ** Version changed from {old} to {new}. Running tests.'
+                         .format(old=last_tested_version, new=current_version))
+            self.execute_tests()
         time.sleep(30)
         return
+
+    def get_current_os_version(self):
+        """Get the current version's major.minor.build number"""
+        version = win32api.GetVersionEx(1)
+        return "{major}.{minor}.{build}".format(
+            major=version[0], minor=version[1], build=version[2])
 
     def execute_tests(self):
         """Execute all tests from DB."""
         # iterate over all tests
         try:
-            logging.info('* * Reached execute_tests * *')
-            CONFIG_PATH = os.path.join('c:/', 'AllAmericanRegress')
-            DB_PATH = os.path.join(CONFIG_PATH, 'aar_db.db')
-            database_connection = sqlite3.connect(DB_PATH)
-            cursor = database_connection.cursor()
-            for p in cursor.execute("""SELECT * FROM registrant"""):
+            logging.info('* * Executing tests * *')
+            execution_id = service_database_engine.record_execution(self.get_current_os_version())
+            for p in service_database_engine.get_registrants():
                 # substitute the path into the command
                 command = p[2].replace('$1', p[1])
                 # execute the command
-                child = subprocess.Popen(command.split(' '), stdout=subprocess.PIPE)
-                # wait for it to finish get an exit code, and get text output
-                console_output = child.communicate()[0]
-                code = child.returncode
-                # only log if there was an error
-                if code != 0:
+                try:
+                    child = subprocess.Popen(command, stdout=subprocess.PIPE)
+                    # wait for it to finish get an exit code, and get text output
+                    console_output = child.communicate()[0]
+                    code = child.returncode
+                except FileNotFoundError:
+                    code = 1
+                    console_output = "File not found."
+                was_successful = (code == 0)
+                # update registrant's current record
+                service_database_engine.update_current_record(p[0], execution_id, was_successful)
+                # record all failures
+                if not was_successful:
                     logging.debug("Test {} failed.".format(p[3]))
-                    # database_engine.log_executed_test(p[0], console_output, code)
-                logging.info("Test {} exited with code {}".format(p[3], code))
-                # TODO: record the execution, any failures, and update current records
+                    service_database_engine.record_failure(p[0], execution_id, code, "")
+                logging.debug("Test {} exited with code {}".format(p[3], code))
         except Exception as e:
             logging.exception(str(e))
 

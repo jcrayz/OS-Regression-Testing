@@ -1,97 +1,117 @@
 import sqlite3
-from . import config
+import logging
+import time
 
-def execute_tests(self):
-    """Execute all tests from DB."""
-    # iterate over all tests
-    try:
-        # logging.info('* * Reached execute_tests * *')
-        database_connection = sqlite3.connect(config.DB_PATH)
-        cursor = database_connection.cursor()
-        for p in cursor.execute("""SELECT * FROM registrant"""):
-            # substitute the path into the command
-            command = p[2].replace('$1', p[1])
-            # execute the command
-            # child = subprocess.Popen(command.split(' '), stdout=subprocess.PIPE)
-            # wait for it to finish get an exit code, and get text output
-            console_output = child.communicate()[0]
-            code = child.returncode
-            # only log if there was an error
-            if code != 0:
-                # logging.debug("Test {} failed.".format(p[3]))
-                # database_engine.log_executed_test(p[0], console_output, code)
-            logging.info("Test {} exited with code {}".format(p[3], code))
-            # TODO: record the execution, any failures, and update current records
-    except Exception as e:
-        logging.exception(str(e))
-
-def get_cursor():
-    CONFIG_PATH = os.path.join('c:/', 'AllAmericanRegress')
-    DB_PATH = os.path.join(CONFIG_PATH, 'aar_db.db')
-    database_connection = sqlite3.connect(DB_PATH)
-    return database_connection.cursor()
-
-def get_registrants():
-    cursor = get_cursor()
-    return cursor.execute("""SELECT * FROM registrant""")
-
-class ExecutionRecord(db.Model):
-    """Record when each Registrant is invoked by allamericanregress
-    and record timestamps."""
-    id = db.Column(db.Integer, primary_key=True)
-    os_version = db.Column(db.String())
-    timestamp = db.Column(db.Integer)
-
+LOG_FORMAT = '[regrOS-service] %(levelname)-7.7s %(message)s'
+logging.basicConfig(
+    filename=config.LOG_PATH,
+    level=logging.DEBUG,
+    format=LOG_FORMAT
+)
 
 def record_execution(os_version):
     """Saves records of when tests are executed, preserving the OS version and time of execution.
-    This table exists to reduce duplication of information between the CurrentRecords and FailedRecords tables.
     Returns the execution record ID"""
-    cursor = get_cursor()
-    logger.log(logging.DEBUG,
-               "Attempting to record execution for version %s", os_version)
-    new_execution_record = models.ExecutionRecord(
-        os_version=os_version, timestamp=time.time())
-    session.add(new_execution_record)
-    logger.log(logging.DEBUG, "Successfully recorded execution of %s",
-               os_version)
-    return new_execution_record.id
+    try:
+        connection = get_connection()
+        cursor = connection.cursor()
+        logging.debug("Attempting to record execution for version %s", os_version)
+        cursor.execute("""INSERT INTO execution_record(os_version, timestamp) VALUES ({os_vs}, {time})"""
+                       .format(os_vs=os_version, time=time.time()))
+        connection.commit()
+        row_id = cursor.lastrowid
+        connection.close()
+        logging.debug("Successfully recorded execution of {}".format(os_version))
+        return row_id
+    except sqlite3.IntegrityError as e:
+        logging.exception(str(e))
+        return None
 
+def get_connection():
+    """Returns the database connection"""
+    CONFIG_PATH = os.path.join('c:/', 'AllAmericanRegress')
+    # Absolute path for database file.
+    DB_PATH = os.path.join(CONFIG_PATH, 'aar_db.db')
+    return sqlite3.connect(DB_PATH)
+
+
+def get_registrants():
+    """Returns the list of registrants"""
+    connection = get_connection()
+    cursor = connection.cursor()
+    cursor.execute("""SELECT * FROM registrant""")
+    registrants = cursor.fetchall()
+    connection.close()
+    return registrants
+
+def get_current_record(registrant_id):
+    """Returns the current record for a given registrant, if it exists"""
+    connection = get_connection()
+    cursor = connection.cursor()
+    cursor.execute("""SELECT * FROM current_record WHERE registrant_id={reg_id}"""
+                   .format(reg_id=registrant_id))
+    current_record = cursor.fetchone()
+    connection.close()
+    return current_record
 
 def update_current_record(registrant_id, execution_id, succeeded):
     """Updates or inserts the current record for the given registrant. References the most recent
        execution record and the last successful one (i.e. can be queried to see if the registrant
        succeeded on its most recent execution)"""
-    with connect() as session:
-        # see if there is an existing record for the registrant
-        updated_record = session.query(models.CurrentRecord).filter(
-            models.CurrentRecord.registrant_id == registrant_id).first()
-        if (updated_record is None):  # if not, create a new record
-            updated_record = models.CurrentRecord(
-                registrant_id=registrant_id, last_execution_id=execution_id)
+    try:
+        current_record = get_current_record(registrant_id)
+        connection = get_connection()
+        cursor = connection.cursor()
+        if current_record is not None:
+            if (succeeded):
+                success_exec_id = execution_id
+            else:
+                success_exec_id = current_record[3]
+            # update existing record
+            cursor.execute(
+                """UPDATE current_record 
+                   SET last_execution_id={last_exec}, last_successful_execution_id={last_success}
+                   WHERE registrant_id={reg_id}"""
+                    .format(last_exec=execution_id, last_success=success_exec_id, reg_id=registrant_id))
         else:
-            updated_record.last_execution_id = execution_id
-        if (succeeded):
-            updated_record.last_successful_execution_id = execution_id
-
-        session.merge(updated_record)
-
+            # insert new record
+            if (succeeded):
+                cursor.execute(
+                    """INSERT INTO current_record(registrant_id, last_execution_id, last_successful_execution_id) 
+                       VALUES ({reg_id}, {last_exec}, {last_success})""".format(reg_id=registrant_id,
+                                                                                last_exec=execution_id,
+                                                                                last_success=execution_id))
+            else:
+                cursor.execute(
+                    """INSERT INTO current_record(registrant_id, last_execution_id)
+                       VALUES ({reg_id}, {last_exec})""".format(reg_id=registrant_id,
+                                                                last_exec=execution_id))
+        connection.commit()
+        connection.close()
+    except sqlite3.IntegrityError as e:
+        logging.exception(str(e))
 
 def record_failure(registrant_id, execution_id, exit_code, message):
     """Saves records of failed test executions' codes and messages, referencing the program ID and execution ID"""
-    with connect() as session:
-        failure_record = models.FailureRecord(
-            registrant_id=registrant_id,
-            execution_id=execution_id,
-            exit_code=exit_code,
-            message=message)
-        session.add(failure_record)
+    try:
+        connection = get_connection()
+        cursor = connection.cursor()
+        cursor.execute("""INSERT INTO failure_record(registrant_id, execution_id, exit_code, message)
+                          VALUES ({reg_id}, {exec_id}, {exit_code}, '{msg}')"""
+                       .format(reg_id=registrant_id, exec_id=execution_id, exit_code=exit_code, msg=message))
+        connection.commit()
+        connection.close()
+        logging.debug("Recorded failed execution for registrant #{}".format(registrant_id))
+    except sqlite3.IntegrityError as e:
+        logging.exception(str(e))
 
 def get_last_os_version():
     """Returns the last recorded OS version as '{major}.{minor}.{build}"""
-    with connect() as session:
-        exec_rec = session.query(models.ExecutionRecord).order_by(
-            models.ExecutionRecord.timestamp)[0]
-    if exec_rec == None:
+    connection = get_connection()
+    cursor = connection.cursor()
+    cursor.execute("""SELECT os_version FROM execution_record ORDER BY timestamp LIMIT 1""")
+    last_tested_version = cursor.fetchone()
+    connection.close()
+    if last_tested_version is None:
         return ""  # Depending on how we use this function, this return val may change
-    return exec_rec.os_version
+    return last_tested_version[0] # fetchone() wraps single value in a tuple
