@@ -54,8 +54,10 @@ def deregister_program(entry_id):
                    entry_id)
         session.query(models.Registrant).filter(
             models.Registrant.id == entry_id).delete()
-        # Should we delete corresponding entries in FailureRecords and
-        # CurrentRecords?
+        session.query(models.FailureRecord).filter(
+            models.FailureRecord.registrant_id == entry_id).delete()
+        session.query(models.CurrentRecord).filter(
+            models.CurrentRecord.registrant_id == entry_id). delete()
         logger.log(logging.DEBUG, "Deleted program id=%s", entry_id)
 
 
@@ -63,9 +65,11 @@ def all_registrants():
     """Returns all registrant entries."""
     yield from models.Registrant.query.all()
 
+
 def get_registrant(id):
     """Returns the registrant with the given id"""
     return models.Registrant.query.filter(models.Registrant.id == id).first()
+
 
 def get_failure_registrants():
     """Returns all the registrants that have failed on the last run"""
@@ -76,6 +80,7 @@ def get_failure_registrants():
             registrants.append(record.registrant)
 
     return registrants
+
 
 def record_execution(os_version):
     """Saves records of when tests are executed, preserving the OS version and time of execution.
