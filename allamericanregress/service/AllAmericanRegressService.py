@@ -11,19 +11,19 @@ import win32api
 import sys
 import os
 import win32com.shell.shell as shell
-from . import config
 from . import service_database_engine
 
 logging.basicConfig(
-    filename=config.LOG_PATH,
+    filename=service_database_engine.LOG_PATH,
     level=logging.DEBUG,
     format=service_database_engine.LOG_FORMAT
 )
 
+
 class RegrOSService(win32serviceutil.ServiceFramework):
     """Creates a Windows service that executes the testing framework automatically on boot."""
     _svc_name_ = "regrOS"
-    _svc_display_name_ = "regrOS" # display name that appears in Service Manager
+    _svc_display_name_ = "regrOS"  # display name that appears in Service Manager
 
     def __init__(self, args):
         win32serviceutil.ServiceFramework.__init__(self, args)
@@ -108,4 +108,3 @@ if __name__ == '__main__':
         win32serviceutil.HandleCommandLine(RegrOSService, None,
                                            ["regrOS", "--startup=auto", "install"])
         win32serviceutil.HandleCommandLine(RegrOSService, None, ["regrOS", "start"])
-

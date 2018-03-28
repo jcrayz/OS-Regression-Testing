@@ -1,16 +1,16 @@
 """AllAmericanRegress """
 import argparse
-from . import database_engine
-from . import utils
-from . import testing_framework
-from . import webapp
-from . import config
-from . import AllAmericanRegressService
-import subprocess
 import logging.config
 import os
+import subprocess
 import sys
 
+from allamericanregress.service import AllAmericanRegressService
+from . import config
+from . import database_engine
+from . import testing_framework
+from . import utils
+from . import webapp
 
 # configure logging to log everything to file and stdout
 logger = logging.getLogger(__name__)

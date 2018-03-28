@@ -1,10 +1,13 @@
 import sqlite3
 import logging
 import time
+import os
 
+CONFIG_PATH = os.path.join('c:/', 'AllAmericanRegress')
+LOG_PATH = os.path.join(CONFIG_PATH, 'service.log')
 LOG_FORMAT = '[regrOS-service] %(levelname)-7.7s %(message)s'
 logging.basicConfig(
-    filename=config.LOG_PATH,
+    filename=LOG_PATH,
     level=logging.DEBUG,
     format=LOG_FORMAT
 )
@@ -29,7 +32,6 @@ def record_execution(os_version):
 
 def get_connection():
     """Returns the database connection"""
-    CONFIG_PATH = os.path.join('c:/', 'AllAmericanRegress')
     # Absolute path for database file.
     DB_PATH = os.path.join(CONFIG_PATH, 'aar_db.db')
     return sqlite3.connect(DB_PATH)
