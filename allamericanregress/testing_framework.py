@@ -2,22 +2,15 @@
 from allamericanregress import database_engine
 import subprocess
 import logging
-import sys
-import os
 
-# Determines if the system is linux or windows to execute the proper import
-if sys.platform == 'linux':
-    import allamericanregress.win32api_dummy as win32api
-else:
-    import win32api
 logger = logging.getLogger(__name__)
 
 
 def get_current_os_version():
-    """Get the current version's major.minor.build number"""
-    version = win32api.GetVersionEx(1)
-    return "{major}.{minor}.{build}".format(
-        major=version[0], minor=version[1], build=version[2])
+    """Get the current OS version"""
+    import platform
+    version = platform.platform()
+    return version
 
 
 def execute_tests():

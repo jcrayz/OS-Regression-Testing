@@ -1,16 +1,15 @@
 """AllAmericanRegress """
 import argparse
-from . import database_engine
-from . import utils
-from . import testing_framework
-from . import webapp
-from . import config
-from . import AllAmericanRegressService
-import subprocess
 import logging.config
 import os
+import subprocess
 import sys
 
+from . import config
+from . import database_engine
+from . import testing_framework
+from . import utils
+from . import webapp
 
 # configure logging to log everything to file and stdout
 logger = logging.getLogger(__name__)
@@ -112,7 +111,7 @@ def cli():
 
     if args.install_service:
         install_proc = subprocess.Popen(['python', 'AllAmericanRegressService.py'],
-                         cwd='C:\\Users\\Jenna\\PycharmProjects\\Capstone\\allamericanregress')
+                         cwd='C:\\Users\\Jenna\\PycharmProjects\\Capstone\\allamericanregress\\service')
         install_proc.wait()
         exit_code = install_proc.returncode
         if (exit_code is 0):
