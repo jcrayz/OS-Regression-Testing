@@ -9,6 +9,7 @@ import time
 from allamericanregress import models
 from contextlib import contextmanager
 from allamericanregress.webapp import app_init
+from allamericanregress import testing_framework
 
 logger = logging.getLogger(__name__)
 
@@ -46,6 +47,9 @@ def register_program(name, path, command, author=''):
         session.add(new_registrant)
         logger.log(logging.DEBUG, "Successfully registered %s", repr(args))
 
+    # On register, the test will execute
+    testing_framework.execute_individual_test(new_registrant.id)
+
 
 def deregister_program(entry_id):
     """Removes the registered program with the given ID from the DB."""
@@ -66,16 +70,16 @@ def all_registrants():
     yield from models.Registrant.query.all()
 
 
-def get_registrant(id):
+def get_registrant(id_number):
     """Returns the registrant with the given id"""
-    return models.Registrant.query.filter(models.Registrant.id == id).first()
+    return models.Registrant.query.filter(models.Registrant.id == id_number).first()
 
 
 def get_failure_registrants():
     """Returns all the registrants that have failed on the last run"""
-    currentRecords = models.CurrentRecord.query.all()
+    current_records = models.CurrentRecord.query.all()
     registrants = []
-    for record in currentRecords:
+    for record in current_records:
         if record.last_successful_execution_id != record.last_execution_id:
             registrants.append(record.registrant)
 
@@ -105,12 +109,12 @@ def update_current_record(registrant_id, execution_id, succeeded):
         # see if there is an existing record for the registrant
         updated_record = session.query(models.CurrentRecord).filter(
             models.CurrentRecord.registrant_id == registrant_id).first()
-        if (updated_record is None):  # if not, create a new record
+        if updated_record is None:  # if not, create a new record
             updated_record = models.CurrentRecord(
                 registrant_id=registrant_id, last_execution_id=execution_id)
         else:
             updated_record.last_execution_id = execution_id
-        if (succeeded):
+        if succeeded:
             updated_record.last_successful_execution_id = execution_id
 
         session.merge(updated_record)
@@ -172,7 +176,7 @@ def get_last_os_version():
     """Returns the last recorded OS version as '{major}.{minor}.{build}"""
     with connect() as session:
         exec_rec = session.query(models.ExecutionRecord).order_by(
-            models.ExecutionRecord.timestamp)[0]
-    if exec_rec == None:
+            models.ExecutionRecord.timestamp.desc())[0]
+    if exec_rec is None:
         return ""  # Depending on how we use this function, this return val may change
     return exec_rec.os_version
