@@ -5,7 +5,6 @@ import os
 import subprocess
 import sys
 
-from allamericanregress.service import AllAmericanRegressService
 from . import config
 from . import database_engine
 from . import testing_framework
@@ -112,7 +111,7 @@ def cli():
 
     if args.install_service:
         install_proc = subprocess.Popen(['python', 'AllAmericanRegressService.py'],
-                         cwd='C:\\Users\\Jenna\\PycharmProjects\\Capstone\\allamericanregress')
+                         cwd='C:\\Users\\Jenna\\PycharmProjects\\Capstone\\allamericanregress\\service')
         install_proc.wait()
         exit_code = install_proc.returncode
         if (exit_code is 0):

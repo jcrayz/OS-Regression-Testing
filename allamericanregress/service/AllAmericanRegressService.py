@@ -11,7 +11,7 @@ import win32api
 import sys
 import os
 import win32com.shell.shell as shell
-from . import service_database_engine
+import service_database_engine
 
 logging.basicConfig(
     filename=service_database_engine.LOG_PATH,
