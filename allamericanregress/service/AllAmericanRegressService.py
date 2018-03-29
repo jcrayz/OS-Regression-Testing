@@ -7,7 +7,6 @@ import socket
 import time
 import logging
 import subprocess
-import win32api
 import sys
 import os
 import win32com.shell.shell as shell
@@ -60,10 +59,10 @@ class RegrOSService(win32serviceutil.ServiceFramework):
         return
 
     def get_current_os_version(self):
-        """Get the current version's major.minor.build number"""
-        version = win32api.GetVersionEx(1)
-        return "{major}.{minor}.{build}".format(
-            major=version[0], minor=version[1], build=version[2])
+        """Get the current OS version"""
+        import platform
+        version = platform.platform()
+        return version
 
     def execute_tests(self):
         """Execute all tests from DB."""

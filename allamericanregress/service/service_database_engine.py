@@ -19,8 +19,8 @@ def record_execution(os_version):
         connection = get_connection()
         cursor = connection.cursor()
         logging.debug("Attempting to record execution for version %s", os_version)
-        cursor.execute("""INSERT INTO execution_record(os_version, timestamp) VALUES ({os_vs}, {time})"""
-                       .format(os_vs=os_version, time=time.time()))
+        cursor.execute("""INSERT INTO execution_record(os_version, timestamp) VALUES (?, ?)""",
+                       (os_version, time.time()))
         connection.commit()
         row_id = cursor.lastrowid
         connection.close()
@@ -50,8 +50,7 @@ def get_current_record(registrant_id):
     """Returns the current record for a given registrant, if it exists"""
     connection = get_connection()
     cursor = connection.cursor()
-    cursor.execute("""SELECT * FROM current_record WHERE registrant_id={reg_id}"""
-                   .format(reg_id=registrant_id))
+    cursor.execute("""SELECT * FROM current_record WHERE registrant_id=?""", (registrant_id,))
     current_record = cursor.fetchone()
     connection.close()
     return current_record
@@ -72,22 +71,18 @@ def update_current_record(registrant_id, execution_id, succeeded):
             # update existing record
             cursor.execute(
                 """UPDATE current_record 
-                   SET last_execution_id={last_exec}, last_successful_execution_id={last_success}
-                   WHERE registrant_id={reg_id}"""
-                    .format(last_exec=execution_id, last_success=success_exec_id, reg_id=registrant_id))
+                   SET last_execution_id=?, last_successful_execution_id=?
+                   WHERE registrant_id=?""", (execution_id, success_exec_id, registrant_id))
         else:
             # insert new record
             if (succeeded):
                 cursor.execute(
                     """INSERT INTO current_record(registrant_id, last_execution_id, last_successful_execution_id) 
-                       VALUES ({reg_id}, {last_exec}, {last_success})""".format(reg_id=registrant_id,
-                                                                                last_exec=execution_id,
-                                                                                last_success=execution_id))
+                       VALUES (?, ?, ?)""", (registrant_id, execution_id, execution_id))
             else:
                 cursor.execute(
                     """INSERT INTO current_record(registrant_id, last_execution_id)
-                       VALUES ({reg_id}, {last_exec})""".format(reg_id=registrant_id,
-                                                                last_exec=execution_id))
+                       VALUES (?, ?)""", (registrant_id, execution_id))
         connection.commit()
         connection.close()
     except sqlite3.IntegrityError as e:
@@ -99,8 +94,7 @@ def record_failure(registrant_id, execution_id, exit_code, message):
         connection = get_connection()
         cursor = connection.cursor()
         cursor.execute("""INSERT INTO failure_record(registrant_id, execution_id, exit_code, message)
-                          VALUES ({reg_id}, {exec_id}, {exit_code}, '{msg}')"""
-                       .format(reg_id=registrant_id, exec_id=execution_id, exit_code=exit_code, msg=message))
+                          VALUES (?, ?, ?, ?)""", (registrant_id, execution_id, exit_code, message))
         connection.commit()
         connection.close()
         logging.debug("Recorded failed execution for registrant #{}".format(registrant_id))
@@ -111,7 +105,7 @@ def get_last_os_version():
     """Returns the last recorded OS version as '{major}.{minor}.{build}"""
     connection = get_connection()
     cursor = connection.cursor()
-    cursor.execute("""SELECT os_version FROM execution_record ORDER BY timestamp LIMIT 1""")
+    cursor.execute("""SELECT os_version FROM execution_record ORDER BY timestamp DESC LIMIT 1""")
     last_tested_version = cursor.fetchone()
     connection.close()
     if last_tested_version is None:
