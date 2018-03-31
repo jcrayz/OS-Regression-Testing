@@ -9,24 +9,31 @@
     {% endif %}
 </p>
 {% endmacro %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>regrOS</title>
+        <link rel="stylesheet" type="text/css" href="/static/stylesheets/default.css">
+    </head>
 
-<head>
-    <title>regrOS</title>
-    <link rel="stylesheet" type="text/css" href="/static/stylesheets/default.css">
-</head>
-
-<body>
-    <div>
-        <table>
-            <tr>
-                <td>
-                    <a href="{{ url_for('index') }}">Home</a>
-                </td>
-                <td>
-                    <a href="{{ url_for('logs') }}">Failure Logs</a>
-                </td>
-            </tr>
-        </table>
-    </div>
-    {% block body %} {% endblock %}
-</body>
+    <body>
+        <div>
+            <h1>regrOS</h1>
+            <h3>OS Regression Testing</h3>
+        </div>
+        <div>
+            <table class="nav_bar">
+                <tr>
+                    <td>
+                        <a href="{{ url_for('index') }}">Home</a>
+                    </td>
+                    <td>
+                        <a href="{{ url_for('logs') }}">Failure Logs</a>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        {% block body %} {% endblock %}
+    </body>
+</html>

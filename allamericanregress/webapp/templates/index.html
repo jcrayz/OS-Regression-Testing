@@ -7,10 +7,8 @@
 <div id="results">
     <h2>Results</h2> {# The result set query will require a join between 3 of the tables #}
     <p>Current OS Version: {{context.current_version}}</p>
-    <table border="1px">
-        <tr>
-            <th colspan="6">TEST RESULTS</th>
-        </tr>
+    <table>
+        <caption>TEST RESULTS</caption>
         <tr>
             <th>#</th>
             <th>NAME</th>
@@ -42,8 +40,10 @@
         </tr>
         {% endfor %}
     </table>
-    <button onclick="window.location.href='{{ url_for( 'execute_all' ) }}';">EXECUTE ALL</button>
-    <button onclick="window.location.href='{{ url_for( 'execute_failed' ) }}';">EXECUTE FAILED</button>
+    <div class="execution">
+        <button onclick="window.location.href='{{ url_for( 'execute_all' ) }}';">EXECUTE ALL</button>
+        <button onclick="window.location.href='{{ url_for( 'execute_failed' ) }}';">EXECUTE FAILED</button>
+    </div>
 </div>
 <hr>
 <div id="register_div">

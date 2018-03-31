@@ -1,14 +1,77 @@
-h4 {
-    color: gray;
+body {
+    font-family: 'Lucida Grande', 'Lucida Sans Unicode', 'Geneva', 'Verdana', sans-serif;
+    color: #2d3436;
+    padding-left: 30px;
 }
 
-table {
-    margin: 10px;
+h1 {
+    margin-bottom: 0px;
+}
+
+h3 {
+    margin-top: 0px;
+    font-weight: normal;
+}
+
+a:link, visited {
+    text-decoration: none;
+}
+
+.nav_bar table {
+    margin: 5px;
+}
+
+.nav_bar td {
+    padding-right: 30px;
+    border: none;
+}
+
+#results table, th, td {
+    border: 2px solid #636e72;
+    border-collapse: collapse;
+}
+
+#results table {
+    margin: auto;
+    background-color: #dfe6e9;
+    border-radius: 25px;
+    margin-bottom: 10px;
+}
+
+#results td {
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+#results table tr:nth-child(even) {
+    background-color: white;
+}
+
+#results table tr:nth-child(odd) {
+    background-color: #dfe6e9;
+}
+
+#results table th {
+    background-color: #dfe6e9;
+}
+
+#results caption {
+    font-weight: bold;
 }
 
 button {
     border-radius: 10px;
     padding: 5px;
+}
+
+.execution {
+    display: flex;
+    justify-content: center;
+}
+
+.execution button {
+    margin-right: 5px;
+    margin-left: 5px;
 }
 
 .register_form label {
