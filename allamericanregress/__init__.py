@@ -114,7 +114,7 @@ def cli():
 
     if args.install_service:
         install_proc = subprocess.Popen(['python', 'AllAmericanRegressService.py'],
-                         cwd='C:\\Users\\Jenna\\PycharmProjects\\Capstone\\allamericanregress\\service')
+                         cwd=os.path.join(os.path.dirname(__file__),'service'))
         install_proc.wait()
         exit_code = install_proc.returncode
         if (exit_code is 0):
