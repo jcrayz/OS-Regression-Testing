@@ -103,31 +103,6 @@ class RegrOSService(win32serviceutil.ServiceFramework):
             logging.info('pipenv: code=%s, output=%s',
                          code, console_output)
             logging.info('execute tests via lib')
-            execution_id = service_database_engine.record_execution(
-                self.get_current_os_version())
-            for p in service_database_engine.get_registrants():
-                # substitute the path into the command
-                command = p[2].replace('$1', p[1])
-                # execute the command
-                try:
-                    child = subprocess.Popen(command, stdout=subprocess.PIPE)
-                    # wait for it to finish get an exit code, and get text
-                    # output
-                    console_output = child.communicate()[0]
-                    code = child.returncode
-                except FileNotFoundError:
-                    code = 1
-                    console_output = "File not found."
-                was_successful = (code == 0)
-                # update registrant's current record
-                service_database_engine.update_current_record(
-                    p[0], execution_id, was_successful)
-                # record all failures
-                if not was_successful:
-                    logging.debug("Test {} failed.".format(p[3]))
-                    service_database_engine.record_failure(
-                        p[0], execution_id, code, "")
-                logging.debug("Test {} exited with code {}".format(p[3], code))
         except Exception as e:
             logging.exception(str(e))
 
