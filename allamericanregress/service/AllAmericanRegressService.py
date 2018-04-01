@@ -49,7 +49,7 @@ class RegrOSService(win32serviceutil.ServiceFramework):
         logging.info(' ** Checking for update ** ')
         last_tested_version = service_database_engine.get_last_os_version()
         current_version = self.get_current_os_version()
-        if (last_tested_version == current_version) and False:
+        if (last_tested_version == current_version):
             logging.info(' ** No update detected. Tests will not be run. **')
         else:
             logging.info(' ** Version changed from {old} to {new}. Running tests.'
