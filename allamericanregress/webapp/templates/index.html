@@ -83,7 +83,9 @@
                 <button disabled="true">Edit</button>
             </td>
             <td>{# delete button #}
-                <button disabled="true">Delete</button>
+                <button onclick="window.location.href='{{url_for('delete', registrant_id=registrant.id)}}';">
+                    Delete
+                </button>
             </td>
         </tr>
         {% endfor %}

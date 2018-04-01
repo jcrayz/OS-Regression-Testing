@@ -43,5 +43,34 @@ class TestDatabaseEngine (unittest.TestCase):
         # Delete the registrant
         database_engine.deregister_program(1)
 
+    def test_deregister_program(self):
+        # Ensure that results and registrants are empty
+        results = database_engine.get_current_results()
+        registrants = database_engine.all_registrants()
+        self.assertTrue(len(results) == 0)
+        self.assertTrue(len(list(registrants)) == 0)
+
+        # Register a program
+        passing = testing_framework_test.TestTestingFramework.pass_test
+        database_engine.register_program(passing[0], passing[1], passing[2], passing[3])
+
+        # Ensure program is registered
+        registrants = database_engine.all_registrants()
+        self.assertTrue(len(list(registrants)) == 1)
+        results = database_engine.get_current_results()
+        if len(results) == 0:
+            self.fail('Results should contain something')
+
+        # Deregister
+        database_engine.deregister_program(1)
+
+        # Check that results and registrants empty
+        results = database_engine.get_current_results()
+        registrants = database_engine.all_registrants()
+        self.assertTrue(len(results) == 0)
+        self.assertTrue(len(list(registrants)) == 0)
+
+
+
 if __name__ == '__main__':
     unittest.main()
