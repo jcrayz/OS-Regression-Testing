@@ -71,6 +71,16 @@ def execute_registrant(registrant, execution_id):
                                            console_output)
         print("Test {} exited with code {}".format(registrant, code))
 
+def conditionally_execute_tests():
+    logging.info(' ** Checking for update ** ')
+    last_tested_version = service_database_engine.get_last_os_version()
+    current_version = get_current_os_version()
+    if (last_tested_version == current_version):
+        logging.info(' ** No update detected. Tests will not be run. **')
+    else:
+        logging.info(' ** Version changed from {old} to {new}. Running tests.'
+                     .format(old=last_tested_version, new=current_version))
+        execute_tests()
 
 def main():
     f = open('C:\\temp\\debug.log', 'a')

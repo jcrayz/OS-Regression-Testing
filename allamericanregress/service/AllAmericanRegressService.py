@@ -46,15 +46,7 @@ class RegrOSService(win32serviceutil.ServiceFramework):
 
     def main(self):
         """Executes the tests registered with the application if OS version change detected"""
-        logging.info(' ** Checking for update ** ')
-        last_tested_version = service_database_engine.get_last_os_version()
-        current_version = self.get_current_os_version()
-        if (last_tested_version == current_version):
-            logging.info(' ** No update detected. Tests will not be run. **')
-        else:
-            logging.info(' ** Version changed from {old} to {new}. Running tests.'
-                         .format(old=last_tested_version, new=current_version))
-            self.execute_tests()
+        invoke_allamericanregress()
         time.sleep(30)
         return
 
@@ -64,12 +56,10 @@ class RegrOSService(win32serviceutil.ServiceFramework):
         version = platform.platform()
         return version
 
-    def execute_tests(self):
+    def invoke_allamericanregress(self):
         """Execute all tests from DB."""
-        # iterate over all tests
         try:
             logging.info('* * Locate pipenv command * *')
-            # child = subprocess.Popen(['pipenv','run','allamericanregress','--execute-tests'],cwd=os.path.dirname(os.path.dirname(os.path.dirname(__file__))), stdout=subprocess.PIPE)
             child = subprocess.Popen(
                 ['where', 'pipenv'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             # wait for it to finish get an exit code, and get text output
