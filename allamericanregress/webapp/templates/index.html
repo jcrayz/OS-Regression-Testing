@@ -22,9 +22,9 @@
             <td>{{results[0].id}}</td>
             <td>{{results[0].name}}</td>
             {% if results[1].last_execution_id == results[1].last_successful_execution_id %}
-            <td>PASS</td>
+            <td class="pass">PASS</td>
             {% else %}
-            <td>FAIL</td>
+            <td class="fail">FAIL</td>
             {% endif %} {% if results[3] is defined %}
             <td>{{ results[3].os_version }}</td>
             <td>{{ results[3].pretty_time() }}</td>
@@ -56,7 +56,7 @@
         {{render_field(context.form.author)}}
         <!--  -->
         {{render_field(context.form.command)}}
-        <input type="submit" value="Register">
+        <input type="submit" value="REGISTER">
     </form>
 </div>
 <hr>
