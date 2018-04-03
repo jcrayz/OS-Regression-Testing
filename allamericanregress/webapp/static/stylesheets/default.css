@@ -1,7 +1,8 @@
 body {
     font-family: 'Lucida Grande', 'Lucida Sans Unicode', 'Geneva', 'Verdana', sans-serif;
-    color: #2d3436;
+    color: #636e72;
     padding-left: 30px;
+    background-color: #e0ffff;
 }
 
 h1 {
@@ -57,10 +58,12 @@ td {
 
 td.pass {
     background-color: #00b894;
+    color: #e0ffff;
 }
 
 td.fail {
     background-color: #d63031;
+    color: #e0ffff;
 }
 
 
@@ -71,7 +74,7 @@ td.fail {
 }
 
 #nav_bar td {
-    background-color: white;
+    background-color: #e0ffff;
     border: none;
     padding-right: 30px;
 }
