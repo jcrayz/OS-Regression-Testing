@@ -9,6 +9,7 @@ import alembic
 
 logger = logging.getLogger(__name__)
 # hack to get a reference to the templates directory within the package
+# TODO: Use frozen path
 tmpl_dir = os.path.join(
     os.path.dirname(os.path.abspath(__file__)), 'templates')
 

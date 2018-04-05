@@ -24,12 +24,14 @@ def execute_tests():
     for registrant in database_engine.all_registrants():
         execute_registrant(registrant, execution_id)
 
+
 def execute_individual_test(id):
     """Get the registrant"""
     registrant = database_engine.get_registrant(id)
     execution_id = database_engine.record_execution(get_current_os_version())
     logging.info("Executing test for {}".format(registrant))
     execute_registrant(registrant, execution_id)
+
 
 def execute_failed_tests():
     """Execute all the tests that have failed"""
@@ -38,6 +40,7 @@ def execute_failed_tests():
     # iterate over failed tests
     for registrant in database_engine.get_failure_registrants():
         execute_registrant(registrant, execution_id)
+
 
 def execute_registrant(registrant, execution_id):
     """Execute a registrant with an execution record"""
@@ -50,7 +53,7 @@ def execute_registrant(registrant, execution_id):
         try:
             child = subprocess.Popen(command, stdout=subprocess.PIPE)
             # wait for it to finish get an exit code, and get text output
-            console_output = child.communicate()[0]
+            console_output = str(child.communicate()[0],'utf-8')
             code = child.returncode
         except FileNotFoundError:
             code = 1

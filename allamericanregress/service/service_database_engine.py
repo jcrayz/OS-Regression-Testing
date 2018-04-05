@@ -5,7 +5,7 @@ import os
 
 CONFIG_PATH = os.path.join('c:/', 'AllAmericanRegress')
 LOG_PATH = os.path.join(CONFIG_PATH, 'service.log')
-LOG_FORMAT = '[regrOS-service] %(levelname)-7.7s %(message)s'
+LOG_FORMAT = '[regrOS-service] %(asctime)s %(levelname)-7.7s %(message)s'
 logging.basicConfig(
     filename=LOG_PATH,
     level=logging.DEBUG,

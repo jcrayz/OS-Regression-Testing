@@ -89,7 +89,9 @@
                 <button class="btn btn-sm btn-warning" disabled="true">Edit</button>
             </td>
             <td>{# delete button #}
-                <button class="btn btn-sm btn-danger" disabled="true">Delete</button>
+                <button class="btn btn-sm btn-danger" onclick="window.location.href='{{url_for('delete', registrant_id=registrant.id)}}';">
+                    Delete
+              </button>
             </td>
         </tr>
         {% endfor %}

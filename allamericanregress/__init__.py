@@ -57,6 +57,9 @@ parser.add_argument(
     help=
     """Specify command to execute the registry entry in the form 'command $1'. $1 will be replaced with the program path."""
 )
+# Program command, only if registering
+parser.add_argument(
+    '--author', metavar='author', help= "Name of the author of the registry entry")
 # List all programs.
 parser.add_argument(
     '--list', action='store_true', help="List all registered applications.")
@@ -110,8 +113,9 @@ def cli():
         # quit()
 
     if args.install_service:
+        # TODO: Use Frozen path
         install_proc = subprocess.Popen(['python', 'AllAmericanRegressService.py'],
-                         cwd='C:\\Users\\Jenna\\PycharmProjects\\Capstone\\allamericanregress\\service')
+                         cwd=os.path.join(os.path.dirname(__file__),'service'))
         install_proc.wait()
         exit_code = install_proc.returncode
         if (exit_code is 0):
@@ -152,10 +156,14 @@ def cli():
         if args.command is None:
             print("Command must be supplied.")
             error = True
+        if args.author is None:
+            author = ''
+        else:
+            author = args.author
         if error:
             quit()
         print(REGISTER_MESSAGE.format(args.name, path, args.command))
-        database_engine.register_program(args.name, path, args.command)
+        database_engine.register_program(args.name, path, args.command, author)
 
     if args.execute_tests:
         testing_framework.execute_tests()

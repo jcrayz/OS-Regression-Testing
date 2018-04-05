@@ -59,6 +59,12 @@ def execute_individual(registrant_id):
     testing_framework.execute_individual_test(registrant_id)
     return redirect(url_for('index'))
 
+@app.route("/delete/<int:registrant_id>")
+def delete(registrant_id):
+    # route for deleting a registrant
+    database_engine.deregister_program(registrant_id)
+    return redirect(url_for('index'))
+
 def main():
     """File entry point"""
     app.run(debug=True)
