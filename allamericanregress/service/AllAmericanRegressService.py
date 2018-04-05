@@ -112,7 +112,8 @@ if __name__ == '__main__':
     """Installs the service using admin privileges. Privilege code taken from Jorenko's answer at
     https://stackoverflow.com/questions/130763/request-uac-elevation-from-within-a-python-script#answer-11746382"""
     ASADMIN = "--asadmin"
-    if sys.argv[-1] != ASADMIN:
+    ISFROZEN = "--frozen"
+    if ASADMIN not in sys.argv:
         script = os.path.abspath(sys.argv[0])  # get current execution command
         # add admin arg to avoid infinite recursion
         new_args = sys.argv[1:] + [ASADMIN]
