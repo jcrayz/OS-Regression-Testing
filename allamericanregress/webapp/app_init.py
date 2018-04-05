@@ -18,9 +18,6 @@ else:
         os.path.dirname(os.path.abspath(__file__)), 'templates')
     static_dir = os.path.join(
         os.path.dirname(os.path.abspath(__file__)), 'static')
-print('=' * 20)
-print('Templates path: %s' % tmpl_dir)
-print('=' * 20)
 #  ========== Flask App ==========
 app = flask.Flask(__name__, static_url_path='/static',
                   template_folder=tmpl_dir, static_folder=static_dir)
