@@ -10,7 +10,6 @@ logger.debug('index')
 
 # ========== Routes ==========
 
-
 @app.route("/", methods=['GET', 'POST'])
 @app.route("/index", methods=['GET', 'POST'])
 def index():

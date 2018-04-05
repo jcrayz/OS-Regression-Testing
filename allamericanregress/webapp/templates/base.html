@@ -9,24 +9,28 @@
     {% endif %}
 </p>
 {% endmacro %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>regrOS</title>
+        <link rel="stylesheet" href="/static/bootstrap-3.3.7-dist/css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="/static/stylesheets/default.css">
+        <script src="/static/bootstrap-3.3.7-dist/js/bootstrap.js"></script>
+        <script src="/static/js/script.js"></script>
+    </head>
 
-<head>
-    <title>regrOS</title>
-    <link rel="stylesheet" type="text/css" href="/static/stylesheets/default.css">
-</head>
-
-<body>
-    <div>
-        <table>
-            <tr>
-                <td>
-                    <a href="{{ url_for('index') }}">Home</a>
-                </td>
-                <td>
-                    <a href="{{ url_for('logs') }}">Failure Logs</a>
-                </td>
-            </tr>
-        </table>
+    <body>
+    <div class="container">
+        <div class="page-header">
+            <h1>regrOS <small>OS Regression Testing</small></h1>
+            <ul class="nav nav-pills" role="tablist">
+             <li id="home_pill" role="presentation" class="active"><a href="{{ url_for('index') }}">Home</a></li>
+             <li id="logs_pill" role="presentation"><a href="{{ url_for('logs') }}">Failure Logs</a></li>
+            </ul>
+            <script>setActiveTab();</script>
+        </div>
+        {% block body %} {% endblock %}
     </div>
-    {% block body %} {% endblock %}
-</body>
+    </body>
+</html>
