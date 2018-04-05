@@ -117,17 +117,17 @@ def cli():
         # quit()
 
     if args.install_service:
-        # TODO: Use Frozen path
         if not config.FROZEN:
             install_proc = subprocess.Popen(['python', 'AllAmericanRegressService.py'],
                              cwd=os.path.join(os.path.dirname(__file__),'service'))
             install_proc.wait()
             exit_code = install_proc.returncode
-            if (exit_code is 0):
+            if (exit_code == 0):
                 print('Install succeeded.')
             else:
                 print('There was an error installing.')
         else:
+            # TODO: install service from frozen executable
             raise NotImplementedError("Windows service from Frozen distribution not implemented!")
 
     if args.delete_id:
