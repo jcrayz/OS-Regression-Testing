@@ -11,15 +11,19 @@ logger = logging.getLogger(__name__)
 # hack to get a reference to the templates directory within the package
 # TODO: Use frozen path
 if config.FROZEN:
-	tmpl_dir = os.path.join(config.MODULE_PATH,'templates')
+    tmpl_dir = os.path.join(config.MODULE_PATH, 'templates')
+    static_dir = os.path.join(config.MODULE_PATH, 'static')
 else:
-	tmpl_dir = os.path.join(
-	    os.path.dirname(os.path.abspath(__file__)), 'templates')
-print('='*20)
+    tmpl_dir = os.path.join(
+        os.path.dirname(os.path.abspath(__file__)), 'templates')
+    static_dir = os.path.join(
+        os.path.dirname(os.path.abspath(__file__)), 'static')
+print('=' * 20)
 print('Templates path: %s' % tmpl_dir)
-print('='*20)
+print('=' * 20)
 #  ========== Flask App ==========
-app = flask.Flask(__name__, static_url_path='/static', template_folder=tmpl_dir)
+app = flask.Flask(__name__, static_url_path='/static',
+                  template_folder=tmpl_dir, static_folder=static_dir)
 # auto reload template engine when template files change
 app.jinja_env.auto_reload = True
 app.config['TEMPLATES_AUTO_RELOAD'] = True
