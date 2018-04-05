@@ -78,6 +78,7 @@ class RegrOSService(win32serviceutil.ServiceFramework):
             logging.info('console output: %s', console_output)
             # ========== Try to install pipenv env ==========
             logging.info('* * pipenv install * *')
+            # TODO: Use Frozen path
             env_path = os.path.dirname(
                 os.path.dirname(os.path.dirname(__file__)))
             logging.info('path=%s', env_path)

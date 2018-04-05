@@ -113,6 +113,7 @@ def cli():
         # quit()
 
     if args.install_service:
+        # TODO: Use Frozen path
         install_proc = subprocess.Popen(['python', 'AllAmericanRegressService.py'],
                          cwd=os.path.join(os.path.dirname(__file__),'service'))
         install_proc.wait()

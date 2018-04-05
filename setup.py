@@ -9,6 +9,7 @@ from setuptools import setup, find_packages
 # README file and 2) it's easier to type in the README file than to put a raw
 # string in below ...
 def read(fname):
+    # TODO: Use Frozen path
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
 
 
