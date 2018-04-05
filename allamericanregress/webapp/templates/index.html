@@ -45,20 +45,28 @@
 <div id="register_div">
     <h2>Register Test Executable</h2>
     <form method="POST" action="{{url_for('index')}}">
-        <div class="form-group">
-            {{context.form.hidden_tag()}} {{render_field(context.form.path)}}
-            <!--  -->
-            {{render_field(context.form.name)}}
-            <!--  -->
-            {{render_field(context.form.author)}}
-            <!--  -->
-            {{render_field(context.form.command)}}
-            <input class="btn btn-primary" type="submit" value="REGISTER">
+        <div class="form-group container">
+            {{context.form.hidden_tag()}}
+            <div class="col-xs-7">
+                {{render_field(context.form.path, class="form-control")}}
+            </div>
+            <div class="col-xs-7">
+                {{render_field(context.form.name, class="form-control")}}
+            </div>
+            <div class="col-xs-7">
+                {{render_field(context.form.author, class="form-control")}}
+            </div>
+            <div class="col-xs-7">
+                {{render_field(context.form.command, class="form-control")}}
+            </div>
+            <div class="col-xs-7">
+                <input class="btn btn-primary" type="submit" value="REGISTER">
+            </div>
         </div>
     </form>
 </div>
 <hr>
-<div id="registered_tests">
+<div id="registered_tests col-xs-12">
     <h2>Registered Tests</h2>
     <table class="table table-striped">
         <tr>
