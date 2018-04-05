@@ -7,11 +7,19 @@ import flask_migrate
 flask_migrate_package = os.path.dirname(flask_migrate.__file__)
 block_cipher = None
 
+webapp_path = os.path.join('allamericanregress','webapp')
 
+templates_path = os.path.join(webapp_path,'templates')
+statics_path = os.path.join(webapp_path,'static')
+datas  = [
+  (flask_migrate_package,'flask_migrate'),
+  (templates_path,'templates'),
+  (statics_path,'static'),
+]
 a = Analysis([os.path.join('allamericanregress','__main__.py')],
              pathex=[os.getcwd()],
              binaries=[],
-             datas=[(flask_migrate_package,'flask_migrate')],
+             datas=datas,
              hiddenimports=[],
              hookspath=[],
              runtime_hooks=[],

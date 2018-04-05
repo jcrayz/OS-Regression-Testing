@@ -10,11 +10,16 @@ import alembic
 logger = logging.getLogger(__name__)
 # hack to get a reference to the templates directory within the package
 # TODO: Use frozen path
-tmpl_dir = os.path.join(
-    os.path.dirname(os.path.abspath(__file__)), 'templates')
-
+if config.FROZEN:
+	tmpl_dir = os.path.join(config.MODULE_PATH,'templates')
+else:
+	tmpl_dir = os.path.join(
+	    os.path.dirname(os.path.abspath(__file__)), 'templates')
+print('='*20)
+print('Templates path: %s' % tmpl_dir)
+print('='*20)
 #  ========== Flask App ==========
-app = flask.Flask(__name__, static_url_path='/static')
+app = flask.Flask(__name__, static_url_path='/static', template_folder=tmpl_dir)
 # auto reload template engine when template files change
 app.jinja_env.auto_reload = True
 app.config['TEMPLATES_AUTO_RELOAD'] = True
