@@ -118,14 +118,17 @@ def cli():
 
     if args.install_service:
         # TODO: Use Frozen path
-        install_proc = subprocess.Popen(['python', 'AllAmericanRegressService.py'],
-                         cwd=os.path.join(os.path.dirname(__file__),'service'))
-        install_proc.wait()
-        exit_code = install_proc.returncode
-        if (exit_code is 0):
-            print('Install succeeded.')
+        if not config.FROZEN:
+            install_proc = subprocess.Popen(['python', 'AllAmericanRegressService.py'],
+                             cwd=os.path.join(os.path.dirname(__file__),'service'))
+            install_proc.wait()
+            exit_code = install_proc.returncode
+            if (exit_code is 0):
+                print('Install succeeded.')
+            else:
+                print('There was an error installing.')
         else:
-            print('There was an error installing.')
+            raise NotImplementedError("Windows service from Frozen distribution not implemented!")
 
     if args.delete_id:
         database_engine.deregister_program(args.delete_id)
