@@ -53,7 +53,7 @@ def execute_registrant(registrant, execution_id):
         try:
             child = subprocess.Popen(command, stdout=subprocess.PIPE)
             # wait for it to finish get an exit code, and get text output
-            console_output = child.communicate()[0]
+            console_output = str(child.communicate()[0],'utf-8')
             code = child.returncode
         except FileNotFoundError:
             code = 1
