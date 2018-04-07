@@ -2,6 +2,9 @@
 <div id="results">
     <h2>Results</h2> {# The result set query will require a join between 3 of the tables #}
     <h4 class="text-center">Current OS Version: <strong>{{context.current_version}}</strong></h4>
+    <div class="text-right">
+        <button id= "toggle-pass" class="btn" onclick="togglePassingTests();">Hide Passing Tests</button>
+    </div>
     <table class="table table-striped">
         <caption>TEST RESULTS</caption>
         <tr>
@@ -13,14 +16,21 @@
             <th>EXECUTE</th>
         </tr>
         {% for results in context.test_results %}
-        <tr>
+        {% if results[1].last_execution_id == results[1].last_successful_execution_id %}
+        <tr class="tr-pass">
+        {% else %}
+        <tr class="tr-fail">
+        {% endif %}
             <td>{{results[0].id}}</td>
             <td>{{results[0].name}}</td>
+            <td>
             {% if results[1].last_execution_id == results[1].last_successful_execution_id %}
-            <td class="pass">PASS</td>
+            <label class="label label-success">PASS</label>
             {% else %}
-            <td class="fail">FAIL</td>
-            {% endif %} {% if results[3] is defined %}
+            <label class="label label-danger">FAIL</label>
+            {% endif %}
+            </td>
+            {% if results[3] is defined %}
             <td>{{ results[3].os_version }}</td>
             <td>{{ results[3].pretty_time() }}</td>
             {% else %}
