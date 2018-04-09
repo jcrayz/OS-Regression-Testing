@@ -15,6 +15,10 @@ import shlex
 
 import sys
 
+to_append = os.path.dirname(os.path.dirname(__file__))
+sys.path.append(to_append)
+
+
 CONFIG_PATH = os.path.join('c:/', 'AllAmericanRegress')
 LOG_PATH = os.path.join(CONFIG_PATH, 'service.log')
 LOG_FORMAT = '[regrOS-service] %(asctime)s %(levelname)-7.7s %(message)s'
@@ -51,12 +55,24 @@ class RegrOSService(win32serviceutil.ServiceFramework):
         logger.info('Stopping service ...')
         self.stop_requested = True
 
+    def SvcRun(self):
+        self.ReportServiceStatus(win32service.SERVICE_RUNNING)
+        self.SvcDoRun()
+        # Once SvcDoRun terminates, the service has stopped.
+        # We tell the SCM the service is still stopping - the C framework
+        # will automatically tell the SCM it has stopped when this returns.
+        self.ReportServiceStatus(win32service.SERVICE_STOP_PENDING)
+
     def SvcDoRun(self):
         """When launched by service control manager, log brief intro"""
+        logger.info('SvcDoRun')
         servicemanager.LogMsg(servicemanager.EVENTLOG_INFORMATION_TYPE,
                               servicemanager.PYS_SERVICE_STARTED,
                               (self._svc_name_, ''))
         self.main()
+        rc = None
+        while rc != win32event.WAIT_OBJECT_0:
+            rc = win32event.WaitForSingleObject(self.hWaitStop, 5000)
 
     def main(self):
         """Executes the tests registered with the application if OS version change detected"""
@@ -68,10 +84,9 @@ class RegrOSService(win32serviceutil.ServiceFramework):
         # else:
         #     logger.info(' ** Version changed from {old} to {new}. Running tests.'
         #                  .format(old=last_tested_version, new=current_version))
-        logger.disabled = False
         logger.info(' ** Executing tests ** ')
         self.execute_tests()
-        time.sleep(30)
+        # time.sleep(30)
         return
 
     def get_current_os_version(self):
@@ -122,7 +137,7 @@ class RegrOSService(win32serviceutil.ServiceFramework):
                             code, console_output)
                 # logger.info('execute tests via lib')
             else:
-                logger.info('Cosntructing args')
+                logger.info('Constructing args')
                 args = (['regros.exe', '--execute-tests'],)
                 kwargs = dict(cwd=sys._MEIPASS,
                               stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -146,8 +161,9 @@ def install_commandline():
                                            ["regrOS", "--startup=auto", "install"])
     logger.info('second win32serviceutil.HandleCommandLine')
     rs.append(c)
+    # this function behaves as expected if called with "debug" instead of start
     c = win32serviceutil.HandleCommandLine(
-        RegrOSService, None, ["regrOS", "debug"])
+        RegrOSService, None, ["regrOS", "start"])
     rs.append(c)
     logger.info('finished win32serviceutil.HandleCommandLine commands')
     logger.info(

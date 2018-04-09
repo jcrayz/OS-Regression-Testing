@@ -5,8 +5,10 @@ Execute from repossitory root."""
 import os
 import flask_migrate
 import flask_admin
+
 flask_migrate_package = os.path.dirname(flask_migrate.__file__)
 flask_admin_package = os.path.dirname(flask_admin.__file__)
+
 block_cipher = None
 
 webapp_path = os.path.join('allamericanregress','webapp')
