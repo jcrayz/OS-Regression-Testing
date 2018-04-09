@@ -8,8 +8,10 @@ to_append = os.path.dirname(os.path.dirname(__file__))
 sys.path.append(to_append)
 
 import allamericanregress
+
+
+def main():
+    allamericanregress.cli()
+
 if __name__ == '__main__':
-    try:
-        allamericanregress.cli()
-    except ModuleNotFoundError:
-        print('script failed at runtime')
+    main()

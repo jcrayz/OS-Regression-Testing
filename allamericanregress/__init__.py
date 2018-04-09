@@ -115,18 +115,25 @@ def cli():
         # quit()
 
     if args.install_service:
+        logger.info('Install service')
         if not config.FROZEN:
             install_proc = subprocess.Popen(['python', 'AllAmericanRegressService.py'], cwd=os.path.join(
                 os.path.dirname(__file__), 'service'))
+            logger.info(
+                'Installing service from source dist. %s', install_proc)
+            install_proc.wait()
+            exit_code = install_proc.returncode
+            if (exit_code == 0):
+                print('Install succeeded.')
+            else:
+                print('There was an error installing.')
         else:
-            install_proc = subprocess.Popen(
-                ['regros.exe'], cwd=config.MODULE_PATH)
-        install_proc.wait()
-        exit_code = install_proc.returncode
-        if (exit_code == 0):
-            print('Install succeeded.')
-        else:
-            print('There was an error installing.')
+            logger.info(
+                'Installing service from frozen dist.')
+            from allamericanregress.service import AllAmericanRegressService
+            AllAmericanRegressService.main()
+            # install_proc = subprocess.Popen(
+            #     ['regros.exe', '--install-frozen'], cwd=config.MODULE_PATH, shell=True)
 
     if args.delete_id:
         database_engine.deregister_program(args.delete_id)
