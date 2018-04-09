@@ -10,6 +10,7 @@ from . import database_engine
 from . import testing_framework
 from . import utils
 from . import webapp
+from .service import AllAmericanRegressService
 
 
 # configure logging to log everything to file and stdout
@@ -130,7 +131,6 @@ def cli():
         else:
             logger.info(
                 'Installing service from frozen dist.')
-            from allamericanregress.service import AllAmericanRegressService
             AllAmericanRegressService.main()
             # install_proc = subprocess.Popen(
             #     ['regros.exe', '--install-frozen'], cwd=config.MODULE_PATH, shell=True)
