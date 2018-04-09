@@ -135,18 +135,19 @@ def main():
         script = os.path.abspath(sys.argv[0])  # get current execution command
         # add admin arg to avoid infinite recursion
         new_args = sys.argv[1:] + [ASADMIN]
-        logging.info('Rerun as admin params: %s', params)
-        with open(LOG_PATH,'a') as f:
-            f.write(f'params: {params}\n')
-            f.write(f'sys.executable: {sys.executable}\n')
         if not FROZEN:
             params = ' '.join([script] + new_args)
+            logging.info('Rerun as admin params: %s', params)
             shell.ShellExecuteEx(lpVerb='runas', lpFile=sys.executable,
                              lpParameters=params)  # relaunch as admin
         else:
             params = ' '.join(new_args)
-            shell.ShellExecuteEx(lpVerb='runas',
+            logging.info('Rerun as admin params: %s', params)
+            shell.ShellExecuteEx(lpVerb='runas',lpFile=sys.executable,
                              lpParameters=params)  # relaunch as admin
+        with open(LOG_PATH,'a') as f:
+            f.write(f'params: {params}\n')
+            f.write(f'sys.executable: {sys.executable}\n')
 
     else:
         logging.info('Service is admin')
