@@ -19,7 +19,8 @@
         {% if results[1].last_execution_id == results[1].last_successful_execution_id %}
         <tr class="tr-pass">
         {% else %}
-        <tr class="tr-fail">
+        <tr class="tr-fail" onclick="alert('FAILURE OUTPUT\nExit Code: {{results[4].exit_code}}' +
+                                            '\nMessage: {{results[4].message}}')">
         {% endif %}
             <td>{{results[0].id}}</td>
             <td>{{results[0].name}}</td>
@@ -30,7 +31,7 @@
             <label class="label label-danger">FAIL</label>
             {% endif %}
             </td>
-            {% if results[3] is defined %}
+            {% if results[3] is not none %}
             <td>{{ results[3].os_version }}</td>
             <td>{{ results[3].pretty_time() }}</td>
             {% else %}
