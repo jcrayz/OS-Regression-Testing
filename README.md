@@ -39,7 +39,7 @@ If the command returns an **Exit Code** of 0 then it is assumed that all of the 
 is returned, it is assumed that one or more of the tests failed. All of the results will be able to be viewed in the 
 web app. 
 
-![Register Test Executable](/screenshots/Register.png)
+![register test executable](/screenshots/Register.png "Register Test Executable")
 
 #### 2. From the Command Line
 
@@ -56,7 +56,7 @@ the page. The table displays the ID Number of the registered test suite, the Nam
 when it was executed (either Pass or Fail), the operating system’s version number that the test suite last passed on, 
 the date that the test suite last passed, and a button to execute the individual test.
 
-![Results Table](/screenshots/Results.png)
+![results table](/screenshots/Results.png "Results Table")
 
 If there is a failure of any test, click the Failure Logs link at the top of the page. This page shows any failure of 
 any test suite, at any time. This table shows the ID Number of the registered test suite, the Name of the test suite, 
@@ -64,15 +64,17 @@ the Execution ID of the execution record for when the test suite was executed, t
 suite was executed, the version of the Operating System that the executed test suite failed on, the returned Exit Code 
 from the execution, and the Message or the command line output from the execution. 
 
-![Failure Logs](/screenshots/Failures.png)
+![failure logs](/screenshots/Failures.png "Failure Logs")
 
 ## Web App
 
 #### Run the Web App
 
-From the command line, cd to where regrOS is installed on your machine. Once at the command line, execute `python -m 
-allamericanregress --webapp` and keep the command prompt open. This will run the web app so that it is accessible on 
+From the command line, cd to where regrOS is installed on your machine. Once at the command line, execute `regrOS.exe 
+--webapp` and keep the command prompt open. This will run the web app so that it is accessible on 
 any web browser of the local machine at http://127.0.0.1:5000/
+
+![command line](/screenshots/CommandLine.png "Command Line")
 
 #### Stop Running the Web App
 
@@ -104,7 +106,7 @@ machine. On the home (or index) page of the web app, there will be a table of al
 bottom of the page. In the last column of each row, there is a Delete button. Click the button in the row of the record 
 you wish to delete, and this will delete the registered test suite and the logs associated with the test suite. 
 
-![Delete Test Suite](/screenshots/Registered.png)
+![delete test suite](/screenshots/Registered.png "Delete Test Suite")
 
 #### 2. From the Command Line
 
