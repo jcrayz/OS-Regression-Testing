@@ -18,9 +18,9 @@ FROZEN = getattr(sys, 'frozen', False)
 #  ========== Paths ==========
 # Absolute path for folder where database and logs will be stored.
 if sys.platform == 'linux':
+    print('on linux')
     CONFIG_PATH = os.path.join(os.path.expanduser('~'), 'AllAmericanRegress')
 else:
-    print('on windows')
     CONFIG_PATH = os.path.join('c:/', 'AllAmericanRegress')
 # Absolute path for database file.
 DB_PATH = os.path.join(CONFIG_PATH, 'aar_db.db')
