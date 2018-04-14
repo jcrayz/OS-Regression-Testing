@@ -45,6 +45,18 @@ class Registrant(db.Model):
     def __repr__(self):
         return self.name
 
+    def get_age_str(self):
+        current_time = time.time()
+        age_in_sec = current_time - self.timestamp
+        age_in_days = int(round(age_in_sec/(60*60*24)))
+        if (age_in_days > 1):
+            return "{} days".format(str(age_in_days))
+        elif (age_in_days == 1):
+            return "1 day"
+        else:
+            return "Today"
+
+
 
 class ExecutionRecord(db.Model):
     """Record when each Registrant is invoked by allamericanregress

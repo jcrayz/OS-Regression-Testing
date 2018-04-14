@@ -86,6 +86,7 @@
             <th>AUTHOR</th>
             <th>COMMAND</th>
             <th>FILEPATH</th>
+            <th>REGISTERED</th>
             <th></th>
             <th></th>
         </tr>
@@ -96,6 +97,7 @@
             <td>{{registrant.author}}</td>
             <td>{{registrant.command}}</td>
             <td>{{registrant.path}}</td>
+            <td>{{registrant.get_age_str()}}</td>
             <td>{# edit button #}
                 <button class="btn btn-sm btn-warning" disabled="true">Edit</button>
             </td>
