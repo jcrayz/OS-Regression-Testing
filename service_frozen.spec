@@ -3,7 +3,7 @@
 block_cipher = None
 
 
-a = Analysis(['allamericanregress\\service\\AllAmericanRegressService.py'],
+a = Analysis(['allamericanregress\\service\\service_frozen.py'],
              pathex=['D:\\repos\\Capstone'],
              binaries=[],
              datas=[],
@@ -21,7 +21,7 @@ exe = EXE(pyz,
           a.binaries,
           a.zipfiles,
           a.datas,
-          name='AllAmericanRegressService',
+          name='service_frozen',
           debug=False,
           strip=False,
           upx=True,
