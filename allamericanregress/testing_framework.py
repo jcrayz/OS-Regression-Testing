@@ -2,6 +2,7 @@
 from allamericanregress import database_engine
 import subprocess
 import logging
+import time
 
 logger = logging.getLogger(__name__)
 
@@ -51,18 +52,21 @@ def execute_registrant(registrant, execution_id):
         logger.debug('Executing command:%s', command)
         # execute the command
         try:
+            start_time = time.time()
             child = subprocess.Popen(command, stdout=subprocess.PIPE)
             # wait for it to finish get an exit code, and get text output
             console_output = str(child.communicate()[0],'utf-8')
+            execution_time = time.time() - start_time
             code = child.returncode
         except FileNotFoundError:
+            execution_time = 0
             code = 1
             console_output = ''
 
         # tests pass if the exit code was 0
         was_successful = (code == 0)
         database_engine.update_current_record(program_id, execution_id,
-                                              was_successful)
+                                              was_successful, execution_time)
 
         # record all failed executions
         if not was_successful:

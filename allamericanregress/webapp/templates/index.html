@@ -13,6 +13,8 @@
             <th>LAST RESULT</th>
             <th>VERSION OF LAST SUCCESS</th>
             <th>DATE OF LAST SUCCESS</th>
+            <th>AVG EXEC TIME (s)</th>
+            <th>LAST EXEC TIME (s)</th>
             <th>EXECUTE</th>
         </tr>
         {% for results in context.test_results %}
@@ -24,7 +26,7 @@
         {% endif %}
             <td>{{results[0].id}}</td>
             <td>{{results[0].name}}</td>
-            <td>
+            <td class="text-center">
             {% if results[1].last_execution_id == results[1].last_successful_execution_id %}
             <label class="label label-success">PASS</label>
             {% else %}
@@ -38,6 +40,8 @@
             <td>NONE</td>
             <td>NEVER</td>
             {% endif %}
+            <td class="text-right">{{ results[1].get_avg_execution_time() }}</td>
+            <td class="text-right">{{ results[1].get_last_execution_time() }}</td>
             <td>
                 <button class="btn btn-sm btn-warning"
                         onclick="window.location.href='{{url_for('execute_individual', registrant_id=results[0].id)}}';">
