@@ -1,7 +1,8 @@
 """Frozen version of the service
 Windows service for executing registered tests on boot when an update occurred."""
 
-# based off of this: https://www.codeproject.com/Articles/1115336/Using-Python-to-Make-a-Windows-Service
+# based off of this:
+# https://www.codeproject.com/Articles/1115336/Using-Python-to-Make-a-Windows-Service
 import win32serviceutil
 import win32service
 import win32event
@@ -145,18 +146,34 @@ def install_commandline():
 def main():
     """Installs the service using admin privileges. Privilege code taken from Jorenko's answer at
     https://stackoverflow.com/questions/130763/request-uac-elevation-from-within-a-python-script#answer-11746382"""
+    print('Call this executable as "service_frozen.exe --startup=auto install" to install the service with autostart')
     logger.info('Service main running as frozen dist.')
     logger.info('Service called with args: %s', sys.argv)
-    with open(LOG_PATH, 'a') as f:
-        # cause calls to print() to be written to a file
-        with contextlib.redirect_stdout(f):
-            # the Windows Service framework calls this executable with no args.
-            if len(sys.argv) == 1:
-                servicemanager.Initialize()
-                servicemanager.PrepareToHostSingle(RegrOSService)
-                servicemanager.StartServiceCtrlDispatcher()
-            else:
-                win32serviceutil.HandleCommandLine(RegrOSService)
+
+    if not shell.IsUserAnAdmin():
+        # running as not admin
+        new_args = sys.argv[1:]
+        cmdline_params = ' '.join(new_args)
+        logger.info('Rerun as admin params: %s', cmdline_params)
+        val = shell.ShellExecuteEx(lpVerb='runas', lpFile=sys.executable,
+                                   lpParameters=cmdline_params)  # relaunch as admin
+    else:
+        logger.info('Service is admin')
+        # running as not admin
+        logger.info(
+            'Delegate to win32serviceutil.HandleCommandLine with params: %s', sys.argv)
+
+        with open(LOG_PATH, 'a') as f:
+            # cause calls to print() to be written to a file
+            with contextlib.redirect_stdout(f):
+                # the Windows Service framework calls this executable with no
+                # args.
+                if len(sys.argv) == 1:
+                    servicemanager.Initialize()
+                    servicemanager.PrepareToHostSingle(RegrOSService)
+                    servicemanager.StartServiceCtrlDispatcher()
+                else:
+                    win32serviceutil.HandleCommandLine(RegrOSService)
 
 
 if __name__ == '__main__':
