@@ -110,10 +110,7 @@ def cli():
     # print("Arguments:", args)
 
     if args.uninstall:
-        print("Not yet implemented")
-        # utils.uninstall()
-        # # uninstall overrrides everything else
-        # quit()
+        utils.uninstall()
 
     if args.install_service:
         logger.info('Install service')
@@ -143,8 +140,12 @@ def cli():
             print(registrant)
 
     if args.logs:
-        for i in database_engine.all_test_logs():
-            print(i)
+        print("ID, Name, Last Result, Version of Last Success, Date of Last Success")
+        for i in database_engine.get_current_results():
+            result = "Pass" if i[1].last_execution_id == i[1].last_successful_execution_id else "Fail"
+            last_version = i[3].os_version if i[3] is not None else "None"
+            last_success = i[3].pretty_time() if i[3] is not None else "Never"
+            print("{}, {}, {}, {}, {}".format(i[0].id, i[0].name, result, last_version, last_success))
 
     if args.register:
         error = False

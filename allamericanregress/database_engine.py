@@ -143,7 +143,7 @@ def all_failure_records():
 
 def get_current_results():
     """Returns collection of current results for each registrant in the form of
-    <Registrant>, <CurrentRecord>, <LastExecutionRecord> and <LastSuccessfulExecutionRecord>
+    <Registrant>, <CurrentRecord>, <LastExecutionRecord>, <LastSuccessfulExecutionRecord>, and <FailureRecord>
     if it exists."""
     with connect() as session:
         # Join the registrant with their latest execution record
@@ -157,20 +157,28 @@ def get_current_results():
             current_record = result[1]
             last_execution_record = result[2]
             # If the registrant failed recently, find its last successful
-            # record
+            # record and the failure record
             if current_record.last_execution_id is not current_record.last_successful_execution_id:
                 last_successful_record = session.query(models.ExecutionRecord).\
                     filter(models.ExecutionRecord.id ==
                            current_record.last_successful_execution_id).first()
+                failure_record = get_failure_record(current_record.registrant_id, current_record.last_execution_id)
             else:
                 last_successful_record = last_execution_record
+                failure_record = None
 
-            # Add the successful record to the result tuple
-            if last_successful_record is not None:
-                result = result + (last_successful_record, )
+            # Add the records to the result tuple
+            result = result + (last_successful_record, failure_record)
             augmented_results.append(result)
     return augmented_results
 
+
+def get_failure_record(registrant_id, execution_id):
+    """Returns the Failure Record with the associated registrant and execution IDs"""
+    with connect() as session:
+        record = session.query(models.FailureRecord).filter(models.FailureRecord.registrant_id == registrant_id).\
+            filter(models.FailureRecord.execution_id == execution_id).first()
+        return record
 
 def get_last_os_version():
     """Returns the last recorded OS version as '{major}.{minor}.{build}"""
