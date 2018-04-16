@@ -101,7 +101,7 @@ def record_execution(os_version):
     return new_execution_record.id
 
 
-def update_current_record(registrant_id, execution_id, succeeded):
+def update_current_record(registrant_id, execution_id, succeeded, execution_time):
     """Updates or inserts the current record for the given registrant. References the most recent
        execution record and the last successful one (i.e. can be queried to see if the registrant
        succeeded on its most recent execution)"""
@@ -116,6 +116,12 @@ def update_current_record(registrant_id, execution_id, succeeded):
             updated_record.last_execution_id = execution_id
         if succeeded:
             updated_record.last_successful_execution_id = execution_id
+
+        num_exec = updated_record.num_executions or 0
+        total_exec_time = updated_record.total_execution_time or 0
+        updated_record.num_executions = num_exec + 1
+        updated_record.total_execution_time = total_exec_time + execution_time
+        updated_record.last_execution_time = execution_time
 
         session.merge(updated_record)
 
