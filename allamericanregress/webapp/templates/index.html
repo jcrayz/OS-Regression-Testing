@@ -21,8 +21,9 @@
         {% if results[1].last_execution_id == results[1].last_successful_execution_id %}
         <tr class="tr-pass">
         {% else %}
-        <tr class="tr-fail" onclick="alert('FAILURE OUTPUT\nExit Code: {{results[4].exit_code}}' +
-                                            '\nMessage: {{results[4].message}}')">
+        {% set message = results[4].message.replace('\\', '\\\\').replace('"', '\"')
+            .replace('\n', '\\n').replace('\r', '\\r') %}
+        <tr class="tr-fail" onclick='alert("FAILURE OUTPUT\nExit Code: {{results[4].exit_code}}\nMessage: {{message}}")'>
         {% endif %}
             <td>{{results[0].id}}</td>
             <td>{{results[0].name}}</td>
