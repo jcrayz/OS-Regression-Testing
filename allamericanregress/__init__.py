@@ -4,6 +4,7 @@ import logging.config
 import os
 import subprocess
 import sys
+import webbrowser
 
 from . import config
 from . import database_engine
@@ -171,4 +172,5 @@ def cli():
 
     if args.webapp:
         logger.debug(f"Running webapp from command line via {__file__}")
+        webbrowser.open(url='http://127.0.0.1:5000', new=0, autoraise=True)
         webapp.app.run(debug=args.debug)
