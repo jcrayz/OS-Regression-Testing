@@ -44,7 +44,8 @@
             <td class="text-right">{{ results[1].get_last_execution_time() }}</td>
             <td>
                 <button class="btn btn-sm btn-warning"
-                        onclick="window.location.href='{{url_for('execute_individual', registrant_id=results[0].id)}}';">
+                        onclick="window.location.href='{{url_for('execute_individual', registrant_id=results[0].id)}}';
+                                 event.stopPropagation();">
                     Execute
                 </button>
             </td>
@@ -106,7 +107,8 @@
                 <button class="btn btn-sm btn-warning" disabled="true">Edit</button>
             </td>
             <td>{# delete button #}
-                <button class="btn btn-sm btn-danger" onclick="window.location.href='{{url_for('delete', registrant_id=registrant.id)}}';">
+                <button class="btn btn-sm btn-danger"
+                        onclick="window.location.href='{{url_for('delete', registrant_id=registrant.id)}}';">
                     Delete
               </button>
             </td>
