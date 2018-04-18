@@ -1,19 +1,17 @@
 # regrOS
 
-*Still to be completed*
-
 # All-American Regress Team
 
 Jenna Cray, Blake Gordon, Christopher Chen
 
 ## Installation
 
-*Install the product (to be completed)*
+Simply run the "regrOS Setup.exe" to install regrOS.
 
-Once the installation is completed, *(open the command prompt and cd into the root directory/open the shortcut in the
-folder to open the command prompt. To be completed)*, then execute the command `python -m allamericanregress --install`.
+All of the installation process is performed in this executable, and it will create a desktop shortcut to access the 
+[web app](#web-app). 
 
-This command will install the windows service to ensure our program will be run when your computer performs an update.
+This will install the windows service to ensure our program will be run when your computer performs an update.
 Additionally, the install will ensure that the database and supporting files are created.
 
 ## Register Test Suite
@@ -43,8 +41,8 @@ web app.
 
 #### 2. From the Command Line
 
-cd to where regrOS is installed on your machine. Once at the command line, execute 
-`python -m allamericanregress --register --path '{path}' --name '{name}' --command '{command}' --author '{author}'` 
+See [Command Line](#command-line) to navigate the command prompt to the proper directory. Once at the command line, 
+execute `regrOS.lnk --register --path '{path}' --name '{name}' --command '{command}' --author '{author}'` 
 where {path}, {name}, {command}, and {author} are as specified above.
 
 
@@ -70,8 +68,13 @@ from the execution, and the Message or the command line output from the executio
 
 #### Run the Web App
 
-From the command line, cd to where regrOS is installed on your machine. Once at the command line, execute `regrOS.exe 
---webapp` and keep the command prompt open. This will run the web app so that it is accessible on 
+##### 1. From Shortcut (Recommended)
+Double click the "regrOS Webapp" shortcut on your desktop and keep the command prompt open. 
+This will run the web app so that it is accessible on any web browser of the local machine at http://127.0.0.1:5000/
+
+##### 2. From Command Line
+See [Command Line](#command-line) to navigate the command prompt to the proper directory. Once at the command line, 
+execute `regrOS.lnk --webapp` and keep the command prompt open. This will run the web app so that it is accessible on 
 any web browser of the local machine at http://127.0.0.1:5000/
 
 ![command line](/screenshots/CommandLine.png "Command Line")
@@ -79,6 +82,12 @@ any web browser of the local machine at http://127.0.0.1:5000/
 #### Stop Running the Web App
 
 To stop the running of the web app, return to the command prompt that the web app began running on and press Ctrl + C
+or simply close the command prompt. 
+
+## Command Line
+
+From a command prompt, execute `cd "C:\Program Files (x86)\regrOS"`. This will navigate the command prompt to the regrOS
+directory. 
 
 ## Manual Execution
 
@@ -93,8 +102,8 @@ of the results table.
 
 #### 2. From the Command Line
 
-cd to where regrOS is installed on your machine. Once at the command line, execute 
-`python -m allamericanregress --execute-tests` to execute all registered tests. 
+See [Command Line](#command-line) to navigate the command prompt to the proper directory. Once at the command line, 
+execute `regrOS.lnk --execute-tests` to execute all registered tests. 
 
 ## Delete Registered Test Suite
 
@@ -110,11 +119,20 @@ you wish to delete, and this will delete the registered test suite and the logs 
 
 #### 2. From the Command Line
 
-To remove a registered test suite from the command line, be sure you are in the directory of regrOS, and execute 
-`python -m allamericanregress --delete {id}` where {id} is the generated ID Number for the test suite. This can be 
-found on the web app, or by executing `python -m allamericanregress --list` to view the list of all the registered 
-test suites.
+To remove a registered test suite from the command line, see [Command Line](#command-line) to navigate the command 
+prompt to the proper directory. Once at the command line, execute `regrOS.lnk --delete {id}` where {id} is the 
+generated ID Number for the test suite. This can be found on the web app, or by executing `regrOS.lnk --list` to view 
+the list of all the registered test suites.
 
 ## Uninstall
 
-*To be completed*
+There are two ways to uninstall regrOS.
+
+#### 1. Remove Programs
+From the settings of your computer, navigate to the Apps or Programs section. Once in the section, locate the regrOS 
+program and select "Uninstall". This will remove all files related to regrOS (but __NOT__ registered test suites) 
+from your computer. 
+
+#### 2. Run Uninstall Executable
+From your file browser, navigate to "C:\Program Files (x86)\regrOS" and double click the "unins000.exe" file to run the 
+uninstaller. This will remove all files related to regrOS (but __NOT__ registered test suites) from your computer. 
