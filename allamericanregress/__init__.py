@@ -116,7 +116,7 @@ def cli():
     if args.install_service:
         logger.info('Install service')
         if not config.FROZEN:
-            install_proc = subprocess.Popen(['python', 'AllAmericanRegressService.py'], cwd=os.path.join(
+            install_proc = subprocess.Popen(['python', 'AllAmericanRegressService.py', '--startup=auto', 'install'], cwd=os.path.join(
                 os.path.dirname(__file__), 'service'))
             logger.info(
                 'Installing service from source dist. %s', install_proc)
@@ -143,10 +143,12 @@ def cli():
     if args.logs:
         print("ID, Name, Last Result, Version of Last Success, Date of Last Success")
         for i in database_engine.get_current_results():
-            result = "Pass" if i[1].last_execution_id == i[1].last_successful_execution_id else "Fail"
+            result = "Pass" if i[1].last_execution_id == i[
+                1].last_successful_execution_id else "Fail"
             last_version = i[3].os_version if i[3] is not None else "None"
             last_success = i[3].pretty_time() if i[3] is not None else "Never"
-            print("{}, {}, {}, {}, {}".format(i[0].id, i[0].name, result, last_version, last_success))
+            print("{}, {}, {}, {}, {}".format(
+                i[0].id, i[0].name, result, last_version, last_success))
 
     if args.register:
         error = False

@@ -35,70 +35,47 @@ logging.basicConfig(
 )
 
 logger = logging.getLogger(__name__)
-logger.info('Service imported')
 
 
 def execute_tests():
     """Execute all tests from DB."""
     logger.info('Service is executing tests.')
     try:
-        if not FROZEN:
-            logger.info('* * Locate pipenv command * *')
-            # child = subprocess.Popen(['pipenv','run','allamericanregress','--execute-tests'],cwd=os.path.dirname(os.path.dirname(os.path.dirname(__file__))), stdout=subprocess.PIPE)
-            child = subprocess.Popen(
-                ['where', 'pipenv'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-            # wait for it to finish get an exit code, and get text output
-            console_output = child.communicate()
-            code = child.returncode
-            logger.info('console output: %s', console_output)
-            # ========== Try to install pipenv env ==========
-            logger.info('* * pipenv install * *')
-            # TODO: Use Frozen path
-            env_path = os.path.dirname(
-                os.path.dirname(os.path.dirname(__file__)))
-            logger.info('path=%s', env_path)
-            cmd = shlex.split('python -m pipenv install')
-            logger.info('cmd=%s', cmd)
-            child = subprocess.Popen(
-                cmd, cwd=env_path, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-            console_output = child.communicate()
-            code = child.returncode
-            logger.info('pipenv: code=%s, output=%s',
-                        code, console_output)
-            # ========== Execute tests ==========
-            logger.info('* * Executing tests * *')
-            logger.info('execute tests via console')
-            cmd = shlex.split(
-                'python -m pipenv run python -m allamericanregress --execute-tests')
-            logger.info('cmd=%s', cmd)
-            child = subprocess.Popen(
-                cmd, cwd=env_path, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        logger.info('* * Locate pipenv command * *')
+        # child = subprocess.Popen(['pipenv','run','allamericanregress','--execute-tests'],cwd=os.path.dirname(os.path.dirname(os.path.dirname(__file__))), stdout=subprocess.PIPE)
+        child = subprocess.Popen(
+            ['where', 'pipenv'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        # wait for it to finish get an exit code, and get text output
+        console_output = child.communicate()
+        code = child.returncode
+        logger.info('console output: %s', console_output)
+        # ========== Try to install pipenv env ==========
+        logger.info('* * pipenv install * *')
+        # TODO: Use Frozen path
+        env_path = os.path.dirname(
+            os.path.dirname(os.path.dirname(__file__)))
+        logger.info('path=%s', env_path)
+        cmd = shlex.split('python -m pipenv install')
+        logger.info('cmd=%s', cmd)
+        child = subprocess.Popen(
+            cmd, cwd=env_path, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        console_output = child.communicate()
+        code = child.returncode
+        logger.info('pipenv: code=%s, output=%s',
+                    code, console_output)
+        # ========== Execute tests ==========
+        logger.info('* * Executing tests * *')
+        logger.info('execute tests via console')
+        cmd = shlex.split(
+            'python -m pipenv run python -m allamericanregress --execute-tests')
+        logger.info('cmd=%s', cmd)
+        child = subprocess.Popen(
+            cmd, cwd=env_path, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
-            console_output = child.communicate()
-            code = child.returncode
-            logger.info('pipenv: code=%s, output=%s',
-                        code, console_output)
-            # logger.info('execute tests via lib')
-        else:
-            logger.info('Execute tests as frozen dist')
-
-            args = ([os.path.join(os.path.dirname(
-                    os.path.abspath(sys.executable)), 'regros', 'regros.exe'), '--execute-tests'],)
-            # args = (['dir'],)
-            kwargs = dict(
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
-                stdin=subprocess.PIPE,
-            )
-            logger.info(
-                'Calling regros.exe with args: args=%s kwargs=%s', args, kwargs)
-            # logger.info('Files in dir. cwd=%s files=%s', kwargs[
-            #             'cwd'], os.listdir(kwargs['cwd']))
-            child = subprocess.Popen(*args, **kwargs)
-            console_output = child.communicate()
-            code = child.returncode
-            logger.info('Tests output: %s', console_output)
-
+        console_output = child.communicate()
+        code = child.returncode
+        logger.info('pipenv: code=%s, output=%s',
+                    code, console_output)
     except Exception as e:
         logger.exception(str(e))
         raise e
@@ -157,70 +134,24 @@ class RegrOSService(win32serviceutil.ServiceFramework):
         return version
 
 
-def install_commandline():
-    logger.info('main()-admin Service is admin')
-    rs = []
-    try:
-        logger.info('first win32serviceutil.HandleCommandLine')
-        c = win32serviceutil.HandleCommandLine(RegrOSService, None,
-                                               ["regrOS", "--startup=auto", "install"])
-        logger.info('second win32serviceutil.HandleCommandLine')
-        rs.append(c)
-        # this function behaves as expected if called with "debug" instead of
-        # start
-        c = win32serviceutil.HandleCommandLine(
-            RegrOSService, None, ["regrOS", "start"])
-        rs.append(c)
-        logger.info('finished win32serviceutil.HandleCommandLine commands')
-        logger.info(
-            'Service win32serviceutil.HandleCommandLine return codes: %s', rs)
-        logger.info('Process did not die while installing')
-    except SystemExit:
-        logger.info('Process died while installing')
-
-
 def main():
     """Installs the service using admin privileges. Privilege code taken from Jorenko's answer at
     https://stackoverflow.com/questions/130763/request-uac-elevation-from-within-a-python-script#answer-11746382"""
-    with open(LOG_PATH, 'a') as f:
-        with contextlib.redirect_stdout(f):
-            win32serviceutil.HandleCommandLine(RegrOSService)
-    quit()
-    if FROZEN:
-        logger.info('Service main running as frozen dist.')
-    else:
-        logger.info('Service main running as source dist.')
+    logger.info('Service main running as frozen dist.')
     logger.info('Service called with args: %s', sys.argv)
 
     # win32serviceutil.HandleCommandLine(RegrOSService,argv=sys.argv)
     logger.disabled = False
     # use this cmd line option in roder to get usage() output
     # to check if args are invalid
-    ISDRYRUN = "--dryrun" in sys.argv
-    if ISDRYRUN:
-        sys.argv.remove('--dryrun')
-        win32serviceutil.HandleCommandLine(RegrOSService, argv=sys.argv)
-    ASADMIN = "--asadmin"
-    ISFROZEN = "--frozen"
-    DOINSTALL = "--install"
 
-    # if len(sys.argv) <= 1:
-    #     win32serviceutil.HandleCommandLine(RegrOSService)
-    if len(sys.argv) == 1:
-        execute_tests()
-
-    if (ASADMIN not in sys.argv):
+    if not shell.IsUserAnAdmin():
         logger.info('Service is not admin')
         script = os.path.abspath(sys.argv[0])  # get current execution command
         # add admin arg to avoid infinite recursion
-        new_args = sys.argv[1:] + [ASADMIN]
+        new_args = sys.argv[1:]
         params = ' '.join([script] + new_args)
-        if not FROZEN:
-            params = ' '.join([script] + new_args)
-            logger.info('Source dist rerun as admin params: %s', params)
-        else:
-            params = ' '.join(new_args)
-            logger.info('Frozen dist rerun as admin params: %s', params)
+        logger.info('Source dist rerun as admin params: %s', params)
         logger.info(f'params: {params}')
         logger.info(f'sys.executable: {sys.executable}\n')
         val = shell.ShellExecuteEx(lpVerb='runas', lpFile=sys.executable,
@@ -229,17 +160,11 @@ def main():
 
     else:
         logger.info('Service is admin')
-        sys.argv.remove(ASADMIN)
         logger.info('Delegate to win32serviceutil.HandleCommandLine')
         with open(LOG_PATH, 'a') as f:
             with contextlib.redirect_stdout(f):
                 win32serviceutil.HandleCommandLine(
                     RegrOSService, None, sys.argv)
-
-        # if DOINSTALL in sys.argv:
-        #     logger.info('Installing service')
-        #     sys.argv.remove(DOINSTALL)
-        #     install_commandline()
 
 
 if __name__ == '__main__':
