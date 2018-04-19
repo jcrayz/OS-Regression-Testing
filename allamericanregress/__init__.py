@@ -11,18 +11,22 @@ from . import database_engine
 from . import testing_framework
 from . import utils
 from . import webapp
+from .service import AllAmericanRegressService
+
 
 # configure logging to log everything to file and stdout
 logger = logging.getLogger(__name__)
 stream_handler = logging.StreamHandler()
 file_handler = logging.FileHandler(config.LOG_PATH)
 formatter = logging.Formatter(
-      '%(asctime)s %(name)-12s %(levelname)-8s %(message)s')
+    '%(asctime)s %(name)-12s %(levelname)-8s %(message)s')
 stream_handler.setFormatter(formatter)
 file_handler.setFormatter(formatter)
 logger.addHandler(stream_handler)
 logger.addHandler(file_handler)
 logger.setLevel(logging.DEBUG)
+
+
 ASADMIN = '--asadmin'
 
 parser = argparse.ArgumentParser(
@@ -55,12 +59,11 @@ parser.add_argument(
 parser.add_argument(
     '--command',
     metavar='command',
-    help=
-    """Specify command to execute the registry entry in the form 'command $1'. $1 will be replaced with the program path."""
+    help="""Specify command to execute the registry entry in the form 'command $1'. $1 will be replaced with the program path."""
 )
 # Program command, only if registering
 parser.add_argument(
-    '--author', metavar='author', help= "Name of the author of the registry entry")
+    '--author', metavar='author', help="Name of the author of the registry entry")
 # List all programs.
 parser.add_argument(
     '--list', action='store_true', help="List all registered applications.")
@@ -111,15 +114,24 @@ def cli():
         utils.uninstall()
 
     if args.install_service:
-        # TODO: Use Frozen path
-        install_proc = subprocess.Popen(['python', 'AllAmericanRegressService.py'],
-                         cwd=os.path.join(os.path.dirname(__file__),'service'))
-        install_proc.wait()
-        exit_code = install_proc.returncode
-        if (exit_code is 0):
-            print('Install succeeded.')
+        logger.info('Install service')
+        if not config.FROZEN:
+            install_proc = subprocess.Popen(['python', 'AllAmericanRegressService.py'], cwd=os.path.join(
+                os.path.dirname(__file__), 'service'))
+            logger.info(
+                'Installing service from source dist. %s', install_proc)
+            install_proc.wait()
+            exit_code = install_proc.returncode
+            if (exit_code == 0):
+                print('Install succeeded.')
+            else:
+                print('There was an error installing.')
         else:
-            print('There was an error installing.')
+            logger.info(
+                'Installing service from frozen dist.')
+            AllAmericanRegressService.main()
+            # install_proc = subprocess.Popen(
+            #     ['regros.exe', '--install-frozen'], cwd=config.MODULE_PATH, shell=True)
 
     if args.delete_id:
         database_engine.deregister_program(args.delete_id)

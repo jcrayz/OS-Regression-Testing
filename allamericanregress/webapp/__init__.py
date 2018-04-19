@@ -2,7 +2,7 @@
 import flask
 from flask import request, redirect, url_for
 from allamericanregress import database_engine, testing_framework
-from allamericanregress.webapp.app_init import app
+from allamericanregress.webapp.app_init import app, tmpl_dir
 from allamericanregress.webapp import forms
 import logging
 logger = logging.getLogger(__name__)
