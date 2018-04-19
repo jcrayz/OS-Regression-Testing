@@ -45,6 +45,19 @@ class Registrant(db.Model):
     def __repr__(self):
         return self.name
 
+    def get_age_str(self):
+        """Returns the age/registration date of the test in days as a string (e.g. 1 day, today, 3 days)"""
+        current_time = time.time()
+        age_in_sec = current_time - self.timestamp
+        age_in_days = int(round(age_in_sec/(60*60*24)))
+        if (age_in_days > 1):
+            return "{} days".format(str(age_in_days))
+        elif (age_in_days == 1):
+            return "1 day"
+        else:
+            return "<1 day"
+
+
 
 class ExecutionRecord(db.Model):
     """Record when each Registrant is invoked by allamericanregress
@@ -68,12 +81,33 @@ class CurrentRecord(db.Model):
         ExecutionRecord.id))
     last_successful_execution_id = db.Column(db.Integer,
                                              db.ForeignKey(ExecutionRecord.id))
+    num_executions = db.Column(db.Integer)
+    total_execution_time = db.Column(db.Integer) # cumulative, for calculating average execution time
+    last_execution_time = db.Column(db.Integer)
+
     registrant = db.relationship(
         Registrant, backref=db.backref('current_records', lazy='dynamic'))
     last_execution = db.relationship(
         ExecutionRecord, foreign_keys=[last_execution_id])
     last_successful_execution = db.relationship(
         ExecutionRecord, foreign_keys=[last_successful_execution_id])
+
+    def get_avg_execution_time(self):
+        """Returns the average execution time of the test, rounded to hundredths of a second"""
+        if (self.num_executions is None): # necessary check for upgrading rows
+            self.num_executions = 0
+            self.total_execution_time = 0
+        if (self.num_executions < 1):
+            return 0
+        else:
+            return round(self.total_execution_time/self.num_executions, 2)
+
+    def get_last_execution_time(self):
+        """Returns the last recorded execution time of the test, rounded to hundredths of a second"""
+        if (self.last_execution_time is None):
+            return 0
+        else:
+            return round(self.last_execution_time, 2)
 
 
 class FailureRecord(db.Model):
