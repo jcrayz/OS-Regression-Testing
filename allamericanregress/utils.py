@@ -9,7 +9,6 @@ logger = logging.getLogger(__name__)
 
 def uninstall():
     """Uninstalls AllAmericanRegress files"""
-    # TODO: Uninstall the service
     print('Uninstalling')
     params = 'sc delete regrOS'
     shell.ShellExecuteEx(lpVerb='runas', lpFile='cmd.exe', lpParameters='/c '+ params)
