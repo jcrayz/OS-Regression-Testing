@@ -43,7 +43,7 @@ def register_program(name, path, command, author=''):
             path=path,
             command=command,
             author=author,
-            timestamp=time.time())
+            timestamp=int(time.time()))
         session.add(new_registrant)
         logger.log(logging.DEBUG, "Successfully registered %s", repr(args))
 
