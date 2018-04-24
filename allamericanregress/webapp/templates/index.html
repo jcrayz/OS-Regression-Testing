@@ -1,74 +1,98 @@
 {% extends 'base.html' %} {% block body %} {{super()}}
-<div>
-    <h1>{{context.app_title}}</h1>
-    <h4>{{context.subtitle}}</h4>
-</div>
-<hr>
 <div id="results">
     <h2>Results</h2> {# The result set query will require a join between 3 of the tables #}
-    <p>Current OS Version: {{context.current_version}}</p>
-    <table border="1px">
-        <tr>
-            <th colspan="6">TEST RESULTS</th>
-        </tr>
+    <h4 class="text-center">Current OS Version: <strong>{{context.current_version}}</strong></h4>
+    <div class="text-right">
+        <button id= "toggle-pass" class="btn" onclick="togglePassingTests();">Hide Passing Tests</button>
+    </div>
+    <table class="table table-striped">
+        <caption>TEST RESULTS</caption>
         <tr>
             <th>#</th>
             <th>NAME</th>
             <th>LAST RESULT</th>
             <th>VERSION OF LAST SUCCESS</th>
             <th>DATE OF LAST SUCCESS</th>
+            <th>AVG EXEC TIME (s)</th>
+            <th>LAST EXEC TIME (s)</th>
             <th>EXECUTE</th>
         </tr>
         {% for results in context.test_results %}
-        <tr>
+        {% if results[1].last_execution_id == results[1].last_successful_execution_id %}
+        <tr class="tr-pass">
+        {% else %}
+        {% set message = results[4].message.replace('\\', '\\\\').replace('"', '\"')
+            .replace('\n', '\\n').replace('\r', '\\r') %}
+        <tr class="tr-fail" onclick='alert("FAILURE OUTPUT\nExit Code: {{results[4].exit_code}}\nMessage: {{message}}")'>
+        {% endif %}
             <td>{{results[0].id}}</td>
             <td>{{results[0].name}}</td>
+            <td class="text-center">
             {% if results[1].last_execution_id == results[1].last_successful_execution_id %}
-            <td>PASS</td>
+            <label class="label label-success">PASS</label>
             {% else %}
-            <td>FAIL</td>
-            {% endif %} {% if results[3] is defined %}
+            <label class="label label-danger">FAIL</label>
+            {% endif %}
+            </td>
+            {% if results[3] is not none %}
             <td>{{ results[3].os_version }}</td>
             <td>{{ results[3].pretty_time() }}</td>
             {% else %}
             <td>NONE</td>
             <td>NEVER</td>
             {% endif %}
+            <td class="text-right">{{ results[1].get_avg_execution_time() }}</td>
+            <td class="text-right">{{ results[1].get_last_execution_time() }}</td>
             <td>
-                <button onclick="window.location.href='{{url_for('execute_individual', registrant_id=results[0].id)}}';">
+                <button class="btn btn-sm btn-warning"
+                        onclick="window.location.href='{{url_for('execute_individual', registrant_id=results[0].id)}}';
+                                 event.stopPropagation();">
                     Execute
                 </button>
             </td>
         </tr>
         {% endfor %}
     </table>
-    <button onclick="window.location.href='{{ url_for( 'execute' ) }}';">EXECUTE ALL</button>
-    <button onclick="window.location.href='{{ url_for( 'execute_failed' ) }}';">EXECUTE FAILED</button>
+    <div class="text-center">
+        <button class="btn btn-primary" onclick="window.location.href='{{ url_for( 'execute_all' ) }}';">EXECUTE ALL</button>
+        <button class="btn btn-danger" onclick="window.location.href='{{ url_for( 'execute_failed' ) }}';">EXECUTE FAILED</button>
+    </div>
 </div>
 <hr>
 <div id="register_div">
     <h2>Register Test Executable</h2>
-    <form class="register_form" method="POST" action="{{url_for('index')}}">
-        {{context.form.hidden_tag()}} {{render_field(context.form.path)}}
-        <!--  -->
-        {{render_field(context.form.name)}}
-        <!--  -->
-        {{render_field(context.form.author)}}
-        <!--  -->
-        {{render_field(context.form.command)}}
-        <input type="submit" value="Register">
+    <form method="POST" action="{{url_for('index')}}">
+        <div class="form-group container">
+            {{context.form.hidden_tag()}}
+            <div class="col-xs-7">
+                {{render_field(context.form.path, class="form-control")}}
+            </div>
+            <div class="col-xs-7">
+                {{render_field(context.form.name, class="form-control")}}
+            </div>
+            <div class="col-xs-7">
+                {{render_field(context.form.author, class="form-control")}}
+            </div>
+            <div class="col-xs-7">
+                {{render_field(context.form.command, class="form-control")}}
+            </div>
+            <div class="col-xs-7">
+                <input class="btn btn-primary" type="submit" value="REGISTER">
+            </div>
+        </div>
     </form>
 </div>
 <hr>
-<div id="registered_tests">
+<div id="registered_tests col-xs-12">
     <h2>Registered Tests</h2>
-    <table border="1px">
+    <table class="table table-striped">
         <tr>
             <th>#</th>
             <th>NAME</th>
             <th>AUTHOR</th>
             <th>COMMAND</th>
             <th>FILEPATH</th>
+            <th>REGISTERED</th>
             <th></th>
             <th></th>
         </tr>
@@ -79,11 +103,15 @@
             <td>{{registrant.author}}</td>
             <td>{{registrant.command}}</td>
             <td>{{registrant.path}}</td>
+            <td>{{registrant.get_age_str()}}</td>
             <td>{# edit button #}
-                <button disabled="true">Edit</button>
+                <button class="btn btn-sm btn-warning" disabled="true">Edit</button>
             </td>
             <td>{# delete button #}
-                <button disabled="true">Delete</button>
+                <button class="btn btn-sm btn-danger"
+                        onclick="window.location.href='{{url_for('delete', registrant_id=registrant.id)}}';">
+                    Delete
+              </button>
             </td>
         </tr>
         {% endfor %}

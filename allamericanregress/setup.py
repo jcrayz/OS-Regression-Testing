@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
-
+"""Setup script for installing the allamericanregress package.
+Install with `python setup.py install`."""
 import os
-from setuptools import setup, find_packages
+from setuptools import setup
 
 
 # Utility function to read the README file.
@@ -9,11 +10,11 @@ from setuptools import setup, find_packages
 # README file and 2) it's easier to type in the README file than to put a raw
 # string in below ...
 def read(fname):
+    # TODO: Use frozen path
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
 
 
 # print(read('requirements.txt').split('\n'))
-# the setup
 setup(
     name='allamericanregress',
     version=0.1,

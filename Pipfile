@@ -12,7 +12,10 @@ sqlalchemy = "*"
 flask-migrate = "*"
 wtforms = "*"
 flask-wtf = "*"
-Flask-Admin = {git = "git://github.com/flask-admin/flask-admin"}
+flask-admin = {git = "git://github.com/flask-admin/flask-admin"}
+pyinstaller = "*"
+pudb = "*"
+"pypiwin32" = "*"
 
 
 [dev-packages]

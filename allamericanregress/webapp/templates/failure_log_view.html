@@ -1,6 +1,6 @@
 {% extends 'base.html' %} {% block body %} {{super()}}
 <div>
-    <table border="1px">
+    <table class="table table-striped">
         <tr>
             <th colspan="7">Failure Logs</th>
         </tr>
@@ -19,7 +19,7 @@
                 <td>{{ failure_record[0].registrant_id }}</td>
                 <td>{{ failure_record[2].name }}</td>
                 <td>{{ failure_record[0].execution_id }}</td>
-                <td>{{ failure_record[1].timestamp }}</td> {# TODO: date formatting #}
+                <td>{{ failure_record[1].pretty_time() }}</td>
                 <td>{{ failure_record[1].os_version }}</td>
                 <td>{{ failure_record[0].exit_code }}</td>
                 <td>{{ failure_record[0].message }}</td>
