@@ -105,7 +105,9 @@
             <td>{{registrant.path}}</td>
             <td>{{registrant.get_age_str()}}</td>
             <td>{# edit button #}
-                <button class="btn btn-sm btn-warning" disabled="true">Edit</button>
+                <a href="{{url_for('model_view_registrant.edit_view',id=registrant.id)}}">
+                    <button class="btn btn-sm btn-warning">Edit</button>
+                </a>
             </td>
             <td>{# delete button #}
                 <button class="btn btn-sm btn-danger"

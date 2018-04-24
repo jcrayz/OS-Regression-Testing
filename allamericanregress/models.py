@@ -49,14 +49,13 @@ class Registrant(db.Model):
         """Returns the age/registration date of the test in days as a string (e.g. 1 day, today, 3 days)"""
         current_time = time.time()
         age_in_sec = current_time - self.timestamp
-        age_in_days = int(round(age_in_sec/(60*60*24)))
+        age_in_days = int(round(age_in_sec / (60 * 60 * 24)))
         if (age_in_days > 1):
             return "{} days".format(str(age_in_days))
         elif (age_in_days == 1):
             return "1 day"
         else:
             return "<1 day"
-
 
 
 class ExecutionRecord(db.Model):
@@ -82,7 +81,8 @@ class CurrentRecord(db.Model):
     last_successful_execution_id = db.Column(db.Integer,
                                              db.ForeignKey(ExecutionRecord.id))
     num_executions = db.Column(db.Integer)
-    total_execution_time = db.Column(db.Integer) # cumulative, for calculating average execution time
+    # cumulative, for calculating average execution time
+    total_execution_time = db.Column(db.Integer)
     last_execution_time = db.Column(db.Integer)
 
     registrant = db.relationship(
@@ -94,13 +94,13 @@ class CurrentRecord(db.Model):
 
     def get_avg_execution_time(self):
         """Returns the average execution time of the test, rounded to hundredths of a second"""
-        if (self.num_executions is None): # necessary check for upgrading rows
+        if (self.num_executions is None):  # necessary check for upgrading rows
             self.num_executions = 0
             self.total_execution_time = 0
         if (self.num_executions < 1):
             return 0
         else:
-            return round(self.total_execution_time/self.num_executions, 2)
+            return round(self.total_execution_time / self.num_executions, 2)
 
     def get_last_execution_time(self):
         """Returns the last recorded execution time of the test, rounded to hundredths of a second"""
@@ -129,7 +129,7 @@ class FailureRecord(db.Model):
 admin = Admin(app, name='regrOS Admin', template_mode='bootstrap3')
 # register model admin views
 admin.add_view(ModelView(Log, db.session))
-admin.add_view(ModelView(Registrant, db.session))
+admin.add_view(ModelView(Registrant, db.session, endpoint='model_view_registrant'))
 admin.add_view(ModelView(ExecutionRecord, db.session))
 admin.add_view(ModelView(CurrentRecord, db.session))
 admin.add_view(ModelView(FailureRecord, db.session))
