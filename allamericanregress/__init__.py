@@ -49,6 +49,10 @@ parser.add_argument(
     '--execute-tests',
     action='store_true',
     help="Invoke the testing framework and log results.")
+# Service Execution of tests.
+parser.add_argument('--service-execute-tests',
+                    action='store_true',
+                    help="Invoke the testing framework only if the version is different than previous.")
 # Program path, only if registering.
 parser.add_argument(
     '--path', metavar='path', help="Specify path of program to register.")
@@ -183,6 +187,10 @@ def cli():
 
     if args.execute_tests:
         testing_framework.execute_tests()
+
+    if args.service_execute_tests:
+        print('Executing')
+        testing_framework.service_execute_test()
 
     if args.webapp:
         logger.debug(f"Running webapp from command line via {__file__}")

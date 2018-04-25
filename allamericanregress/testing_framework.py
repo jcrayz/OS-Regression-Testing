@@ -26,6 +26,16 @@ def execute_tests():
         execute_registrant(registrant, execution_id)
 
 
+def service_execute_test():
+    """Execute tests if the version is changed"""
+    logger.log(logging.DEBUG, "Checking for version change")
+    if database_engine.get_last_os_version() != get_current_os_version():
+        logger.log(logging.DEBUG, "Version is updated. Executing tests")
+        execute_tests()
+    else:
+        logger.log(logging.DEBUG, "Version not changed")
+
+
 def execute_individual_test(id):
     """Get the registrant"""
     registrant = database_engine.get_registrant(id)

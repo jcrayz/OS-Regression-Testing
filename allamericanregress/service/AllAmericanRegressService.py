@@ -67,7 +67,7 @@ def execute_tests():
         logger.info('* * Executing tests * *')
         logger.info('execute tests via console')
         cmd = shlex.split(
-            'python -m pipenv run python -m allamericanregress --execute-tests')
+            'python -m pipenv run python -m allamericanregress --service-execute-tests')
         logger.info('cmd=%s', cmd)
         child = subprocess.Popen(
             cmd, cwd=env_path, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
