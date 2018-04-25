@@ -46,7 +46,7 @@ def execute_tests():
         logger.info('Execute tests as frozen dist')
 
         args = ([os.path.join(os.path.dirname(
-                os.path.abspath(sys.executable)), 'regros', 'regros.exe'), '--execute-tests'],)
+                os.path.abspath(sys.executable)), 'regros', 'regros.exe'), '--service-execute-tests'],)
         # args = (['dir'],)
         kwargs = dict(
             stdout=subprocess.PIPE,
